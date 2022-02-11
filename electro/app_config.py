@@ -30,4 +30,5 @@ CONFIG = {
     'project_config': None,
     'path_project_directory': None,
     'path_site_directory': None,
+    'path_theme_directory': None,
 }
