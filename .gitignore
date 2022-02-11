@@ -1,0 +1,14 @@
+# Caches
+__pycache__/
+.DS_Store
+.vscode/
+
+# Untracked
+untracked/
+logs/
+projects/
+
+# Compiled
+*.pyc
+
+# Outputs

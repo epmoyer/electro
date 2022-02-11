@@ -1,0 +1,172 @@
+body {
+    margin: 0px;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+.root-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    /* background-color: pink; */
+}
+
+.content-container {
+    width: 100%;
+    /* background-color: palegreen; */
+    padding: 5px;
+}
+
+.sidebar-container {
+    width: 220px;
+    height: 100vh;
+    /* padding: 10px; */
+    background-color: #343131;
+    color: white;
+}
+
+.sidebar-header {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    /* justify-content: center; */
+    /* align-content: center; */
+    color: white;
+    height: 55px;
+    background-color: #2980B9;
+}
+.sidebar-title{
+    flex: none;
+
+    margin-bottom: 8px;
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.sidebar-main {
+    padding: 10px;
+    background-color: #343131;
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+}
+.section-heading {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: smaller;
+    color: white;
+    margin: 8px 0px 2px 0px;
+    user-select: none;
+
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#search-text{
+    /* margin: 10px; */
+    border-radius: 12px;
+    border: 0px;
+    font-size: 12px;
+    /* height: 20px; */
+    padding: 5px 9px;
+    /* margin: 0px 30px; */
+    width: 90%;
+}
+
+/* --------------------------
+   menu-tree specific
+   -------------------------- */
+
+.menu-tree {
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    /* font-family: 'IBM Plex Sans', sans-serif; */
+    color: rgb(212, 212, 212);
+    font-weight: 400;
+    font-size: 12pt;
+    font-weight: 400;
+}
+
+.menu-tree a, .menu-tree a:visited, .menu-tree a:hover, .menu-tree a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Remove default bullets */
+.menu-tree, .menu-tree ul {
+    list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+.menu-tree {
+    margin: 0;
+    padding: 0;
+}
+
+/* Hide the nested list */
+.menu-tree .nested {
+    display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.menu-tree .active {
+    display: block;
+}
+
+.menu-tree .caret {
+    /* margin: 0px 5px 0px 0px; */
+    width: 18px;
+    height: 18px;
+    /* padding-top: 2px; */
+    display: inline-block;
+    /* background-color: orange; */
+    text-align: center;
+    transform: rotate(0deg);
+    transition-duration: 0.2s;
+}
+
+.menu-tree .no_child {
+    /* margin-left: 20px; */
+    padding-left: 20px;
+}
+
+.menu-tree .caret-down {
+    transform: rotate(90deg);
+    transition-duration: 0.2s;
+}
+
+.menu-tree ul {
+    /* List item indent distance */
+    padding-left: 20px;
+}
+.menu-tree .selected {
+    background-color: #666;
+}
+.menu-tree li span {
+    display: block; /*this makes the span as wide as the li*/
+    cursor: pointer;
+    border-radius: 7px;
+    padding: 1px 0px 2px 4px;
+
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.menu-tree li span:hover {
+    background-color: #484848;
+}
+.menu-tree li .selected:hover {
+    background-color: #888;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Lato:wght@300;400&display=swap"
+        rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="root-container">
+        <div class="sidebar-container">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    {{% site_name %}}
+                </div>
+                <input id="search-text" type="text" name="q" placeholder="Search" title="Type search term here">
+            </div>
+            <div class="sidebar-main">
+                {{% sidebar_menu %}}
+            </div>
+        </div>
+        <div class="content-container">
+            {{% content %}}
+        </div>
+    </div>
+</body>
+
+<script>
+    const menu_trees = document.getElementsByClassName("menu-tree");
+    const all_menu_spans = [];
+    for (let menu_tree of menu_trees) {
+        const menu_spans = menu_tree.getElementsByTagName('span');
+        console.log(menu_spans);
+        for (let span of menu_spans) {
+            all_menu_spans.push(span)
+        }
+    }
+
+    for (let span of all_menu_spans) {
+        span.addEventListener("click", function () {
+            for (let old_span of all_menu_spans) {
+                old_span.classList.remove('selected');
+            }
+            console.log('Clicked a span');
+            this.classList.toggle('selected');
+        });
+    };
+
+</script>
+
+<script>
+    var toggler = document.getElementsByClassName("caret");
+    var i;
+
+    for (i = 0; i < toggler.length; i++) {
+        toggler[i].addEventListener("click", function (e) {
+            this.closest("li").querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+            e.stopPropagation();
+        });
+    }
+</script>
