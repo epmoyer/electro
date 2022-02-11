@@ -20,9 +20,14 @@ CONFIG = {
     'version': '0.1.0',
     'app_name': 'electro',
     'enable_debug_logging': True,
-    'project_config': None,  # Loaded at runtime
-    # 'fault_handler':  Faults(),  # Loaded at runtime
     'console_print': CONSOLE.print,
     'console_pprint': CONSOLE_PPRINT.print,
-    'project_filename': 'electro.json'
+    'project_filename': 'electro.json',
+
+    # ----------------------
+    # Set at runtime
+    # ----------------------
+    'project_config': None,
+    'path_project_directory': None,
+    'path_site_directory': None,
 }
