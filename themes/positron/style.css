@@ -5,11 +5,50 @@ body {
 img{
     max-width:700px;
 }
+h1, h2{
+    color: #444;
+}
+h3, h4, h5, h6 {
+    color: #585858;
+}
+h1, h2, h3{
+    margin: 5px 0px;
+}
+code {
+    color: #008c8c;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 2px 5px;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier, monospace;
+    background: #fff;
+    border: solid 1px #e1e4e5;
+    font-size: 75%;
+}
+a {
+    color: #2980B9;
+    text-decoration: none;
+    cursor:pointer
+}
+a:hover {
+    color:#3091d1
+}
+a:visited {
+    color:#9B59B6
+}
+strong {
+    font-weight: 600;
+}
+
 .root-container {
     height: 100vh;
     width: 100vw;
     display: flex;
     /* background-color: pink; */
+}
+blockquote {
+    color: #9b59c7;
+    border-left: 8px solid #ccc;
+    padding: 0px 12px;
 }
 
 .content-container {
@@ -18,6 +57,7 @@ img{
     padding: 10px 20px;
     overflow-x: hidden;
     overflow-y: auto;
+    color: #404040;
 }
 
 .sidebar-container {
