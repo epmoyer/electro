@@ -108,10 +108,28 @@ class Builder:
         project_config = CONFIG['project_config']
         path_site_directory = CONFIG['path_site_directory']
         path_theme_directory = CONFIG['path_theme_directory']
+        path_project_directory = CONFIG['path_project_directory']
 
+        # -------------------
+        # Copy CSS
+        # -------------------
         path_css_source = path_theme_directory / Path('style.css')
         path_css_destination = path_site_directory / Path('style.css')
         shutil.copy(path_css_source, path_css_destination)
+
+        # -------------------
+        # Copy Images
+        # -------------------
+        path_image_source_dir = path_project_directory /Path('docs') / Path('img')
+        path_image_destination_dir = path_site_directory / Path('img')
+        path_image_destination_dir.mkdir(parents=True, exist_ok=True)
+        images = path_image_source_dir.glob('*')
+        # print(path_image_source_dir)
+        for image in list(images):
+            destination_image = path_image_destination_dir / Path(image.name)
+            print(image)
+            print(f'   {destination_image}')
+            shutil.copy(image, destination_image)
 
         path_template = path_theme_directory / Path('template.html')
         with open(path_template, 'r') as file:
