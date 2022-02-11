@@ -3,8 +3,8 @@ body {
     font-family: "IBM Plex Sans", sans-serif;
 }
 .root-container {
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     /* background-color: pink; */
 }
@@ -12,7 +12,9 @@ body {
 .content-container {
     width: 100%;
     /* background-color: palegreen; */
-    padding: 5px;
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .sidebar-container {
@@ -21,6 +23,9 @@ body {
     /* padding: 10px; */
     background-color: #343131;
     color: white;
+
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .sidebar-header {
@@ -53,6 +58,9 @@ body {
     padding: 10px;
     background-color: #343131;
     font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .section-heading {
     text-transform: uppercase;

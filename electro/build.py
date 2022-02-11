@@ -6,9 +6,11 @@ import shutil
 
 # Library
 from prettyprinter import pformat
+import markdown
 
 # Local
 from loguru import logger
+from pytest import mark
 from electro.app_config import CONFIG
 from electro.faults import FAULTS
 from electro.paths import PATH_THEMES
@@ -88,7 +90,19 @@ class Builder:
             FAULTS.error(f'Source markdown document {path_markdown} does not exist.')
             return
         document_name = path_markdown.stem
-        self.site_documents[document_name] = {'path_markdown': path_markdown}
+        with open(path_markdown, 'r') as file:
+            document_markdown = file.read()
+        document_html = markdown.markdown(
+            document_markdown,
+            extensions=[
+                'tables',
+                'fenced_code',
+                'electro.mdx_urlize:UrlizeExtension',
+                'nl2br',
+                'codehilite',
+            ],
+        )
+        self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def render_site(self):
         project_config = CONFIG['project_config']
@@ -107,8 +121,11 @@ class Builder:
             path_site_document = path_site_directory / Path(f'{document_name}.html')
             document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
             document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
+            # document_html = document_html.replace(
+            #     r'{{% content %}}', f'(Content of {document_name}.md goes here.)'
+            # )
             document_html = document_html.replace(
-                r'{{% content %}}', f'(Content of {document_name}.md goes here.)'
+                r'{{% content %}}', document_info['html']
             )
             print(f'   Building {path_site_document}...')
             with open(path_site_document, 'w') as file:
