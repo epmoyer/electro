@@ -80,7 +80,7 @@ class Builder:
         for menu_name, md_document_name in documents_dict.items():
             self.menu_html += f'<li><span class="no_child">{menu_name}</span></li>'
             self.build_document(md_document_name)
-        self.menu_html += '/<ul>'
+        self.menu_html += '</ul>'
 
     def build_document(self, md_document_name):
         path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
