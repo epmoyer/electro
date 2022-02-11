@@ -80,7 +80,12 @@ class Builder:
             FAULTS.error(f'No "documents" key in navigation descriptor {navigation_descriptor}.')
             return
         for menu_name, md_document_name in documents_dict.items():
-            self.menu_html += f'<li><span class="no_child">{menu_name}</span></li>\n'
+            generic_document_name = md_document_name.replace('.md', '')
+            self.menu_html += (
+                '<li><span class="no_child">'
+                f'<a href="/{generic_document_name}.html">{menu_name}</a>'
+                '</span></li>\n'
+            )
             self.build_document(md_document_name)
         self.menu_html += '</ul>\n'
 
