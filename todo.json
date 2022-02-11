@@ -153,6 +153,11 @@
         {
             "name": "Doing",
             "id": "3",
+            "cards": []
+        },
+        {
+            "name": "Done",
+            "id": "4",
             "cards": [
                 {
                     "name": "Dim black font in docs to match current site.",
@@ -187,11 +192,6 @@
                     "due_complete": false
                 }
             ]
-        },
-        {
-            "name": "Done",
-            "id": "4",
-            "cards": []
         }
     ]
 }
