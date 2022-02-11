@@ -153,7 +153,16 @@
         {
             "name": "Doing",
             "id": "3",
-            "cards": []
+            "cards": [
+                {
+                    "name": "Inject copyright",
+                    "id": "114",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                }
+            ]
         },
         {
             "name": "Done",

@@ -107,6 +107,11 @@ class Builder:
                 'codehilite',
             ],
         )
+        if copyright_text := CONFIG['project_config'].get('copyright'):
+            document_html += (
+                '<hr />\n'
+                f'<div class="copyright">{copyright_text}</div>'
+            )
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def render_site(self):
