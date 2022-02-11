@@ -109,11 +109,28 @@ class Builder:
                 'codehilite',
             ],
         )
-        inter_document_links = re.findall(r'<a href="\S*.md">', document_html)
-        # print(md_document_name)
-        # print(inter_document_links)
+        
+        inter_document_links = re.findall(r'<a href="\S*.md(?:\#\S*)?">', document_html)
         for link in list(set(inter_document_links)):
             document_html = document_html.replace(link, link.replace('.md', '.html'))
+
+        # print(md_document_name)
+        headings = re.findall(r'<h\d>.*<\/h\d>', document_html)
+        for heading in headings:
+            core = heading[4:-5]
+            tag_start = heading[0:3]
+            _id = text_to_id(core)
+            replacement = heading.replace(tag_start, f'{tag_start} id="{_id}"') 
+            # print(f'   {heading}')
+            # print(f'      {core}')
+            # print(f'      {tag_start}')
+            # print(f'         {_id}')
+            # print(f'         {replacement}')
+            document_html = document_html.replace(heading, replacement)
+
+        # headings = result.groupdict()
+        # print(f'   {headings}')
+
         if copyright_text := CONFIG['project_config'].get('copyright'):
             document_html += (
                 '<hr />\n'
@@ -166,3 +183,16 @@ class Builder:
             with open(path_site_document, 'w') as file:
                 file.write(document_html)
 
+
+def text_to_id(text):
+    _id = ''
+    dash_appended = False
+    for char in text.lower():
+        if char == ' ':
+            if not dash_appended:
+                _id += '-'
+                dash_appended = True
+        elif re.match(r'[a-z0-9]', char):
+            _id += char
+            dash_appended = False
+    return _id

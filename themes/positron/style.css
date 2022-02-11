@@ -1,8 +1,7 @@
 body {
     margin: 0px;
     font-family: "IBM Plex Sans", sans-serif;
-    /* --content-color: #444; */
-    --content-color: red;
+    --content-color: #444;
 }
 img{
     max-width:700px;
