@@ -88,14 +88,6 @@
             "id": "2",
             "cards": [
                 {
-                    "name": "Make inter-document links work.",
-                    "id": "108",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "Center h1?",
                     "id": "107",
                     "id_labels": [],
@@ -106,14 +98,6 @@
                 {
                     "name": "Clicking to right of a doc name should navigate to the doc, even though we are outside the anchor tag.",
                     "id": "101",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
-                    "name": "In js, highlight current menu item on page load.",
-                    "id": "104",
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -155,8 +139,8 @@
             "id": "3",
             "cards": [
                 {
-                    "name": "Inject copyright",
-                    "id": "114",
+                    "name": "In js, highlight current menu item on page load.",
+                    "id": "104",
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -168,6 +152,22 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Make inter-document links work.",
+                    "id": "108",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Inject copyright",
+                    "id": "114",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Dim black font in docs to match current site.",
                     "id": "105",

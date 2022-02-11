@@ -3,6 +3,8 @@ from pathlib import Path
 import json
 import shutil
 import shutil
+import re
+from textwrap import indent
 
 # Library
 from prettyprinter import pformat
@@ -107,6 +109,11 @@ class Builder:
                 'codehilite',
             ],
         )
+        inter_document_links = re.findall(r'<a href="\S*.md">', document_html)
+        # print(md_document_name)
+        # print(inter_document_links)
+        for link in list(set(inter_document_links)):
+            document_html = document_html.replace(link, link.replace('.md', '.html'))
         if copyright_text := CONFIG['project_config'].get('copyright'):
             document_html += (
                 '<hr />\n'
