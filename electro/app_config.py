@@ -21,7 +21,8 @@ CONFIG = {
     'app_name': 'electro',
     'enable_debug_logging': True,
     'project_config': None,  # Loaded at runtime
-    'fault_handler': None,  # Loaded at runtime
+    # 'fault_handler':  Faults(),  # Loaded at runtime
     'console_print': CONSOLE.print,
     'console_pprint': CONSOLE_PPRINT.print,
+    'project_filename': 'electro.json'
 }

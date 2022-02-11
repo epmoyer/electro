@@ -54,3 +54,4 @@ class Faults:
                 print(f'Line: {fault.cluster.line_number + 1}')
                 print('\n'.join(fault.cluster.lines))
 
+FAULTS = Faults()
