@@ -109,7 +109,7 @@ class Builder:
                 'codehilite',
             ],
         )
-        
+
         inter_document_links = re.findall(r'<a href="\S*.md(?:\#\S*)?">', document_html)
         for link in list(set(inter_document_links)):
             document_html = document_html.replace(link, link.replace('.md', '.html'))
@@ -118,9 +118,9 @@ class Builder:
         headings = re.findall(r'<h\d>.*<\/h\d>', document_html)
         for heading in headings:
             core = heading[4:-5]
-            tag_start = heading[0:3]
+            tag_start = heading[:3]
             _id = text_to_id(core)
-            replacement = heading.replace(tag_start, f'{tag_start} id="{_id}"') 
+            replacement = heading.replace(tag_start, f'{tag_start} id="{_id}"')
             # print(f'   {heading}')
             # print(f'      {core}')
             # print(f'      {tag_start}')
@@ -128,14 +128,9 @@ class Builder:
             # print(f'         {replacement}')
             document_html = document_html.replace(heading, replacement)
 
-        # headings = result.groupdict()
-        # print(f'   {headings}')
 
         if copyright_text := CONFIG['project_config'].get('copyright'):
-            document_html += (
-                '<hr />\n'
-                f'<div class="copyright">{copyright_text}</div>'
-            )
+            document_html += '<hr />\n' f'<div class="copyright">{copyright_text}</div>'
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def render_site(self):
@@ -154,7 +149,7 @@ class Builder:
         # -------------------
         # Copy Images
         # -------------------
-        path_image_source_dir = path_project_directory /Path('docs') / Path('img')
+        path_image_source_dir = path_project_directory / Path('docs') / Path('img')
         path_image_destination_dir = path_site_directory / Path('img')
         path_image_destination_dir.mkdir(parents=True, exist_ok=True)
         images = path_image_source_dir.glob('*')
@@ -176,9 +171,7 @@ class Builder:
             # document_html = document_html.replace(
             #     r'{{% content %}}', f'(Content of {document_name}.md goes here.)'
             # )
-            document_html = document_html.replace(
-                r'{{% content %}}', document_info['html']
-            )
+            document_html = document_html.replace(r'{{% content %}}', document_info['html'])
             print(f'   Building {path_site_document}...')
             with open(path_site_document, 'w') as file:
                 file.write(document_html)
