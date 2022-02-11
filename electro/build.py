@@ -71,16 +71,16 @@ class Builder:
 
     def add_navigation_descriptor(self, navigation_descriptor):
         if section_name := navigation_descriptor.get('section'):
-            self.menu_html += f'<div class="section-heading">{section_name}</div>'
-        self.menu_html += '<ul class="menu-tree">'
+            self.menu_html += f'<div class="section-heading">{section_name}</div>\n'
+        self.menu_html += '<ul class="menu-tree">\n'
         documents_dict = navigation_descriptor.get('documents')
         if documents_dict is None:
             FAULTS.error(f'No "documents" key in navigation descriptor {navigation_descriptor}.')
             return
         for menu_name, md_document_name in documents_dict.items():
-            self.menu_html += f'<li><span class="no_child">{menu_name}</span></li>'
+            self.menu_html += f'<li><span class="no_child">{menu_name}</span></li>\n'
             self.build_document(md_document_name)
-        self.menu_html += '</ul>'
+        self.menu_html += '</ul>\n'
 
     def build_document(self, md_document_name):
         path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
