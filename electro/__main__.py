@@ -37,7 +37,6 @@ def cli(enable_debug_logging):
 @cli.command()
 @click.argument('project_directory', default='./')
 def build(project_directory):
-    print('build()')
     build_project(project_directory)
     FAULTS.render()
 

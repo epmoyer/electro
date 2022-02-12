@@ -9,6 +9,7 @@ from textwrap import indent
 # Library
 from prettyprinter import pformat
 import markdown
+from bs4 import BeautifulSoup
 
 # Local
 from loguru import logger
@@ -119,12 +120,18 @@ class Builder:
             ],
         )
 
+        # ---------------------
+        # Modify HTML
+        # ---------------------
+
+        # Fix inter-document links
         inter_document_links = re.findall(r'<a href="\S*.md(?:\#\S*)?">', document_html)
         for link in list(set(inter_document_links)):
             document_html = document_html.replace(link, link.replace('.md', '.html'))
 
-        # print(md_document_name)
+        # Add id tags to headings
         headings = re.findall(r'<h\d>.*<\/h\d>', document_html)
+        # print(md_document_name)
         for heading in headings:
             core = heading[4:-5]
             tag_start = heading[:3]
@@ -137,9 +144,19 @@ class Builder:
             # print(f'         {replacement}')
             document_html = document_html.replace(heading, replacement)
 
+        # Add copyright text
         if copyright_text := CONFIG['project_config'].get('copyright'):
             document_html += '<hr />\n' f'<div class="copyright">{copyright_text}</div>'
+        
+        # ---------------------
+        # Search
+        # ---------------------
+        self.add_document_to_search(document_name, document_html)
+
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
+
+    def add_document_to_search(self, document_name, document_html):
+        pass
 
     def render_site(self):
         project_config = CONFIG['project_config']
@@ -164,8 +181,8 @@ class Builder:
         # print(path_image_source_dir)
         for image in list(images):
             destination_image = path_image_destination_dir / Path(image.name)
-            print(image)
-            print(f'   {destination_image}')
+            # print(image)
+            # print(f'   {destination_image}')
             shutil.copy(image, destination_image)
 
         path_template = path_theme_directory / Path('template.html')
