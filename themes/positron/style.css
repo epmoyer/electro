@@ -1,13 +1,26 @@
 body {
     margin: 0px;
     font-family: "IBM Plex Sans", sans-serif;
-    --content-color: #444;
+    --color-content: #444;
+    --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
+    --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
 }
+p {
+    line-height: 24px;
+}
+
 img{
     max-width:700px;
 }
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-content-header);
+    font-weight: 700;
+}
+h1 {
+    font-size: 175%;
+}
 h1, h2{
-    color: var(--content-color);
+    color: var(--color-content);
 }
 h3, h4, h5, h6 {
     color: #585858;
@@ -63,7 +76,11 @@ blockquote {
     padding: 10px 20px;
     overflow-x: hidden;
     overflow-y: auto;
-    color: var(--content-color);
+    color: var(--color-content);
+    font-family: var(--font-content-text);
+}
+.content-container ul {
+    line-height: 24px;
 }
 
 .sidebar-container {
