@@ -176,7 +176,7 @@ class Builder:
         for element in soup.find_all(["h2", "h3", "p"]):
             if element.name == 'p':
                 # Paragraph
-                section_text += ' ' + element.text.strip()
+                section_text += (' ' if section_text else '') + element.text.strip()
             else:
                 # Heading
                 if section_text:
