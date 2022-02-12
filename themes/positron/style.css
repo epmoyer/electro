@@ -84,6 +84,10 @@ blockquote {
 .content-container ul {
     line-height: 24px;
 }
+.content-container li img {
+    /* Force bulleted images to have their bullet at the top, rather than the bottom */
+    vertical-align: top;
+}
 
 .sidebar-container {
     flex: 0 0 auto;
