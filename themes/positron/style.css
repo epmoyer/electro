@@ -4,6 +4,8 @@ body {
     --color-content: #444;
     --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+    --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+    --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier, monospace;
 }
 p {
     line-height: 24px;
@@ -33,7 +35,7 @@ code {
     white-space: pre-wrap;
     word-wrap: break-word;
     padding: 2px 5px;
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier, monospace;
+    font-family: var(--font-code);
     background: #fff;
     border: solid 1px #e1e4e5;
     font-size: 75%;
@@ -101,7 +103,7 @@ blockquote {
     align-items: center;
     align-content: center;
     justify-content: center;
-    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    font-family: var(--font-sidebar);
     /* justify-content: center; */
     /* align-content: center; */
     color: white;
@@ -123,7 +125,7 @@ blockquote {
 .sidebar-main {
     padding: 10px;
     background-color: #343131;
-    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    font-family: var(--font-sidebar);
 
     overflow-x: hidden;
     overflow-y: auto;
@@ -165,7 +167,7 @@ blockquote {
    -------------------------- */
 
 .menu-tree {
-    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    font-family: var(--font-sidebar);
     /* font-family: 'IBM Plex Sans', sans-serif; */
     color: rgb(212, 212, 212);
     font-weight: 400;
