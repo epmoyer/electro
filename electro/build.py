@@ -72,6 +72,15 @@ class Builder:
     def __init__(self):
         self.menu_html = ''
         self.site_documents = {}
+        self.search_index = {
+            "config": {
+                "lang": ["en"],
+                "min_search_length": 3,
+                "prebuild_index": False,
+                "separator": r"[\s\-]+",
+            },
+            "docs": [],
+        }
 
     def add_navigation_descriptor(self, navigation_descriptor):
         if section_name := navigation_descriptor.get('section'):
@@ -128,7 +137,6 @@ class Builder:
             # print(f'         {replacement}')
             document_html = document_html.replace(heading, replacement)
 
-
         if copyright_text := CONFIG['project_config'].get('copyright'):
             document_html += '<hr />\n' f'<div class="copyright">{copyright_text}</div>'
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
@@ -176,6 +184,15 @@ class Builder:
             print(f'   Building {path_site_document}...')
             with open(path_site_document, 'w') as file:
                 file.write(document_html)
+
+        # -------------------
+        # Save search index
+        # -------------------
+        path_search_directory = path_site_directory / Path('search')
+        path_search_directory.mkdir(parents=True, exist_ok=True)
+        path_search_index = path_search_directory / Path('search_index.json')
+        with open(path_search_index, 'w') as file:
+            json.dump(self.search_index, file)
 
 
 def text_to_id(text):
