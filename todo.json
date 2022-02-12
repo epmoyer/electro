@@ -145,6 +145,30 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Copy attachments dir.",
+                    "id": "116",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Make attachment links work",
+                    "id": "117",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Lock sidebar width (is changing on resize)",
+                    "id": "118",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ]
         },

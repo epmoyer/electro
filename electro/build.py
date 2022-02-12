@@ -84,7 +84,7 @@ class Builder:
         for menu_name, md_document_name in documents_dict.items():
             generic_document_name = md_document_name.replace('.md', '')
             self.menu_html += (
-                '<li><span class="no_child">'
+                f'<li><span class="no_child" id="menuitem_doc_{generic_document_name}">'
                 f'<a href="/{generic_document_name}.html">{menu_name}</a>'
                 '</span></li>\n'
             )
@@ -168,6 +168,7 @@ class Builder:
             path_site_document = path_site_directory / Path(f'{document_name}.html')
             document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
             document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
+            document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
             # document_html = document_html.replace(
             #     r'{{% content %}}', f'(Content of {document_name}.md goes here.)'
             # )

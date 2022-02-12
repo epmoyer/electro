@@ -33,6 +33,20 @@
 </body>
 
 <script>
+    var App = App || {}; // Create namespace
+
+    (function () {
+        'use strict';
+
+        App.globalConfig = {
+            'currentDocumentName': '{{% current_document_name %}}'
+        };
+    }()); // "use strict" wrapper
+</script>
+<script>
+    // -----------------------
+    // menu-tree: Find all items (spans) in all menu-tree(s)
+    // -----------------------
     const menu_trees = document.getElementsByClassName("menu-tree");
     const all_menu_spans = [];
     for (let menu_tree of menu_trees) {
@@ -43,8 +57,12 @@
         }
     }
 
+    // -----------------------
+    // menu-tree: Set item (span) click handler
+    // -----------------------
     for (let span of all_menu_spans) {
         span.addEventListener("click", function () {
+            // Unselect all items in all menu-tree(s)
             for (let old_span of all_menu_spans) {
                 old_span.classList.remove('selected');
             }
@@ -53,9 +71,21 @@
         });
     };
 
+    // -----------------------
+    // menu-tree: Select the current document (at page load)
+    // -----------------------
+    for (let span of all_menu_spans) {
+        if(span.id == 'menuitem_doc_' + App.globalConfig.currentDocumentName){
+            span.classList.add('selected');
+        }
+    };
+
 </script>
 
 <script>
+    /* -----------------------
+     * menu-tree: Sep caret (child folding) click handler
+     * ---------------------- */
     var toggler = document.getElementsByClassName("caret");
     var i;
 
