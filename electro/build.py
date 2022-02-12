@@ -135,7 +135,7 @@ class Builder:
         for heading in headings:
             core = heading[4:-5]
             tag_start = heading[:3]
-            _id = text_to_id(core)
+            _id = heading_text_to_id(core)
             replacement = heading.replace(tag_start, f'{tag_start} id="{_id}"')
             # print(f'   {heading}')
             # print(f'      {core}')
@@ -156,7 +156,47 @@ class Builder:
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def add_document_to_search(self, document_name, document_html):
-        pass
+        print(f'add_document_to_search(): {document_name}')
+        soup = BeautifulSoup(document_html, 'lxml')
+        document_title =  None
+        for element in soup.find_all(["h1"]):
+            document_title = element.text.strip()
+            break
+        if document_title is None:
+            FAULTS.warning(f'No h1 tag found in {document_name}. Cannot extract document title for search.')
+            document_title = '(Unknown)' 
+        doc_descriptor = {
+            'title': document_title,
+            'location': f'{document_name}.html',
+            'text': ''
+        }
+        base_location = f'{document_name}.html'
+        current_location = base_location
+        section_text = ''
+        for element in soup.find_all(["h2", "h3", "p"]):
+            if element.name == 'p':
+                # Paragraph
+                section_text += ' ' + element.text.strip()
+            else:
+                # Heading
+                if section_text:
+                    self._add_search_item(document_title, current_location, section_text)
+                    section_text = ''
+                heading_text = element.text.strip()
+                heading_id = heading_text_to_id(heading_text)
+                print(f'   {element.name} : {heading_text} : {heading_id}')
+                current_location = f'{base_location}#{heading_id}'
+        # Commit any remaining text
+        if section_text:
+            self._add_search_item(document_title, current_location, section_text)
+
+    def _add_search_item(self, title, location, text):
+        doc_descriptor = {
+            'title': title,
+            'location': location,
+            'text': text
+        }
+        self.search_index['docs'].append(doc_descriptor)
 
     def render_site(self):
         project_config = CONFIG['project_config']
@@ -209,10 +249,11 @@ class Builder:
         path_search_directory.mkdir(parents=True, exist_ok=True)
         path_search_index = path_search_directory / Path('search_index.json')
         with open(path_search_index, 'w') as file:
-            json.dump(self.search_index, file)
+            # TODO: Remove this indent after everything is working.
+            json.dump(self.search_index, file, indent=4)
 
 
-def text_to_id(text):
+def heading_text_to_id(text):
     _id = ''
     dash_appended = False
     for char in text.lower():
