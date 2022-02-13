@@ -64,5 +64,27 @@ var App = App || {}; // Create namespace
                 e.stopPropagation();
             });
         }
+
+        // -----------------------
+        // Search handler
+        // -----------------------
+        var searchBox = document.getElementById("search-text");
+        console.log(searchBox);
+        searchBox.addEventListener(
+            "keydown",
+            function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    App.onSearch();
+                }
+            },
+            false
+        );
+    };
+
+    App.onSearch = () => {
+        console.log("onSearch()");
+        var searchText = document.getElementById('search-text').value;
+        console.log('searchText', searchText);
     };
 })(); // "use strict" wrapper
