@@ -16,7 +16,7 @@ from loguru import logger
 from pytest import mark
 from electro.app_config import CONFIG
 from electro.faults import FAULTS
-from electro.paths import PATH_THEMES
+from electro.paths import PATH_THEMES, PATH_JS
 
 pprint = CONFIG['console_pprint']
 
@@ -164,12 +164,7 @@ class Builder:
             break
         if document_title is None:
             FAULTS.warning(f'No h1 tag found in {document_name}. Cannot extract document title for search.')
-            document_title = '(Unknown)' 
-        doc_descriptor = {
-            'title': document_title,
-            'location': f'{document_name}.html',
-            'text': ''
-        }
+            document_title = '(Unknown)'
         base_location = f'{document_name}.html'
         current_location = base_location
         section_text = ''
@@ -216,15 +211,25 @@ class Builder:
         # -------------------
         path_image_source_dir = path_project_directory / Path('docs') / Path('img')
         path_image_destination_dir = path_site_directory / Path('img')
-        path_image_destination_dir.mkdir(parents=True, exist_ok=True)
-        images = path_image_source_dir.glob('*')
-        # print(path_image_source_dir)
-        for image in list(images):
-            destination_image = path_image_destination_dir / Path(image.name)
-            # print(image)
-            # print(f'   {destination_image}')
-            shutil.copy(image, destination_image)
+        copy_directory_contents(path_image_source_dir, path_image_destination_dir)
 
+        # -------------------
+        # Copy Attachments
+        # -------------------
+        path_attachment_source_dir = path_project_directory / Path('docs') / Path('attachments')
+        path_attachments_destination_dir = path_site_directory / Path('attachments')
+        copy_directory_contents(path_attachment_source_dir, path_attachments_destination_dir)
+
+        # -------------------
+        # Copy js
+        # -------------------
+        path_js_source_dir = PATH_JS
+        path_js_destination_dir = path_site_directory / Path('js')
+        copy_directory_contents(path_js_source_dir, path_js_destination_dir)
+
+        # -------------------
+        # Build site pages
+        # -------------------
         path_template = path_theme_directory / Path('template.html')
         with open(path_template, 'r') as file:
             template_html = file.read()
@@ -265,3 +270,13 @@ def heading_text_to_id(text):
             _id += char
             dash_appended = False
     return _id
+
+
+def copy_directory_contents(source_directory, target_directory):
+    logger.debug(f'Copying directory "{source_directory}" to "{target_directory}"')
+    target_directory.mkdir(parents=True, exist_ok=True)
+    paths_source_files = source_directory.glob('*')
+    for path_source_file in sorted(list(paths_source_files)):
+        logger.debug(f'   {path_source_file.name}')
+        path_destination_file = target_directory / Path(path_source_file.name)
+        shutil.copy(path_source_file, path_destination_file)
