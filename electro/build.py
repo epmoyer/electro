@@ -223,9 +223,13 @@ class Builder:
         # -------------------
         # Copy js
         # -------------------
-        path_js_source_dir = PATH_JS
+        path_js_resource_source_dir = PATH_JS
         path_js_destination_dir = path_site_directory / Path('js')
-        copy_directory_contents(path_js_source_dir, path_js_destination_dir)
+        copy_directory_contents(path_js_resource_source_dir, path_js_destination_dir)
+
+        path_js_theme_source_dir = path_theme_directory / Path('js')
+        copy_directory_contents(path_js_theme_source_dir, path_js_destination_dir)
+
 
         # -------------------
         # Build site pages
