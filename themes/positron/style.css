@@ -195,6 +195,27 @@ blockquote {
 }
 
 /* --------------------------
+   scrollbar
+   -------------------------- */
+   ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+    height: 12px;
+    bottom: -10px;
+}
+.sidebar-container::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(124, 124, 124);
+}
+.content-container::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(190, 190, 190);
+}
+::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+/* --------------------------
    menu-tree specific
    -------------------------- */
 

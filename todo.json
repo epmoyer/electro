@@ -65,6 +65,22 @@
             "id": "5",
             "cards": [
                 {
+                    "name": "Hover color makes caret hard to see when unfolding a selected item.",
+                    "id": "128",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "---",
+                    "id": "133",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "Add Info/Warning/Note blocks.",
                     "id": "111",
                     "id_labels": [],
@@ -132,14 +148,6 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Add a home button.",
-                    "id": "109",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "---",
                     "id": "132",
                     "id_labels": [],
@@ -162,14 +170,6 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
-                },
-                {
-                    "name": "Hover color makes caret hard to see when unfolding a selected item.",
-                    "id": "128",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
                 }
             ],
             "archived": false
@@ -183,6 +183,14 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Add a home button.",
+                    "id": "109",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "use a search url \"/search.html?q=this+thing\"",
                     "id": "124",
