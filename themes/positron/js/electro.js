@@ -27,18 +27,34 @@ var App = App || {}; // Create namespace
                 // Unselect all items in all menu-tree(s)
                 for (let old_span of all_menu_spans) {
                     old_span.classList.remove("selected");
+                    old_span.classList.remove("navigating");
                 }
-                // console.log("Clicked a span");
-                this.classList.toggle("selected");
                 // Navigate to link, if this span contains one
+                var target_url = null;
                 const anchors = this.getElementsByTagName("a");
                 if (anchors) {
                     for (let anchor of anchors) {
-                        window.location.href = anchor.href;
+                        target_url = anchor.href;
                         // There should be only one anchor, but break anyway.
                         break;
                     }
                 }
+                if (target_url !== null){
+                    // if(App.globalConfig.currentDocumentName in 
+                    if (target_url.indexOf(App.globalConfig.currentDocumentName) > -1) {
+                        // We are navigating to the current page
+                        this.classList.add("selected");
+                    }
+                    else{
+                        // We are navigating away from the current page
+                        this.classList.add("navigating");
+                    }
+                    window.location.href = target_url;
+                }
+                else {
+                    this.classList.add("selected");
+                }
+                console.log(this.classList);
             });
         }
 

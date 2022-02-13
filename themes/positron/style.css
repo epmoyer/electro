@@ -2,6 +2,7 @@ body {
     margin: 0px;
     font-family: "IBM Plex Sans", sans-serif;
     --color-content: #444;
+    --color-navigating: rgb(38, 114, 255);
     --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
@@ -289,6 +290,10 @@ blockquote {
 .menu-tree .selected {
     background-color: #666;
 }
+.menu-tree .navigating {
+    /* shown when we are navigating to a new location (document), but haven't finished loading it yet */
+    background-color: var(--color-navigating);
+}
 .menu-tree li {
     margin: 5px 0px;
 }
@@ -311,4 +316,7 @@ blockquote {
 }
 .menu-tree li .selected:hover {
     background-color: #888;
+}
+.menu-tree li .navigating:hover {
+    background-color: var(--color-navigating);
 }
