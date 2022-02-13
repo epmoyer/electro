@@ -122,14 +122,6 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Add a home button.",
-                    "id": "109",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "Support Mobile",
                     "id": "113",
                     "id_labels": [
@@ -140,8 +132,24 @@
                     "due_complete": false
                 },
                 {
+                    "name": "Add a home button.",
+                    "id": "109",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "---",
                     "id": "132",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Highlight section when click-navigating to section of different doc (and unfold).",
+                    "id": "130",
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -170,14 +178,6 @@
             "name": "Doing",
             "id": "3",
             "cards": [
-                {
-                    "name": "Highlight section when click-navigating to section of different doc (and unfold).",
-                    "id": "130",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
                 {
                     "name": "use a search url \"/search.html?q=this+thing\"",
                     "id": "124",
