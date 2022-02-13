@@ -93,20 +93,38 @@ class Builder:
             return
         for menu_name, md_document_name in documents_dict.items():
             generic_document_name = md_document_name.replace('.md', '')
+            self.build_document(md_document_name)
+            document_name = md_document_name_to_document_name(md_document_name)
+            subheading_menu_html = self.build_subheading_menu_html(document_name)
+            if subheading_menu_html:
+                subheading_menu_html = '\n' + subheading_menu_html
             self.menu_html += (
                 f'<li><span class="no_child" id="menuitem_doc_{generic_document_name}">'
                 f'<a href="/{generic_document_name}.html">{menu_name}</a>'
-                '</span></li>\n'
+                f'</span>{subheading_menu_html}</li>\n'
             )
-            self.build_document(md_document_name)
+
+            
         self.menu_html += '</ul>\n'
+
+    def build_subheading_menu_html(self, document_name):
+        document_html = self.site_documents[document_name]['html']
+        soup = BeautifulSoup(document_html, 'lxml')
+        menu_html = ''
+        for heading in soup.find_all('h2'):
+            if not menu_html:
+                menu_html = '    <ul class="nested">\n'
+            menu_html += f'        <li><span class="no_child">{heading.text.strip()}</span></li>\n'
+        if menu_html:
+            menu_html += '    </ul>\n'
+        return menu_html
 
     def build_document(self, md_document_name):
         path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
         if not path_markdown.exists():
             FAULTS.error(f'Source markdown document {path_markdown} does not exist.')
             return
-        document_name = path_markdown.stem
+        document_name = md_document_name_to_document_name(md_document_name)
         with open(path_markdown, 'r') as file:
             document_markdown = file.read()
         document_html = markdown.markdown(
@@ -264,6 +282,9 @@ class Builder:
             # TODO: Remove this indent after everything is working.
             json.dump(self.search_index, file, indent=4)
 
+
+def md_document_name_to_document_name(md_document_name):
+    return Path(md_document_name).stem
 
 def heading_text_to_id(text):
     _id = ''
