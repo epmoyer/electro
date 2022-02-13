@@ -138,24 +138,6 @@
             "id": "2",
             "cards": [
                 {
-                    "name": "Use blue highlight on menu for page loading indication.",
-                    "id": "120",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
-                    "name": "Support Mobile",
-                    "id": "113",
-                    "id_labels": [
-                        "3"
-                    ],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "---",
                     "id": "132",
                     "id_labels": [],
@@ -169,12 +151,39 @@
         {
             "name": "Doing",
             "id": "3",
-            "cards": []
+            "cards": [
+                {
+                    "name": "Support Mobile",
+                    "id": "113",
+                    "id_labels": [
+                        "3"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                }
+            ]
         },
         {
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Support style directive",
+                    "id": "134",
+                    "id_labels": [],
+                    "description": "Example:\n![](img/my_image_file.jpeg){: style=\"height:340px;\"}\n\nsolution: add `attr_list` markdown extension.",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Use blue highlight on menu for page loading indication.",
+                    "id": "120",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Set sidebar scroll handle color so that it is more visible.",
                     "id": "129",

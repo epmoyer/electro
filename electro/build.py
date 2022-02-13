@@ -146,6 +146,7 @@ class Builder:
                 'electro.mdx_urlize:UrlizeExtension',
                 'nl2br',
                 'codehilite',
+                'attr_list',
             ],
         )
 
