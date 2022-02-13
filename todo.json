@@ -155,6 +155,14 @@
                     "description": "URL for search needs to be different, otherwise links to subsections of the \"same page\" we are on won't work.",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Shrink images if window becomes too small to display them.",
+                    "id": "125",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ]
         },
