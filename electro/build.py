@@ -93,7 +93,8 @@ class Builder:
             return
         for menu_name, md_document_name in documents_dict.items():
             document_name = md_document_name_to_document_name(md_document_name)
-            self.build_document(md_document_name)
+            path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
+            self.build_document(path_markdown, document_name)
             subheading_menu_html = self.build_subheading_menu_html(document_name)
             if subheading_menu_html:
                 subheading_menu_html = '\n' + subheading_menu_html
@@ -131,12 +132,10 @@ class Builder:
             menu_html += '    </ul>\n'
         return menu_html
 
-    def build_document(self, md_document_name):
-        path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
+    def build_document(self, path_markdown, document_name):
         if not path_markdown.exists():
             FAULTS.error(f'Source markdown document {path_markdown} does not exist.')
             return
-        document_name = md_document_name_to_document_name(md_document_name)
         with open(path_markdown, 'r') as file:
             document_markdown = file.read()
         document_html = markdown.markdown(
