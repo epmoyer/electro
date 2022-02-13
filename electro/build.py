@@ -153,6 +153,11 @@ class Builder:
         for link in list(set(inter_document_links)):
             document_html = document_html.replace(link, link.replace('.md', '.html'))
 
+        # Wrap images
+        img_tags = re.findall(r'<img .*?>', document_html)
+        for img_tag in list(set(img_tags)):
+            document_html = document_html.replace(img_tag, f'<div class="img-wrapper">{img_tag}</div>')
+
         # Add id tags to headings
         headings = re.findall(r'<h\d>.*<\/h\d>', document_html)
         # print(md_document_name)

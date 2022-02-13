@@ -12,6 +12,16 @@ p {
 }
 
 img{
+    max-width: 100%;
+    height: auto;
+}
+.img-wrapper{
+    /* All img tags are additionally wrapped by .img-wrapper so that we can:
+       - Apply an absolute (in pixels) max-width to the wrapper, constraining the max
+         size of all images to some max pixel size.
+       - Apply a relative (100%)) max-width to the img, constraining the img to ALWAYS shrink
+         as necessary to fit in the current window width.
+    */
     max-width:700px;
 }
 h1, h2, h3, h4, h5, h6 {
