@@ -65,6 +65,14 @@
             "id": "5",
             "cards": [
                 {
+                    "name": "Highlight section when click-navigating to section of different doc (and unfold).",
+                    "id": "130",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "Hover color makes caret hard to see when unfolding a selected item.",
                     "id": "128",
                     "id_labels": [],
@@ -154,22 +162,6 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
-                },
-                {
-                    "name": "Highlight section when click-navigating to section of different doc (and unfold).",
-                    "id": "130",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
-                    "name": "Set sidebar scroll handle color so that it is more visible.",
-                    "id": "129",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
                 }
             ],
             "archived": false
@@ -183,6 +175,14 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Set sidebar scroll handle color so that it is more visible.",
+                    "id": "129",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Add a home button.",
                     "id": "109",
