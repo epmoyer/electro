@@ -84,14 +84,25 @@ var App = App || {}; // Create namespace
         // -----------------------
         // Get search data
         // -----------------------
-        fetch('search/search_index.json')
+        fetch("search/search_index.json")
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
-                console.log('Fetched search index');
+                console.log("Fetched search index");
                 // console.log(data);
-                App.globalConfig.searchIndex = data;
+                App.globalConfig.searchData = data;
+                App.globalConfig.searchIndex = lunr(function () {
+                    this.field("title");
+                    this.field("text");
+                    this.ref("location");
+
+                    for (var i = 0; i < data.docs.length; i++) {
+                        var doc = data.docs[i];
+                        this.add(doc);
+                        documents[doc.location] = doc;
+                    }
+                });
             });
     };
 
@@ -99,5 +110,24 @@ var App = App || {}; // Create namespace
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;
         console.log("searchText", searchText);
+        results = App.search(searchText);
+        console.log(results);
+    };
+
+    App.search = (query) => {
+        if (App.globalConfig.searchIndex === null) {
+            console.error("Assets for search still loading");
+            return;
+        }
+
+        var resultDocuments = [];
+        var results = index.search(query);
+        for (var i = 0; i < results.length; i++) {
+            var result = results[i];
+            doc = documents[result.ref];
+            doc.summary = doc.text.substring(0, 200);
+            resultDocuments.push(doc);
+        }
+        return resultDocuments;
     };
 })(); // "use strict" wrapper
