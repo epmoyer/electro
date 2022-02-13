@@ -139,22 +139,6 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Copy attachments dir.",
-                    "id": "116",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
-                    "name": "Make attachment links work",
-                    "id": "117",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "Show headings",
                     "id": "121",
                     "id_labels": [
@@ -173,6 +157,14 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Make attachment links work",
+                    "id": "117",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ]
         },
@@ -180,6 +172,14 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Copy attachments dir.",
+                    "id": "116",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Make search work.",
                     "id": "110",

@@ -168,9 +168,9 @@ class Builder:
         base_location = f'{document_name}.html'
         current_location = base_location
         section_text = ''
-        for element in soup.find_all(["h2", "h3", "p"]):
-            if element.name == 'p':
-                # Paragraph
+        for element in soup.find_all(['h2', 'h3', 'p', 'li', 'th', 'td']):
+            if element.name in ['p', 'li', 'th', 'td']:
+                # Paragraph, list, table
                 section_text += (' ' if section_text else '') + element.text.strip()
             else:
                 # Heading
