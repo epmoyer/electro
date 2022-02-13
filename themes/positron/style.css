@@ -186,7 +186,7 @@ blockquote {
     /* font-family: 'IBM Plex Sans', sans-serif; */
     color: rgb(212, 212, 212);
     font-weight: 400;
-    font-size: 12pt;
+    font-size: 11pt;
     font-weight: 400;
 }
 
@@ -218,8 +218,8 @@ blockquote {
 
 .menu-tree .caret {
     /* margin: 0px 5px 0px 0px; */
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
     /* padding-top: 2px; */
     display: inline-block;
     /* background-color: orange; */

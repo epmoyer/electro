@@ -89,6 +89,14 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Consider resizing image files to be lo larger than the max supported pixel width.",
+                    "id": "126",
+                    "id_labels": [],
+                    "description": "mkdocs does NOT do this.  How does it constrain max-width in pixels AND as 100%? It does not play the \".img-wrapper\" trick we are playing.  Does some other enclosing div constrain the max size?",
+                    "due": null,
+                    "due_complete": false
                 }
             ],
             "archived": false
@@ -122,6 +130,14 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Hover color makes caret hard to see when unfolding a selected item.",
+                    "id": "128",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ],
             "archived": false
@@ -139,20 +155,34 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Make attachment links work",
-                    "id": "117",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "use a search url \"/search.html?q=this+thing\"",
                     "id": "124",
                     "id_labels": [
                         "9"
                     ],
                     "description": "URL for search needs to be different, otherwise links to subsections of the \"same page\" we are on won't work.",
+                    "due": null,
+                    "due_complete": false
+                }
+            ]
+        },
+        {
+            "name": "Done",
+            "id": "4",
+            "cards": [
+                {
+                    "name": "Reduce sidebar font size a pinch.",
+                    "id": "127",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Make attachment links work",
+                    "id": "117",
+                    "id_labels": [],
+                    "description": "",
                     "due": null,
                     "due_complete": false
                 },
@@ -163,13 +193,7 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
-                }
-            ]
-        },
-        {
-            "name": "Done",
-            "id": "4",
-            "cards": [
+                },
                 {
                     "name": "Show headings",
                     "id": "121",
