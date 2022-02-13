@@ -96,6 +96,7 @@ var App = App || {}; // Create namespace
                 config.searchIndex = lunr(function () {
                     this.field("title");
                     this.field("text");
+                    this.field("heading");
                     this.ref("location");
 
                     for (var i = 0; i < data.docs.length; i++) {
@@ -118,6 +119,9 @@ var App = App || {}; // Create namespace
         results.forEach(result => {
             html += html == '' ? '' : '<hr>'
             html += '<h3><a href="/' + result.location + '">' + result.title + '</a></h3>';
+            if(result.heading){
+                html += '<h4 class="search-result">' + result.heading + '</h4>';
+            }
             html += '<p>' + result.summary + '</p>'
         });
         document.getElementById("content").innerHTML = html;

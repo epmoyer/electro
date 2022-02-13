@@ -17,6 +17,7 @@ img{
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-content-header);
     font-weight: 700;
+    margin: 5px 0px;
 }
 h1 {
     font-size: 175%;
@@ -27,9 +28,9 @@ h1, h2{
 h3, h4, h5, h6 {
     color: #585858;
 }
-h1, h2, h3{
-    margin: 5px 0px;
-}
+/* .search-result h4{
+    maring
+} */
 code {
     color: #008c8c;
     white-space: pre-wrap;

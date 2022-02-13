@@ -147,7 +147,7 @@ class Builder:
         # Add copyright text
         if copyright_text := CONFIG['project_config'].get('copyright'):
             document_html += '<hr />\n' f'<div class="copyright">{copyright_text}</div>'
-        
+
         # ---------------------
         # Search
         # ---------------------
@@ -156,17 +156,21 @@ class Builder:
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def add_document_to_search(self, document_name, document_html):
-        print(f'add_document_to_search(): {document_name}')
+        logger.debug(f'add_document_to_search(): {document_name}')
         soup = BeautifulSoup(document_html, 'lxml')
-        document_title =  None
+        document_title = None
         for element in soup.find_all(["h1"]):
             document_title = element.text.strip()
             break
         if document_title is None:
-            FAULTS.warning(f'No h1 tag found in {document_name}. Cannot extract document title for search.')
+            FAULTS.warning(
+                f'No h1 tag found in {document_name}. Cannot extract document title for search.'
+            )
             document_title = '(Unknown)'
         base_location = f'{document_name}.html'
+
         current_location = base_location
+        current_heading_text = None
         section_text = ''
         for element in soup.find_all(['h2', 'h3', 'p', 'li', 'th', 'td']):
             if element.name in ['p', 'li', 'th', 'td']:
@@ -175,22 +179,22 @@ class Builder:
             else:
                 # Heading
                 if section_text:
-                    self._add_search_item(document_title, current_location, section_text)
+                    self._add_search_item(
+                        document_title, current_location, current_heading_text, section_text
+                    )
                     section_text = ''
-                heading_text = element.text.strip()
-                heading_id = heading_text_to_id(heading_text)
-                print(f'   {element.name} : {heading_text} : {heading_id}')
+                current_heading_text = element.text.strip()
+                heading_id = heading_text_to_id(current_heading_text)
+                logger.debug(f'   {element.name} : {current_heading_text} : {heading_id}')
                 current_location = f'{base_location}#{heading_id}'
         # Commit any remaining text
         if section_text:
-            self._add_search_item(document_title, current_location, section_text)
+            self._add_search_item(
+                document_title, current_location, current_heading_text, section_text
+            )
 
-    def _add_search_item(self, title, location, text):
-        doc_descriptor = {
-            'title': title,
-            'location': location,
-            'text': text
-        }
+    def _add_search_item(self, title, location, heading, text):
+        doc_descriptor = {'title': title, 'location': location, 'heading': heading, 'text': text}
         self.search_index['docs'].append(doc_descriptor)
 
     def render_site(self):
@@ -229,7 +233,6 @@ class Builder:
 
         path_js_theme_source_dir = path_theme_directory / Path('js')
         copy_directory_contents(path_js_theme_source_dir, path_js_destination_dir)
-
 
         # -------------------
         # Build site pages
