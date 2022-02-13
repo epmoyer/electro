@@ -89,10 +89,11 @@ var App = App || {}; // Create namespace
                 return response.json();
             })
             .then((data) => {
+                const config = App.globalConfig;
                 console.log("Fetched search index");
                 // console.log(data);
-                App.globalConfig.searchData = data;
-                App.globalConfig.searchIndex = lunr(function () {
+                config.searchData = data;
+                config.searchIndex = lunr(function () {
                     this.field("title");
                     this.field("text");
                     this.ref("location");
@@ -100,7 +101,7 @@ var App = App || {}; // Create namespace
                     for (var i = 0; i < data.docs.length; i++) {
                         var doc = data.docs[i];
                         this.add(doc);
-                        documents[doc.location] = doc;
+                        config.documents[doc.location] = doc;
                     }
                 });
             });
@@ -110,21 +111,22 @@ var App = App || {}; // Create namespace
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;
         console.log("searchText", searchText);
-        results = App.search(searchText);
+        const results = App.search(searchText);
         console.log(results);
     };
 
     App.search = (query) => {
-        if (App.globalConfig.searchIndex === null) {
+        const config = App.globalConfig;
+        if (config.searchIndex === null) {
             console.error("Assets for search still loading");
             return;
         }
 
         var resultDocuments = [];
-        var results = index.search(query);
+        var results = config.searchIndex.search(query);
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
-            doc = documents[result.ref];
+            var doc = config.documents[result.ref];
             doc.summary = doc.text.substring(0, 200);
             resultDocuments.push(doc);
         }

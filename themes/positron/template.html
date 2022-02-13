@@ -12,6 +12,7 @@
         rel="stylesheet">
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
 
+    <script type = "text/javascript" src="js/lunr.js"></script>
     <script type = "text/javascript" src="js/electro.js"></script>
 </head>
 
@@ -39,7 +40,8 @@
     App.globalConfig = {
         'currentDocumentName': '{{% current_document_name %}}',
         'searchData': null,
-        'searchIndex': null
+        'searchIndex': null,
+        'documents': {}
     };
 </script>
 
