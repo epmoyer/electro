@@ -132,7 +132,6 @@ var App = App || {}; // Create namespace
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;
         console.log("searchText", searchText);
-        // App.doSearch(searchText);
         window.location.href = 'search.html?query=' + searchText;
     };
 
