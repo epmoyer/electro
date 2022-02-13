@@ -177,6 +177,11 @@
         {
             "name": "Doing",
             "id": "3",
+            "cards": []
+        },
+        {
+            "name": "Done",
+            "id": "4",
             "cards": [
                 {
                     "name": "use a search url \"/search.html?q=this+thing\"",
@@ -187,13 +192,7 @@
                     "description": "URL for search needs to be different, otherwise links to subsections of the \"same page\" we are on won't work.",
                     "due": null,
                     "due_complete": false
-                }
-            ]
-        },
-        {
-            "name": "Done",
-            "id": "4",
-            "cards": [
+                },
                 {
                     "name": "Show document sections in menu-tree",
                     "id": "119",
