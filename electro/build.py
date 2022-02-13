@@ -120,7 +120,14 @@ class Builder:
         for heading in soup.find_all('h2'):
             if not menu_html:
                 menu_html = '    <ul class="nested">\n'
-            menu_html += f'        <li><span class="no_child">{heading.text.strip()}</span></li>\n'
+            heading_text = heading.text.strip()
+            heading_id = heading_text_to_id(heading_text)
+            heading_url = f'{document_name}.html#{heading_id}'
+            menu_html += (
+                '        <li><span class="no_child">'
+                + f'<a href="{heading_url}">{heading_text}</a>'
+                + '</span></li>\n'
+            )
         if menu_html:
             menu_html += '    </ul>\n'
         return menu_html
