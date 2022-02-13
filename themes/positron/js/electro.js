@@ -120,7 +120,7 @@ var App = App || {}; // Create namespace
             html += html == '' ? '' : '<hr>'
             html += '<h3><a href="/' + result.location + '">' + result.title + '</a></h3>';
             if(result.heading){
-                html += '<h4 class="search-result">' + result.heading + '</h4>';
+                html += '<h4>' + result.heading + '</h4>';
             }
             html += '<p>' + result.summary + '</p>'
         });

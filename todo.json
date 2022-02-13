@@ -139,16 +139,6 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Show headings",
-                    "id": "121",
-                    "id_labels": [
-                        "9"
-                    ],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "Make attachment links work",
                     "id": "117",
                     "id_labels": [],
@@ -172,6 +162,16 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Show headings",
+                    "id": "121",
+                    "id_labels": [
+                        "9"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Gather from lists and other tags (not just p)",
                     "id": "122",
