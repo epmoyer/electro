@@ -88,6 +88,14 @@
             "id": "2",
             "cards": [
                 {
+                    "name": "Use blue highlight on menu for page loading indication.",
+                    "id": "120",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "Add a home button.",
                     "id": "109",
                     "id_labels": [],
