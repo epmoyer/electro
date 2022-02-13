@@ -98,8 +98,14 @@ class Builder:
             subheading_menu_html = self.build_subheading_menu_html(document_name)
             if subheading_menu_html:
                 subheading_menu_html = '\n' + subheading_menu_html
+                class_str = ''
+                caret_str = '<i class="caret fa fa-angle-right"></i>'
+            else:
+                class_str = 'class="no_child"'
+                caret_str = ''
             self.menu_html += (
-                f'<li><span class="no_child" id="menuitem_doc_{generic_document_name}">'
+                f'<li><span {class_str} id="menuitem_doc_{generic_document_name}">'
+                f'{caret_str}'
                 f'<a href="/{generic_document_name}.html">{menu_name}</a>'
                 f'</span>{subheading_menu_html}</li>\n'
             )
