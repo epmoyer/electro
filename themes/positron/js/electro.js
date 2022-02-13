@@ -105,13 +105,40 @@ var App = App || {}; // Create namespace
                         config.documents[doc.location] = doc;
                     }
                 });
+
+                // Execute search query (if requested in url)
+                const searchText = App.getUrlValue('query');
+                if(searchText){
+                    document.getElementById("search-text").value = searchText;
+                    console.log('query', searchText);
+                    App.doSearch(searchText);
+                }
             });
+
+    };
+
+    App.getUrlValue  = (VarSearch) => {
+        var SearchString = window.location.search.substring(1);
+        var VariableArray = SearchString.split('&');
+        for(var i = 0; i < VariableArray.length; i++){
+            var KeyValuePair = VariableArray[i].split('=');
+            if(KeyValuePair[0] == VarSearch){
+                return decodeURI(KeyValuePair[1]);
+            }
+        }
     };
 
     App.onSearch = () => {
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;
         console.log("searchText", searchText);
+        // App.doSearch(searchText);
+        window.location.href = 'search.html?query=' + searchText;
+    };
+
+    App.doSearch = (searchText) => {
+        console.log("doSearch()");
+        
         const results = App.search(searchText);
         console.log(results);
 
