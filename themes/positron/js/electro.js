@@ -113,6 +113,14 @@ var App = App || {}; // Create namespace
         console.log("searchText", searchText);
         const results = App.search(searchText);
         console.log(results);
+
+        var html = '';
+        results.forEach(result => {
+            html += html == '' ? '' : '<hr>'
+            html += '<h3><a href="/' + result.location + '">' + result.title + '</a></h3>';
+            html += '<p>' + result.summary + '</p>'
+        });
+        document.getElementById("content").innerHTML = html;
     };
 
     App.search = (query) => {
