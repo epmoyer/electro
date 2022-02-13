@@ -51,6 +51,7 @@ a:visited {
 }
 strong {
     font-weight: 600;
+    color: black;
 }
 hr {
     height: 1px;
