@@ -79,6 +79,16 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Highlight search hits.",
+                    "id": "123",
+                    "id_labels": [
+                        "9"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ],
             "archived": false
@@ -99,16 +109,6 @@
                     "name": "Add a home button.",
                     "id": "109",
                     "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
-                    "name": "Make search work.",
-                    "id": "110",
-                    "id_labels": [
-                        "3"
-                    ],
                     "description": "",
                     "due": null,
                     "due_complete": false
@@ -153,6 +153,26 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Show headings",
+                    "id": "121",
+                    "id_labels": [
+                        "9"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Gather from lists and other tags (not just p)",
+                    "id": "122",
+                    "id_labels": [
+                        "9"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ]
         },
@@ -160,6 +180,16 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Make search work.",
+                    "id": "110",
+                    "id_labels": [
+                        "3"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "In js, highlight current menu item on page load.",
                     "id": "104",
