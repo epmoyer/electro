@@ -90,7 +90,8 @@ blockquote {
 
 .sidebar-container {
     flex: 0 0 auto;
-    width: 260px;
+    /* width: 260px; */
+    width: 280px;
     height: 100vh;
     /* padding: 10px; */
     background-color: #343131;
