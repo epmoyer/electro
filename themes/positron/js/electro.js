@@ -115,15 +115,18 @@ var App = App || {}; // Create namespace
         const results = App.search(searchText);
         console.log(results);
 
-        var html = '';
+        var html = '<h1>Search Results</h1>\n';
         results.forEach(result => {
-            html += html == '' ? '' : '<hr>'
+            html += '<hr>';
             html += '<h3><a href="/' + result.location + '">' + result.title + '</a></h3>';
             if(result.heading){
                 html += '<h4>' + result.heading + '</h4>';
             }
             html += '<p>' + result.summary + '</p>'
         });
+        if (results.length == 0){
+            html += '(no results to show)';
+        }
         document.getElementById("content").innerHTML = html;
     };
 
