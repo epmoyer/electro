@@ -155,6 +155,16 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "use a search url \"/search.html?q=this+thing\"",
+                    "id": "124",
+                    "id_labels": [
+                        "9"
+                    ],
+                    "description": "URL for search needs to be different, otherwise links to subsections of the \"same page\" we are on won't work.",
+                    "due": null,
+                    "due_complete": false
                 }
             ]
         },
