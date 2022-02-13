@@ -80,11 +80,24 @@ var App = App || {}; // Create namespace
             },
             false
         );
+
+        // -----------------------
+        // Get search data
+        // -----------------------
+        fetch('search/search_index.json')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Fetched search index');
+                // console.log(data);
+                App.globalConfig.searchIndex = data;
+            });
     };
 
     App.onSearch = () => {
         console.log("onSearch()");
-        var searchText = document.getElementById('search-text').value;
-        console.log('searchText', searchText);
+        var searchText = document.getElementById("search-text").value;
+        console.log("searchText", searchText);
     };
 })(); // "use strict" wrapper
