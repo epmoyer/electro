@@ -36,14 +36,9 @@
 
 <script>
     var App = App || {}; // Create namespace
-
-    (function () {
-        'use strict';
-
-        App.globalConfig = {
-            'currentDocumentName': '{{% current_document_name %}}'
-        };
-    }()); // "use strict" wrapper
+    App.globalConfig = {
+        'currentDocumentName': '{{% current_document_name %}}'
+    };
 </script>
 
 <script>
