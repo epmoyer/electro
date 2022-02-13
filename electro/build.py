@@ -16,7 +16,7 @@ from loguru import logger
 from pytest import mark
 from electro.app_config import CONFIG
 from electro.faults import FAULTS
-from electro.paths import PATH_THEMES, PATH_JS
+from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
 
 pprint = CONFIG['console_pprint']
 
@@ -267,6 +267,11 @@ class Builder:
 
         path_js_theme_source_dir = path_theme_directory / Path('js')
         copy_directory_contents(path_js_theme_source_dir, path_js_destination_dir)
+
+        # -------------------
+        # Build search results doc
+        # -------------------
+        self.build_document(PATH_SEARCH_RESULTS_MD, 'search')
 
         # -------------------
         # Build site pages
