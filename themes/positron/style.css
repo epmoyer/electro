@@ -188,6 +188,9 @@ blockquote {
     height: 55px;
     background-color: var(--color-header);
 }
+.sidebar-header i {
+    margin-right: 5px;
+}
 .sidebar-title {
     flex: none;
 
@@ -253,7 +256,7 @@ blockquote {
    notices
    -------------------------- */
    .notices{
-    margin: 10px 0px;
+    margin: 30px 0px;
     padding: 10px;
     border-top-style: solid;
     border-top-width: 30px;

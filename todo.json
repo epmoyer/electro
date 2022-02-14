@@ -89,14 +89,6 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Add Info/Warning/Note blocks.",
-                    "id": "111",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "Support Notable data dir as source.",
                     "id": "112",
                     "id_labels": [],
@@ -184,6 +176,14 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Add Info/Warning/Note blocks.",
+                    "id": "111",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Support style directive",
                     "id": "134",
