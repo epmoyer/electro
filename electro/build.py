@@ -183,6 +183,9 @@ class Builder:
         if copyright_text := CONFIG['project_config'].get('copyright'):
             document_html += '<hr />\n' f'<div class="copyright">{copyright_text}</div>'
 
+        # Format notices
+        # notices_starts = re.findall
+
         # ---------------------
         # Search
         # ---------------------

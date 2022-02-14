@@ -129,6 +129,14 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Adopt Font Awesome 6, local, free",
+                    "id": "136",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ],
             "archived": false
