@@ -5,12 +5,15 @@ body {
     --color-content: #444;
     --color-navigating: rgb(38, 114, 255);
     --color-header: #2980b9;
+    --color-header-text: #fff;
 
     --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
         monospace;
+
+    --height-header: 40px;
 }
 p {
     line-height: 24px;
@@ -101,13 +104,38 @@ blockquote {
     border-left: 8px solid #ccc;
     padding: 0px 12px;
 }
-
+.main-container {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.nav-header {
+    display: none;
+    background-color: var(--color-header);
+    color: var(--color-header-text);
+    /* height: 40px; */
+    line-height: var(--height-header);
+    text-align: center;
+    vertical-align: middle;
+    padding: 0px 10px;
+}
+.nav-header i{
+    font-size: 25px;
+    float: left;
+    cursor: pointer;
+    padding-top: inherit;
+    line-height: var(--height-header);
+    /* display: inline-block; */
+}
+@media screen and (max-width: 768px) {
+    .nav-header {
+        display:block
+    }
+}
 .content-container {
     width: 100%;
     /* background-color: palegreen; */
     padding: 10px 20px;
-    overflow-x: hidden;
-    overflow-y: auto;
     color: var(--color-content);
     font-family: var(--font-content-text);
 }
@@ -127,7 +155,7 @@ blockquote {
     height: 100vh;
     /* padding: 10px; */
     background-color: #343131;
-    color: white;
+    color: var(--color-header-text);
 
     overflow-x: hidden;
     overflow-y: auto;

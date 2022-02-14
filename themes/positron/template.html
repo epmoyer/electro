@@ -12,8 +12,8 @@
         rel="stylesheet">
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
 
-    <script type = "text/javascript" src="js/lunr.js"></script>
-    <script type = "text/javascript" src="js/electro.js"></script>
+    <script type="text/javascript" src="js/lunr.js"></script>
+    <script type="text/javascript" src="js/electro.js"></script>
 </head>
 
 <body>
@@ -29,8 +29,14 @@
                 {{% sidebar_menu %}}
             </div>
         </div>
-        <div class="content-container" id="content">
-            {{% content %}}
+        <div class="main-container">
+            <div class="nav-header">
+                <i class="fa fa-bars"></i>
+                {{% site_name %}}
+            </div>
+            <div class="content-container" id="content">
+                {{% content %}}
+            </div>
         </div>
     </div>
 </body>
