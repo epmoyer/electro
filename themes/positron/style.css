@@ -130,13 +130,26 @@ blockquote {
     line-height: var(--height-header);
     /* display: inline-block; */
 }
+.content-area {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    align-content: flex-start;
+}
+.content-right-margin{
+    /* Because scrolling happens in the enclosing .main-container,  right padding in the 
+       .content-container is ignored. To create a right pad sufficient to keep text visible,
+       we instead use this .content-right-margin div to force a small gap. */
+    width: 10px;
+    /* background-color: orange; */
+}
 .content-container {
     width: 100%;
     /* overflow-x: hidden; */
     /* overflow-y: auto; */
     /* background-color: palegreen; */
     /* margin-right: 30px; */
-    padding: 10px 350px 10px 20px;
+    padding: 10px 0px 10px 20px;
     color: var(--color-content);
     font-family: var(--font-content-text);
 }
