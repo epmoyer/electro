@@ -127,11 +127,6 @@ blockquote {
     line-height: var(--height-header);
     /* display: inline-block; */
 }
-@media screen and (max-width: 768px) {
-    .nav-header {
-        display:block
-    }
-}
 .content-container {
     width: 100%;
     /* background-color: palegreen; */
@@ -147,7 +142,6 @@ blockquote {
     /* Force bulleted images to have their bullet at the top, rather than the bottom */
     vertical-align: top;
 }
-
 .sidebar-container {
     flex: 0 0 auto;
     /* width: 260px; */
@@ -226,7 +220,15 @@ blockquote {
     color: #bbb;
     font-size: 12px;
 }
-
+@media screen and (max-width: 768px) {
+    .nav-header {
+        display:block;
+    }
+    .sidebar-container{
+        /* left: -300px; */
+        display: none;
+    }
+}
 /* --------------------------
    scrollbar
    -------------------------- */
