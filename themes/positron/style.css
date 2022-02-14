@@ -1,8 +1,11 @@
 body {
     margin: 0px;
     font-family: "IBM Plex Sans", sans-serif;
+    
     --color-content: #444;
     --color-navigating: rgb(38, 114, 255);
+    --color-header: #2980b9;
+
     --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
@@ -142,7 +145,7 @@ blockquote {
     /* align-content: center; */
     color: white;
     height: 55px;
-    background-color: #2980b9;
+    background-color: var(--color-header);
 }
 .sidebar-title {
     flex: none;
