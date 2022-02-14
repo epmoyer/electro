@@ -17,6 +17,7 @@ from pytest import mark
 from electro.app_config import CONFIG
 from electro.faults import FAULTS
 from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
+from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
 
 pprint = CONFIG['console_pprint']
 
@@ -82,6 +83,7 @@ class Builder:
             },
             "docs": [],
         }
+        self.substitutions = {}
 
     def add_navigation_descriptor(self, navigation_descriptor):
         if section_name := navigation_descriptor.get('section'):
@@ -110,7 +112,6 @@ class Builder:
                 f'</span>{subheading_menu_html}</li>\n'
             )
 
-            
         self.menu_html += '</ul>\n'
 
     def build_subheading_menu_html(self, document_name):
@@ -138,6 +139,15 @@ class Builder:
             return
         with open(path_markdown, 'r') as file:
             document_markdown = file.read()
+
+        # --------------------
+        # Pre-parser
+        # --------------------
+        document_markdown = self.pre_parse_markdown(document_markdown)
+
+        # --------------------
+        # Render Markdown
+        # --------------------
         document_html = markdown.markdown(
             document_markdown,
             extensions=[
@@ -149,6 +159,11 @@ class Builder:
                 'attr_list',
             ],
         )
+
+        # --------------------
+        # Pre-parser
+        # --------------------
+        document_html = self.post_parse_html(document_html)
 
         # ---------------------
         # Modify HTML
@@ -183,15 +198,38 @@ class Builder:
         if copyright_text := CONFIG['project_config'].get('copyright'):
             document_html += '<hr />\n' f'<div class="copyright">{copyright_text}</div>'
 
-        # Format notices
-        # notices_starts = re.findall
-
         # ---------------------
         # Search
         # ---------------------
         self.add_document_to_search(document_name, document_html)
 
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
+
+
+    def pre_parse_markdown(self, markdown):
+        notice_start_types = re.findall(r'{{% notice (\S*) %}}', markdown)
+        logger.debug(f'{notice_start_types=}')
+        for notice_start_type in notice_start_types:
+            index = str(len(self.substitutions))
+            html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
+            substitution = build_snippet_notice_start(notice_start_type)
+            self.substitutions[html_temporary] = substitution
+            markdown = markdown.replace(r'{{% notice ' + notice_start_type + r' %}}', html_temporary)
+
+        NOTICE_END_ITEM = r'{{% /notice %}}'
+        if NOTICE_END_ITEM in markdown:
+            index = str(len(self.substitutions))
+            html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
+            substitution = SNIPPET_NOTICE_END
+            self.substitutions[html_temporary] = substitution
+            markdown = markdown.replace(NOTICE_END_ITEM, html_temporary)
+        return markdown
+
+    def post_parse_html(self, html):
+        for text_old, text_new in self.substitutions.items():
+            logger.debug(f'Subsitituting: {text_old=} {text_new=}')
+            html = html.replace(text_old, text_new)
+        return html
 
     def add_document_to_search(self, document_name, document_html):
         logger.debug(f'add_document_to_search(): {document_name}')

@@ -248,6 +248,42 @@ blockquote {
         display: none;
     }
 }
+
+/* --------------------------
+   notices
+   -------------------------- */
+   .notices{
+    margin: 10px 0px;
+    padding: 10px;
+    border-top-style: solid;
+    border-top-width: 30px;
+}
+.notices.info {
+    background-color: #e5f0ff;
+    border-color: #648CE4; 
+}
+.notices.note {
+    background-color: #FCEED8;
+    border-color: #E6AC58; 
+}
+.notices.tip {
+    background-color: #E7FBE2;
+    border-color: #75BF5C; 
+}
+.notices.warning {
+    background-color: #FBE6E5;
+    border-color: #D86A65; 
+}
+.notices .label{
+    color:#FFF;
+    font-weight: 500;
+    margin-bottom: 15px;
+    margin-top: -35px;
+}
+.notices .label i{
+    margin-right: 10px;
+}
+
 /* --------------------------
    scrollbar
    -------------------------- */
