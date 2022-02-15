@@ -252,6 +252,18 @@ blockquote {
         /* left: -300px; */
         display: none;
     }
+   
+
+    /* ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 0px;
+        height: 0px;
+        bottom: 0px;
+    } */
+}
+
+@supports (-webkit-touch-callout: none) {
+    /* This selector detects iOS devices only */ 
     .main-container {
         /* iOS handles the overflow scrolling badly in this situation, so disable it*/
         overflow-x: visible;
@@ -300,7 +312,7 @@ blockquote {
 /* --------------------------
    scrollbar
    -------------------------- */
-   ::-webkit-scrollbar {
+::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 8px;
     height: 12px;
