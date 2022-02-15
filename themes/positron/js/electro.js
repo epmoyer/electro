@@ -175,10 +175,10 @@ var App = App || {}; // Create namespace
     };
 
     App.doSearch = (searchText) => {
-        console.log("doSearch()");
+        // console.log("doSearch()");
         
         const results = App.search(searchText);
-        console.log(results);
+        // console.log(results);
 
         var html = '<h1>Search Results</h1>\n';
         results.forEach(result => {
@@ -187,9 +187,24 @@ var App = App || {}; // Create namespace
             if(result.heading){
                 html += '<h4>' + result.heading + '</h4>';
             }
-            var summary = result.summary.replace(
-                searchText, '<span class="highlight">' + searchText + '</span>');
 
+            // ----------------------
+            // Highlight search text
+            // ----------------------
+            const regex = new RegExp(searchText, "ig");
+            var summary = result.summary;
+            const matches = summary.matchAll(regex);
+            const match_words = [];
+            var match;
+            for(match of matches){
+                match_words.push(match[0]);
+            }
+            const unique = Array.from(new Set(match_words));
+            for(match of unique){
+                summary = summary.replace(
+                    match, '<span class="highlight">' + match + '</span>');
+            }
+            
             html += '<p>' + summary + '</p>';
         });
         if (results.length == 0){
