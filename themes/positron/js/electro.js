@@ -188,22 +188,23 @@ var App = App || {}; // Create namespace
                 html += '<h4>' + result.heading + '</h4>';
             }
 
+            const summary = App.highlight(searchText, result.summary);
             // ----------------------
             // Highlight search text
             // ----------------------
-            const regex = new RegExp(searchText, "ig");
-            var summary = result.summary;
-            const matches = summary.matchAll(regex);
-            const match_words = [];
-            var match;
-            for(match of matches){
-                match_words.push(match[0]);
-            }
-            const unique = Array.from(new Set(match_words));
-            for(match of unique){
-                summary = summary.replace(
-                    match, '<span class="highlight">' + match + '</span>');
-            }
+            // const regex = new RegExp(searchText, "ig");
+            // var summary = result.summary;
+            // const matches = summary.matchAll(regex);
+            // const match_words = [];
+            // var match;
+            // for(match of matches){
+            //     match_words.push(match[0]);
+            // }
+            // const unique = Array.from(new Set(match_words));
+            // for(match of unique){
+            //     summary = summary.replace(
+            //         match, '<span class="highlight">' + match + '</span>');
+            // }
             
             html += '<p>' + summary + '</p>';
         });
@@ -211,6 +212,22 @@ var App = App || {}; // Create namespace
             html += '(no results to show)';
         }
         document.getElementById("content").innerHTML = html;
+    };
+
+    App.highlight = (searchText, html) => {
+        const regex = new RegExp(searchText, "ig");
+        const matches = html.matchAll(regex);
+        const match_words = [];
+        var match;
+        for(match of matches){
+            match_words.push(match[0]);
+        }
+        const unique = Array.from(new Set(match_words));
+        for(match of unique){
+            html = html.replace(
+                match, '<span class="highlight">' + match + '</span>');
+        }
+        return(html);
     };
 
     App.search = (query) => {
