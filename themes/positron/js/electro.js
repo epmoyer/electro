@@ -188,24 +188,9 @@ var App = App || {}; // Create namespace
                 html += '<h4>' + result.heading + '</h4>';
             }
 
+            // Highlight search hits
             const summary = App.highlight(searchText, result.summary);
-            // ----------------------
-            // Highlight search text
-            // ----------------------
-            // const regex = new RegExp(searchText, "ig");
-            // var summary = result.summary;
-            // const matches = summary.matchAll(regex);
-            // const match_words = [];
-            // var match;
-            // for(match of matches){
-            //     match_words.push(match[0]);
-            // }
-            // const unique = Array.from(new Set(match_words));
-            // for(match of unique){
-            //     summary = summary.replace(
-            //         match, '<span class="highlight">' + match + '</span>');
-            // }
-            
+
             html += '<p>' + summary + '</p>';
         });
         if (results.length == 0){
