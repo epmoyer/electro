@@ -24,7 +24,7 @@
             "color": "orange"
         },
         {
-            "name": "",
+            "name": "Bug",
             "id": "4",
             "color": "red"
         },
@@ -129,6 +129,16 @@
                     "description": "Probably adopt light bulb (instead of wrench) for \"Tip\" notice at that time.",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Mobile scroll when sidebar visible.",
+                    "id": "137",
+                    "id_labels": [
+                        "4"
+                    ],
+                    "description": "On mobile it is possible, with determination, to get the page to \"scroll up\" such that the content begins to scroll off the screen and the sidebar scrolls away.\n\nIt seems like touch-dragging the divider between side bar and content is one way to make it happen.",
+                    "due": null,
+                    "due_complete": false
                 }
             ],
             "archived": false
@@ -144,14 +154,6 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
-                },
-                {
-                    "name": "Create a favicon/icon.",
-                    "id": "135",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
                 }
             ],
             "archived": false
@@ -159,6 +161,28 @@
         {
             "name": "Doing",
             "id": "3",
+            "cards": [
+                {
+                    "name": "Create a favicon/icon.",
+                    "id": "135",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Simple search highlighting.",
+                    "id": "138",
+                    "id_labels": [],
+                    "description": "Better search is coming later, but for now just **at least** highlight the exact search text if/when it appears in the search preview.",
+                    "due": null,
+                    "due_complete": false
+                }
+            ]
+        },
+        {
+            "name": "Done",
+            "id": "4",
             "cards": [
                 {
                     "name": "Support Mobile",
@@ -169,13 +193,7 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
-                }
-            ]
-        },
-        {
-            "name": "Done",
-            "id": "4",
-            "cards": [
+                },
                 {
                     "name": "Add Note/Info/Tip/Warning blocks.",
                     "id": "111",
