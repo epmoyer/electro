@@ -255,8 +255,8 @@ blockquote {
 /* --------------------------
    notices
    -------------------------- */
-   .notices{
-    margin: 30px 0px;
+.notices{
+    margin: 30px 10px 30px 0px;
     padding: 10px;
     border-top-style: solid;
     border-top-width: 30px;
