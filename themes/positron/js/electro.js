@@ -4,8 +4,6 @@ var App = App || {}; // Create namespace
     "use strict";
 
     App.main = () => {
-        console.log("main()");
-
         // -----------------------
         // menu-tree: Find all items (spans) in all menu-tree(s)
         // -----------------------
@@ -88,7 +86,7 @@ var App = App || {}; // Create namespace
         // Search handler
         // -----------------------
         var searchBox = document.getElementById("search-text");
-        console.log(searchBox);
+        // console.log(searchBox);
         searchBox.addEventListener(
             "keydown",
             function (event) {
@@ -135,15 +133,14 @@ var App = App || {}; // Create namespace
             });
 
         // -----------------------
-        // Stop propagation on touch events to improve scroll behavior on iOS.
+        //  Set handler
         // -----------------------
         const main_element = document.getElementsByClassName("main-container")[0];
         main_element.addEventListener('touchmove', App.onMainTouchMove, false);
-        // const element = document;
-        // element.addEventListener('touchstart', (e) => { e.preventDefault();}, false);
-        // element.addEventListener('touchend', (e) => { e.preventDefault();}, false);
-        
 
+        
+        // Show version
+        console.log('Built with Elecro ' + App.globalConfig.electroVersion);
     };
 
     App.onMainTouchMove = (e) => {

@@ -327,6 +327,7 @@ class Builder:
             document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
             document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
             document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
+            document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
             # document_html = document_html.replace(
             #     r'{{% content %}}', f'(Content of {document_name}.md goes here.)'
             # )
