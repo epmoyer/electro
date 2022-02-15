@@ -273,7 +273,12 @@ blockquote {
 .sidebar-container.force-show {
     display: block;
 }
-
+.highlight{
+    background-color: rgb(255, 255, 77);
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: black;
+}
 /* --------------------------
    notices
    -------------------------- */

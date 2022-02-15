@@ -187,7 +187,10 @@ var App = App || {}; // Create namespace
             if(result.heading){
                 html += '<h4>' + result.heading + '</h4>';
             }
-            html += '<p>' + result.summary + '</p>'
+            var summary = result.summary.replace(
+                searchText, '<span class="highlight">' + searchText + '</span>');
+
+            html += '<p>' + summary + '</p>';
         });
         if (results.length == 0){
             html += '(no results to show)';
