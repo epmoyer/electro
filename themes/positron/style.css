@@ -386,7 +386,7 @@ blockquote {
     background-color: var(--color-navigating);
 }
 .menu-tree li {
-    margin: 5px 0px;
+    margin: 6px 0px;
 }
 .menu-tree li span {
     display: block; /*this makes the span as wide as the li*/
