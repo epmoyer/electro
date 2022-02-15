@@ -19,7 +19,7 @@
 
 <body>
     <div class="root-container">
-        <div class="sidebar-container">
+        <div class="sidebar-container" id="sidebar-container">
             <div class="sidebar-header">
                 <div class="sidebar-title">
                     <a class="no-anchor-style" href="index.html"><i class="fa fa-home"></i></a> {{% site_name %}}
@@ -32,7 +32,9 @@
         </div>
         <div class="main-container">
             <div class="nav-header">
-                <i class="fa fa-bars" onclick="App.toggleSidebar();"></i>
+                <div onclick="App.toggleSidebar();">
+                <i class="fa fa-bars"></i>
+                </div>
                 <a class="no-anchor-style" href="/">{{% site_name %}}</a>
             </div>
             <div class="content-area">

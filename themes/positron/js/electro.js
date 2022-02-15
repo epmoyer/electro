@@ -146,6 +146,7 @@ var App = App || {}; // Create namespace
 
     App.toggleSidebar = () => {
         console.log('toggleSidebar()');
+        document.getElementById("sidebar-container").classList.toggle("force-show");
     };
 
     App.onSearch = () => {
