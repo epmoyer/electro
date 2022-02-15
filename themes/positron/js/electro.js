@@ -215,6 +215,8 @@ var App = App || {}; // Create namespace
     };
 
     App.highlight = (searchText, html) => {
+        // Case insensitive highlight searchText in html.
+        // Wraps hits with '<span class="highlight">' tag.
         const regex = new RegExp(searchText, "ig");
         const matches = html.matchAll(regex);
         const match_words = [];
