@@ -144,6 +144,10 @@ var App = App || {}; // Create namespace
         }
     };
 
+    App.toggleSidebar = () => {
+        console.log('toggleSidebar()');
+    };
+
     App.onSearch = () => {
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;

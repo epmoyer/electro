@@ -251,6 +251,9 @@ blockquote {
         display: none;
     }
 }
+.sidebar-container.force-show {
+    display: block;
+}
 
 /* --------------------------
    notices
