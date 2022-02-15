@@ -108,6 +108,8 @@ blockquote {
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    
+    /* -webkit-overflow-scrolling: touch; */
     /* padding: 5px 30px 5px 20px; */
     padding: 0px;
 }
@@ -249,6 +251,11 @@ blockquote {
     .sidebar-container{
         /* left: -300px; */
         display: none;
+    }
+    .main-container {
+        /* iOS handles the overflow scrolling badly in this situation, so disable it*/
+        overflow-x: visible;
+        overflow-y: visible;
     }
 }
 .sidebar-container.force-show {

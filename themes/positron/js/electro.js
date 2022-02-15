@@ -55,6 +55,9 @@ var App = App || {}; // Create namespace
                     this.classList.add("selected");
                 }
                 console.log(this.classList);
+
+                // If in responsive narrow-screen, re-hide the menu.
+                document.getElementById("sidebar-container").classList.remove("force-show");
             });
         }
 
@@ -131,6 +134,29 @@ var App = App || {}; // Create namespace
                 }
             });
 
+        // -----------------------
+        // Stop propagation on touch events to improve scroll behavior on iOS.
+        // -----------------------
+        const main_element = document.getElementsByClassName("main-container")[0];
+        main_element.addEventListener('touchmove', App.onMainTouchMove, false);
+        // const element = document;
+        // element.addEventListener('touchstart', (e) => { e.preventDefault();}, false);
+        // element.addEventListener('touchend', (e) => { e.preventDefault();}, false);
+        
+
+    };
+
+    App.onMainTouchMove = (e) => {
+        if(document.getElementById("sidebar-container").classList.contains("force-show")){
+            // Don't allow the main window to be scrolled while the sidebar is 
+            // deployed in "mobile" (narrow screen) mode.
+            e.preventDefault();
+        }
+    };
+
+    App.toggleSidebar = () => {
+        console.log('toggleSidebar()');
+        document.getElementById("sidebar-container").classList.toggle("force-show");
     };
 
     App.getUrlValue  = (VarSearch) => {
@@ -142,11 +168,6 @@ var App = App || {}; // Create namespace
                 return decodeURI(KeyValuePair[1]);
             }
         }
-    };
-
-    App.toggleSidebar = () => {
-        console.log('toggleSidebar()');
-        document.getElementById("sidebar-container").classList.toggle("force-show");
     };
 
     App.onSearch = () => {
