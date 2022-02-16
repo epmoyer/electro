@@ -177,6 +177,14 @@
                     "description": "Better search is coming later, but for now just **at least** highlight the exact search text if/when it appears in the search preview.",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Add title tag",
+                    "id": "139",
+                    "id_labels": [],
+                    "description": "Add to <head> as:\n\n<title>(TITLE)</title>",
+                    "due": null,
+                    "due_complete": false
                 }
             ]
         },
