@@ -108,7 +108,7 @@ class Builder:
             self.menu_html += (
                 f'<li><span {class_str} id="menuitem_doc_{document_name}">'
                 f'{caret_str}'
-                f'<a href="/{document_name}.html">{menu_name}</a>'
+                f'<a href="{document_name}.html">{menu_name}</a>'
                 f'</span>{subheading_menu_html}</li>\n'
             )
 
