@@ -73,6 +73,14 @@
                     "due_complete": false
                 },
                 {
+                    "name": "make each web page title match menu.",
+                    "id": "142",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "---",
                     "id": "132",
                     "id_labels": [],
@@ -178,14 +186,6 @@
             "id": "3",
             "cards": [
                 {
-                    "name": "Add title tag",
-                    "id": "139",
-                    "id_labels": [],
-                    "description": "Add to <head> as:\n\n<title>(TITLE)</title>",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "---",
                     "id": "141",
                     "id_labels": [],
@@ -199,6 +199,14 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Add title tag",
+                    "id": "139",
+                    "id_labels": [],
+                    "description": "Add to <head> as:\n\n<title>(TITLE)</title>",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Simple search highlighting.",
                     "id": "138",
