@@ -11,6 +11,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## 0.1.1 2022-02-16
 ### Changed
 - Remove `\` from menu `href`.
+- Remove `\` from search `href`.
 
 ## 0.1.0 2022-02-16
 (Initial)

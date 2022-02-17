@@ -183,7 +183,7 @@ var App = App || {}; // Create namespace
         var html = '<h1>Search Results</h1>\n';
         results.forEach(result => {
             html += '<hr>';
-            html += '<h3><a href="/' + result.location + '">' + result.title + '</a></h3>';
+            html += '<h3><a href="' + result.location + '">' + result.title + '</a></h3>';
             if(result.heading){
                 html += '<h4>' + result.heading + '</h4>';
             }
