@@ -301,6 +301,13 @@ class Builder:
         copy_directory_contents(path_attachment_source_dir, path_attachments_destination_dir)
 
         # -------------------
+        # Copy Favicon
+        # -------------------
+        path_favicon_source = path_theme_directory / Path('favicon.ico')
+        path_favicon_destination = path_site_directory / Path('img') / Path('favicon.ico')
+        shutil.copy(path_favicon_source, path_favicon_destination)
+
+        # -------------------
         # Copy js
         # -------------------
         path_js_resource_source_dir = PATH_JS
