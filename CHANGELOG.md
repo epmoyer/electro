@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 0.1.2 2022-02-16
+### Changed
+- New favicon
+
 ## 0.1.1 2022-02-16
 ### Changed
 - Set page `title` tag.
