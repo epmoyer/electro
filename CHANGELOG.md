@@ -10,6 +10,8 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 (None)
 ## 0.1.1 2022-02-16
 ### Changed
+- Set page `title` tag.
+- Use a placeholder `favicon.ico`.
 - Remove `\` from menu `href`.
 - Remove `\` from search `href`.
 

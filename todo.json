@@ -65,6 +65,22 @@
             "id": "5",
             "cards": [
                 {
+                    "name": "Create a custom favicon/icon.",
+                    "id": "135",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "---",
+                    "id": "132",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "Get fenced code blocks working (Monokai)",
                     "id": "140",
                     "id_labels": [],
@@ -154,16 +170,7 @@
         {
             "name": "Backlog (MVP)",
             "id": "2",
-            "cards": [
-                {
-                    "name": "---",
-                    "id": "132",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                }
-            ],
+            "cards": [],
             "archived": false
         },
         {
@@ -171,18 +178,18 @@
             "id": "3",
             "cards": [
                 {
-                    "name": "Create a favicon/icon.",
-                    "id": "135",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "Add title tag",
                     "id": "139",
                     "id_labels": [],
                     "description": "Add to <head> as:\n\n<title>(TITLE)</title>",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "---",
+                    "id": "141",
+                    "id_labels": [],
+                    "description": "",
                     "due": null,
                     "due_complete": false
                 }
