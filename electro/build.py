@@ -148,16 +148,18 @@ class Builder:
         # --------------------
         # Render Markdown
         # --------------------
-        document_html = markdown.markdown(
-            document_markdown,
-            extensions=[
+        extensions=[
                 'tables',
                 'fenced_code',
                 'electro.mdx_urlize:UrlizeExtension',
-                'nl2br',
                 'codehilite',
                 'attr_list',
-            ],
+            ]
+        if not CONFIG['disable_nl2br']:
+            extensions.append('nl2br')
+        document_html = markdown.markdown(
+            document_markdown,
+            extensions=extensions,
         )
 
         # --------------------

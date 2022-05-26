@@ -17,7 +17,7 @@ CONSOLE = Console(highlight=False, color_system='256', theme=THEME)
 CONSOLE_PPRINT = Console(highlight=True, color_system='256', theme=THEME)
 
 CONFIG = {
-    'version': '0.1.2',
+    'version': '0.1.3',
     'app_name': 'electro',
     'enable_debug_logging': True,
     'console_print': CONSOLE.print,
@@ -31,4 +31,5 @@ CONFIG = {
     'path_project_directory': None,
     'path_site_directory': None,
     'path_theme_directory': None,
+    'disable_nl2br': None,
 }
