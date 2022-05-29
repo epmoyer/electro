@@ -83,7 +83,7 @@ def pack_site(path_site_directory):
             continue
         path_file_out = path_file.parent / Path(f"{path_file.stem}.packed.html")
         print(f'packing {path_file.name} to {path_file_out}')
-        simplepack(path_file, path_file_out)
+        simplepack(path_file, path_file_out, uglify=False)
         
 
 class Builder:

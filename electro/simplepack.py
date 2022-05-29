@@ -27,15 +27,15 @@ TEMP_PATH = BUILD_PATH / Path('temp/')
 
 REPLACEMENT_MAP = (
     # fmt:off
-    # Content type Regex search string                                                    Replacement tag  # noqa:E501
-    # ------------ ---------------------------------------------------------------------  -------          # noqa:E501
-    ('javascript', r'^\s*<script\s*src="(.*)">\s*</script>\s$',                           'script'),       # noqa:E501, E241
-    ('CSS',        r'^\s*<link\s*rel="stylesheet"\s*type=text/css\s*href="(.*)"\s*>\s*$', 'style'),
+    # Content type Regex search string                                                      Replacement tag  # noqa:E501
+    # ------------ ---------------------------------------------------------------------    -------          # noqa:E501
+    ('javascript', r'^\s*<script\s*type="text/javascript"\s*src="(.*)">\s*</script>\s$',    'script'),       # noqa:E501, E241
+    ('CSS',        r'^\s*<link\s*rel="stylesheet"\s*type="text/css"\s*href="(.*)"\s*>\s*$', 'style'),
     # noqa:E501, E241
     # fmt:on
 )
 
-def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
+def simplepack(path_file_in, path_file_out, debug=False, uglify=True):
     """Module entry point."""
     # ----------------------
     # Make local build folder if it does not exist
@@ -45,7 +45,7 @@ def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
     TEMP_PATH.mkdir(parents=True, exist_ok=True)
 
     logger.info(f'simplepack version {__version__}')
-    logger.info(f'Args: {path_file_in=} {path_file_out=} {debug=} {nopack=}')
+    logger.info(f'Args: {path_file_in=} {path_file_out=} {debug=} {uglify=}')
 
     with open(path_file_in) as file:
         lines = file.readlines()
@@ -53,7 +53,7 @@ def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
 
     new_lines = []
     for line in lines:
-        expansion_lines = expand_line(line, path_file_in.parent, nopack)
+        expansion_lines = expand_line(line, path_file_in.parent, uglify)
         if expansion_lines:
             new_lines += expansion_lines
         else:
@@ -65,7 +65,7 @@ def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
     with open(path_file_out, "w") as file:
         file.writelines(new_lines)
 
-def expand_line(line, path_working_dir, nopack):
+def expand_line(line, path_working_dir, uglify):
     for content_type, regex, tag_name in REPLACEMENT_MAP:
         find_result = re.findall(regex, line)
         if find_result:
@@ -76,16 +76,13 @@ def expand_line(line, path_working_dir, nopack):
                 continue
             filename = path_working_dir / Path(find_text)
             logger.info(f'Merging {content_type}: {filename}')
-            return get_file_lines(filename, tag_name, nopack)
+            return get_file_lines(filename, tag_name, uglify)
     return None
 
-def get_file_lines(filename, tag_name, nopack):
+def get_file_lines(filename, tag_name, uglify):
     if (
-        not nopack
+        uglify
         and tag_name == 'script'
-        and 'search-query-parser' not in filename
-        and 'event_data' not in filename
-        and 'userPreferences' not in filename
     ):
         # Minimize js using node package UglifyJS
         assert filename.startswith('project_build/app/')
