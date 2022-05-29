@@ -11,6 +11,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## 0.1.3 2022-05-56
 ### added
 - Add `--nobreak` option (to disable nl2br)
+- Use `overlay.css` if provided in a project's `docs/` directory.
 
 ## 0.1.2 2022-02-16
 ### Changed

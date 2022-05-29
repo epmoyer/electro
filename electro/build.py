@@ -289,6 +289,15 @@ class Builder:
         shutil.copy(path_css_source, path_css_destination)
 
         # -------------------
+        # Copy CSS overlay
+        # -------------------
+        path_css_destination = path_site_directory / Path('overlay.css')
+        path_css_source = path_project_directory / Path('docs') / Path('overlay.css')
+        if not path_css_source.exists():
+            path_css_source = path_theme_directory / Path('overlay.css')
+        shutil.copy(path_css_source, path_css_destination)
+
+        # -------------------
         # Copy Images
         # -------------------
         path_image_source_dir = path_project_directory / Path('docs') / Path('img')
@@ -362,6 +371,7 @@ def md_document_name_to_document_name(md_document_name):
 def heading_text_to_id(text):
     _id = ''
     dash_appended = False
+    text = text.replace('&nbsp;', '')
     for char in text.lower():
         if char == ' ':
             if not dash_appended:
