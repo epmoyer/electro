@@ -39,7 +39,7 @@
             "color": "blue"
         },
         {
-            "name": "",
+            "name": "electrobear",
             "id": "7",
             "color": "sky"
         },
@@ -178,7 +178,18 @@
         {
             "name": "Backlog (MVP)",
             "id": "2",
-            "cards": [],
+            "cards": [
+                {
+                    "name": "Use IBM Plex in positron",
+                    "id": "143",
+                    "id_labels": [
+                        "7"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                }
+            ],
             "archived": false
         },
         {

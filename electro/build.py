@@ -18,6 +18,7 @@ from electro.app_config import CONFIG
 from electro.faults import FAULTS
 from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
+from electro.simplepack import simplepack
 
 pprint = CONFIG['console_pprint']
 
@@ -69,6 +70,21 @@ def build_project(project_directory):
         builder.add_navigation_descriptor(navigation_descriptor)
     builder.render_site()
 
+    if project_config.get('pack'):
+        pack_site(path_site_directory)
+
+def pack_site(path_site_directory):
+    print("Packing...")
+    for path_file in path_site_directory.glob('*.html'):
+        if path_file.name == "search.html":
+            continue
+        if ".packed." in path_file.name:
+            # Already packed
+            continue
+        path_file_out = path_file.parent / Path(f"{path_file.stem}.packed.html")
+        print(f'packing {path_file.name} to {path_file_out}')
+        simplepack(path_file, path_file_out)
+        
 
 class Builder:
     def __init__(self):

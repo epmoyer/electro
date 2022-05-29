@@ -11,14 +11,13 @@ from pathlib import Path
 
 # Library
 import click
+from loguru import logger
 
 # Local
-import quicklog
+
 
 __version__ = '1.1.0'
 qlog = None  # Will assign on start
-OUT_FILENAME_DEFAULT = 'PROJECT.html'
-OUT_FILENAME_AUTODETECT = '(autodetect)'
 
 BUILD_PATH = Path('project_build/')
 EVENT_DATA_PATH = BUILD_PATH / Path('app/js/event_data.js')
@@ -26,18 +25,7 @@ LOG_PATH = BUILD_PATH / Path('logs/')
 TEMP_PATH = BUILD_PATH / Path('temp/')
 
 
-@click.command()
-@click.argument("in_filename", default='project_build/app/index.html')
-@click.argument("out_filename", default=OUT_FILENAME_AUTODETECT)
-@click.option('-d', '--debug', is_flag=True)
-@click.option('-n', '--nopack', is_flag=True)
-@click.version_option(version=__version__)
-def cli(in_filename, out_filename, debug, nopack):
-    """CLI entry point."""
-    simplepack(in_filename, out_filename, debug, nopack)
-
-
-def simplepack(in_filename, out_filename=OUT_FILENAME_AUTODETECT, debug=False, nopack=False):
+def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
     """Module entry point."""
     # ----------------------
     # Make local build folder if it does not exist
@@ -46,26 +34,12 @@ def simplepack(in_filename, out_filename=OUT_FILENAME_AUTODETECT, debug=False, n
     LOG_PATH.mkdir(parents=True, exist_ok=True)
     TEMP_PATH.mkdir(parents=True, exist_ok=True)
 
-    # Setup logging
-    global qlog
-    logger_name = 'simplepack'
-    try:
-        qlog = quicklog.get_logger(logger_name)
-    except ValueError:
-        qlog = quicklog.Quicklog(
-            log_filename=LOG_PATH / Path('simplepack.log'),
-            logging_level=logging.DEBUG if debug else logging.INFO,
-            maxBytes=5000000,
-            backupCount=1,
-            logger_name='simplepack',
-        )
-    qlog.begin(f'simplepack version {__version__}')
-    qlog.info('Command line: ' + ' '.join(sys.argv))
-    qlog.info(f'Args: {in_filename=} {out_filename=} {debug=} {nopack=}')
+    logger.info(f'simplepack version {__version__}')
+    logger.info(f'Args: {path_file_in=} {path_file_out=} {debug=} {nopack=}')
 
-    with open(in_filename) as file:
+    with open(path_file_in) as file:
         lines = file.readlines()
-    qlog.debug(f'Read {len(lines)} lines.')
+    logger.debug(f'Read {len(lines)} lines.')
 
     replacement_map = (
         # fmt:off
@@ -82,40 +56,22 @@ def simplepack(in_filename, out_filename=OUT_FILENAME_AUTODETECT, debug=False, n
             find_result = re.findall(regex, line)
             if find_result:
                 find_text = find_result[0]
-                qlog.debug(f'Found {content_type} import:\n   line:{line}   find_text: {find_text}')
+                logger.debug(f'Found {content_type} import:\n   line:{line}   find_text: {find_text}')
                 if 'http' in find_text:
-                    qlog.debug(f'Ignoring (not local file)')
+                    logger.debug(f'Ignoring (not local file)')
                     continue
-                filename = 'project_build/app/' + find_text
-                qlog.info(f'Merging {content_type}: {filename}')
+                filename = path_file_in.parent / Path(find_text)
+                logger.info(f'Merging {content_type}: {filename}')
                 new_lines = merge_file(new_lines, filename, tag_name, nopack)
                 continue
 
         new_lines.append(line)
 
-    if out_filename == OUT_FILENAME_AUTODETECT:
-        out_filename = extract_output_filename()
-        if out_filename is None:
-            out_filename = OUT_FILENAME_DEFAULT
+    print(f'Writing: {path_file_out}')
+    logger.info(f'Writing: {path_file_out}')
 
-    qlog.lprint(f'Writing: {out_filename}')
-    with open(out_filename, "w") as file:
+    with open(path_file_out, "w") as file:
         file.writelines(new_lines)
-
-    qlog.end()
-
-
-def extract_output_filename():
-    """Build output filename by extracting project title from event data in JS project."""
-    out_filename = None
-    with open(EVENT_DATA_PATH, 'r') as file:
-        lines = file.readlines()
-    for line in lines:
-        if 'project_title' in line:
-            project_title = line.split(':')[1].strip().strip('"').replace(' ', '_')
-            out_filename = 'PROJECT_' + project_title + '.html'
-            break
-    return out_filename
 
 
 def merge_file(lines, filename, tag_name, nopack):
@@ -130,8 +86,8 @@ def merge_file(lines, filename, tag_name, nopack):
         assert filename.startswith('project_build/app/')
         temp_filemane = TEMP_PATH / Path(filename).name
         command = f'uglifyjs {filename} -o {temp_filemane} -c'
-        qlog.info(f'Compressing {filename}...')
-        qlog.debug(f'Running: {command}')
+        logger.info(f'Compressing {filename}...')
+        logger.debug(f'Running: {command}')
         subprocess.run(command, shell=True)
         filename = temp_filemane
     new_lines = copy.deepcopy(lines)
