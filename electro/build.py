@@ -287,6 +287,9 @@ class Builder:
         path_css_source = path_theme_directory / Path('style.css')
         path_css_destination = path_site_directory / Path('style.css')
         shutil.copy(path_css_source, path_css_destination)
+        path_css_source = path_theme_directory / Path('fonts.css')
+        path_css_destination = path_site_directory / Path('fonts.css')
+        shutil.copy(path_css_source, path_css_destination)
 
         # -------------------
         # Copy CSS overlay
@@ -303,6 +306,13 @@ class Builder:
         path_image_source_dir = path_project_directory / Path('docs') / Path('img')
         path_image_destination_dir = path_site_directory / Path('img')
         copy_directory_contents(path_image_source_dir, path_image_destination_dir)
+
+        # -------------------
+        # Copy Fonts
+        # -------------------
+        path_fonts_source_dir = path_theme_directory / Path('fonts')
+        path_image_destination_dir = path_site_directory / Path('fonts')
+        copy_directory_contents(path_fonts_source_dir, path_image_destination_dir)
 
         # -------------------
         # Copy Attachments
