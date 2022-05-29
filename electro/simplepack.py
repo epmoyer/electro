@@ -25,6 +25,16 @@ LOG_PATH = BUILD_PATH / Path('logs/')
 TEMP_PATH = BUILD_PATH / Path('temp/')
 
 
+REPLACEMENT_MAP = (
+    # fmt:off
+    # Content type Regex search string                                                    Replacement tag  # noqa:E501
+    # ------------ ---------------------------------------------------------------------  -------          # noqa:E501
+    ('javascript', r'^\s*<script\s*src="(.*)">\s*</script>\s$',                           'script'),       # noqa:E501, E241
+    ('CSS',        r'^\s*<link\s*rel="stylesheet"\s*type=text/css\s*href="(.*)"\s*>\s*$', 'style'),
+    # noqa:E501, E241
+    # fmt:on
+)
+
 def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
     """Module entry point."""
     # ----------------------
@@ -41,31 +51,13 @@ def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
         lines = file.readlines()
     logger.debug(f'Read {len(lines)} lines.')
 
-    replacement_map = (
-        # fmt:off
-        # Content type Regex search string                                                    Replacement tag  # noqa:E501
-        # ------------ ---------------------------------------------------------------------  -------          # noqa:E501
-        ('javascript', r'^\s*<script\s*src="(.*)">\s*</script>\s$',                           'script'),       # noqa:E501, E241
-        ('CSS',        r'^\s*<link\s*rel="stylesheet"\s*type=text/css\s*href="(.*)"\s*>\s*$', 'style'),
-        # noqa:E501, E241
-        # fmt:on
-    )
     new_lines = []
     for line in lines:
-        for content_type, regex, tag_name in replacement_map:
-            find_result = re.findall(regex, line)
-            if find_result:
-                find_text = find_result[0]
-                logger.debug(f'Found {content_type} import:\n   line:{line}   find_text: {find_text}')
-                if 'http' in find_text:
-                    logger.debug(f'Ignoring (not local file)')
-                    continue
-                filename = path_file_in.parent / Path(find_text)
-                logger.info(f'Merging {content_type}: {filename}')
-                new_lines = merge_file(new_lines, filename, tag_name, nopack)
-                continue
-
-        new_lines.append(line)
+        expansion_lines = expand_line(line, path_file_in.parent, nopack)
+        if expansion_lines:
+            new_lines += expansion_lines
+        else:
+            new_lines.append(line)
 
     print(f'Writing: {path_file_out}')
     logger.info(f'Writing: {path_file_out}')
@@ -73,8 +65,21 @@ def simplepack(path_file_in, path_file_out, debug=False, nopack=False):
     with open(path_file_out, "w") as file:
         file.writelines(new_lines)
 
+def expand_line(line, path_working_dir, nopack):
+    for content_type, regex, tag_name in REPLACEMENT_MAP:
+        find_result = re.findall(regex, line)
+        if find_result:
+            find_text = find_result[0]
+            logger.debug(f'Found {content_type} import:\n   line:{line}   find_text: {find_text}')
+            if 'http' in find_text:
+                logger.debug('Ignoring (not local file)')
+                continue
+            filename = path_working_dir / Path(find_text)
+            logger.info(f'Merging {content_type}: {filename}')
+            return get_file_lines(filename, tag_name, nopack)
+    return None
 
-def merge_file(lines, filename, tag_name, nopack):
+def get_file_lines(filename, tag_name, nopack):
     if (
         not nopack
         and tag_name == 'script'
@@ -90,7 +95,7 @@ def merge_file(lines, filename, tag_name, nopack):
         logger.debug(f'Running: {command}')
         subprocess.run(command, shell=True)
         filename = temp_filemane
-    new_lines = copy.deepcopy(lines)
+    new_lines = []
     with open(filename) as file:
         script_lines = file.readlines()
     new_lines.append(f'   <{tag_name}>\n')
@@ -100,7 +105,3 @@ def merge_file(lines, filename, tag_name, nopack):
         new_lines.append('      ' + script_line)
     new_lines.append(f'   </{tag_name}>\n')
     return new_lines
-
-
-if __name__ == '__main__':
-    cli()
