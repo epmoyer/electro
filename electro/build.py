@@ -154,7 +154,7 @@ class Builder:
             heading_id = heading_text_to_id(heading_text)
             heading_url = f'{document_name}.html#{heading_id}'
             menu_html += (
-                '        <li><span class="no_child">'
+                f'        <li><span class="no_child" data-document-name="{document_name}">'
                 # + f'<a href="{heading_url}">{heading_text}</a>'
                 + f'{heading_text}'
                 + '</span></li>\n'

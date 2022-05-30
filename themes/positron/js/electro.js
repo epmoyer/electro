@@ -56,10 +56,13 @@ var App = App || {}; // Create namespace
 
                 const menu_item_id = this.id;
                 console.log('ID of clicked menu item: ' + menu_item_id);
-                // const pageId = menu_item_id.replace('menuitem_doc_', '');
                 const pageId = this.dataset.documentName;
                 console.log('Target page id: ' + pageId);
                 const pages = document.getElementsByClassName('content-page');
+
+                // -----------------------------
+                // Make the target page visible
+                // -----------------------------
                 for (const page of pages) {
                     console.log(page.id);
                     if(page.id == pageId){
@@ -68,7 +71,12 @@ var App = App || {}; // Create namespace
                         page.style.display = 'none';
                     }
                 }
-    
+
+                // -----------------------------
+                // Select the clicked menu item
+                // -----------------------------
+                this.classList.add("selected");
+
                 // If in responsive narrow-screen, re-hide the menu.
                 document.getElementById("sidebar-container").classList.remove("force-show");
             });
