@@ -454,10 +454,19 @@ blockquote {
     width: 40px;
     /* background-color: orange; */
 }
+.menu-left-piece.wide {
+    width: 45px;
+}
 .menu-right-piece {
     /* As flex child */
     flex-grow: 1;
     flex-shrink: 1;
     text-align: left;
     /* background-color: lime; */
+}
+.menu-tree .caret-placeholder {
+    width: 17px;
+    height: 17px;
+    display: inline-block;
+    /* background-color: purple; */
 }

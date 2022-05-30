@@ -132,15 +132,36 @@ class Builder:
                 subheading_menu_html = '\n' + subheading_menu_html
                 caret_str = '<i class="caret fa fa-angle-right"></i>'
             else:
-                classes += ' no_child'
-                caret_str = ''
+                # classes += ' no_child'
+                # caret_str = ''
+                caret_str = '<i class="caret-placeholder"></i>'
+            # self.menu_html += (
+            #     f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
+            #     + f'{caret_str}'
+            #     # f'<a href="{document_name}.html">{menu_name}</a>'
+            #     # f'{menu_name}'
+            #     + format_menu_heading(menu_name)
+            #     + f'</span>{subheading_menu_html}</li>\n'
+            # )
             self.menu_html += (
                 f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
-                f'{caret_str}'
-                # f'<a href="{document_name}.html">{menu_name}</a>'
-                f'{menu_name}'
-                f'</span>{subheading_menu_html}</li>\n'
             )
+            pieces = split_if_numbered(menu_name)
+            if pieces:
+                heading_number, heading_text = pieces
+                self.menu_html += (
+                    '<div class="menu-text-container">'
+                    f'<div class="menu-left-piece wide">{caret_str}{heading_number}</div>'
+                    f'<div class="menu-right-piece">{heading_text}</div>'
+                    '</div>'
+                )
+            else:
+                self.menu_html += (
+                    f'{caret_str}'
+                    + format_menu_heading(menu_name)
+                )
+            self.menu_html += f'</span>{subheading_menu_html}</li>\n'
+
 
         self.menu_html += '</ul>\n'
 
@@ -158,7 +179,7 @@ class Builder:
                 f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">'
                 # + f'<a href="{heading_url}">{heading_text}</a>'
                 # + f'{heading_text}'
-                + format_menu_heading(heading_text)
+                + format_menu_heading(heading_text, on_nbsp=True)
                 + '</span></li>\n'
             )
         if menu_html:
@@ -426,29 +447,47 @@ class Builder:
 def md_document_name_to_document_name(md_document_name):
     return Path(md_document_name).stem
 
-def format_menu_heading(text):
+def format_menu_heading(text, on_nbsp = False):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
     For headings that start with a section number (e.g. "1.5 Study Results") we
     will split the heading into two pieces and wrap them each in a div.
     """
     NBSP = "\xa0"
-    if NBSP in text:
-        temp_text = text.replace(NBSP, " ")
-        pieces = temp_text.split()
-        heading_number = pieces[0]
-        logger.debug(f'{heading_number=} {text=} {temp_text=}')
-        if re.match(r'^[\d\.]+$', heading_number):
-            remaining = ' '.join(pieces[1:])
+    if (NBSP in text and on_nbsp) or (" " in text and not on_nbsp):
+        temp_text = text.replace(NBSP, " ") if on_nbsp else text
+        pieces = split_if_numbered(temp_text)
+        # pieces = temp_text.split()
+        # heading_number = pieces[0]
+        # logger.debug(f'{heading_number=} {text=} {temp_text=}')
+        # if re.match(r'^[\d\.]+$', heading_number):
+        #     remaining = ' '.join(pieces[1:])
+        #     text = (
+        #         '<div class="menu-text-container">'
+        #         f'<div class="menu-left-piece">{heading_number}</div>'
+        #         f'<div class="menu-right-piece">{remaining}</div>'
+        #         '</div>'
+        #     )
+        if pieces:
+            heading_number, heading_text = pieces
             text = (
                 '<div class="menu-text-container">'
                 f'<div class="menu-left-piece">{heading_number}</div>'
-                f'<div class="menu-right-piece">{remaining}</div>'
+                f'<div class="menu-right-piece">{heading_text}</div>'
                 '</div>'
             )
 
     logger.debug(f'format_menu_heading: result: "{text}"')
     return text
+
+def split_if_numbered(text):
+    pieces = text.split()
+    heading_number = pieces[0]
+    logger.debug(f'{heading_number=} {text=}')
+    if re.match(r'^[\d\.]+$', heading_number):
+        remaining = ' '.join(pieces[1:])
+        return((heading_number, remaining))
+    return None
 
 def heading_text_to_id(text):
     _id = ''
