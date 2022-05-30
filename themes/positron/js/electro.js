@@ -164,7 +164,16 @@ var App = App || {}; // Create namespace
     };
 
     App.scrollToHash = (hashName) => {
-        location.hash = "#" + hashName;
+        const target = "#" + hashName;
+        if(location.hash == target){
+            // Browser thinks we are already at the target, but we might have scrolled away
+            // from it, so blank it and then set it back to force the document to scroll
+            location.hash = "";
+            location.hash = "#" + hashName;
+        }
+        else {
+            location.hash = "#" + hashName;
+        }
     };
 
     App.onMainTouchMove = (e) => {
