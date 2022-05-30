@@ -154,7 +154,7 @@ class Builder:
             heading_id = heading_text_to_id(heading_text)
             heading_url = f'{document_name}.html#{heading_id}'
             menu_html += (
-                f'        <li><span class="no_child" data-document-name="{document_name}">'
+                f'        <li><span class="no_child" data-document-name="{document_name}" data-target-heading-id="{heading_id}">'
                 # + f'<a href="{heading_url}">{heading_text}</a>'
                 + f'{heading_text}'
                 + '</span></li>\n'
@@ -397,7 +397,7 @@ class Builder:
         style_html = ""
         for document_name, document_info in self.site_documents.items():
             pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
-            pages_html += f'(content from {document_name})<br><br>'
+            # pages_html += f'(content from {document_name})<br><br>'
             pages_html += document_info['html']
             pages_html += '</div>'
             # Start all subsequent pages as hidden

@@ -54,15 +54,15 @@ var App = App || {}; // Create namespace
                 // }
                 // console.log(this.classList);
 
-                const menu_item_id = this.id;
-                console.log('ID of clicked menu item: ' + menu_item_id);
                 const pageId = this.dataset.documentName;
-                console.log('Target page id: ' + pageId);
-                const pages = document.getElementsByClassName('content-page');
-
+                const targetHeadingId = this.dataset.targetHeadingId;
+                // console.log('Target page id: ' + pageId);
+                // console.log('Target heading id: ' + targetHeadingId);
+                
                 // -----------------------------
                 // Make the target page visible
                 // -----------------------------
+                const pages = document.getElementsByClassName('content-page');
                 for (const page of pages) {
                     console.log(page.id);
                     if(page.id == pageId){
@@ -71,6 +71,11 @@ var App = App || {}; // Create namespace
                         page.style.display = 'none';
                     }
                 }
+
+                // ----------------------------
+                // Scroll to the target heading
+                // -----------------------------
+                App.scrollToHash(targetHeadingId);
 
                 // -----------------------------
                 // Select the clicked menu item
@@ -156,6 +161,10 @@ var App = App || {}; // Create namespace
         
         // Show version
         console.log('Built with Elecro ' + App.globalConfig.electroVersion);
+    };
+
+    App.scrollToHash = (hashName) => {
+        location.hash = "#" + hashName;
     };
 
     App.onMainTouchMove = (e) => {
