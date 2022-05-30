@@ -14,9 +14,9 @@ def make_html_fonts_inline(path_file_in, path_file_out):
     with open(path_file_in, "r") as file:
         in_lines = [line.strip('\n') for line in file.readlines()]
     for line in in_lines:
-        if 'format("woff")' in line:
+        if re.match(r'.*format\(["\']woff["\']\)', line):
             out_lines.append(convert_font(path_base, line, "woff"))
-        elif 'format("woff2")' in line:
+        elif re.match(r'.*format\(["\']woff2["\']\)', line):
             out_lines.append(convert_font(path_base, line, "woff2"))
         else:
             out_lines.append(line)
@@ -26,8 +26,9 @@ def make_html_fonts_inline(path_file_in, path_file_out):
 
 
 def convert_font(path_base, line, format):
-    url = re.findall(r'url\("(.*?)"\)', line)
-    url_expression = re.findall(r'url\(".*?"\)', line)
+    print(f' 🔵  Converting font in line : {line}')
+    url = re.findall(r'url\(["\'](.*?)["\']\)', line)
+    url_expression = re.findall(r'url\(["\'].*?["\']\)', line)
     if len(url) != 1 or len(url_expression) != 1:
         print(
             f'🔴 Expected to find 1 and only 1 font url entry on line: "{line}". '
