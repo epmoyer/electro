@@ -400,10 +400,12 @@ class Builder:
         # -------------------
         path_search_directory = path_site_directory / Path('search')
         path_search_directory.mkdir(parents=True, exist_ok=True)
-        path_search_index = path_search_directory / Path('search_index.json')
+        path_search_index = path_search_directory / Path('search_index.js')
+        search_js = "App.searchData = " + json.dumps(self.search_index, indent=4)
         with open(path_search_index, 'w') as file:
             # TODO: Remove this indent after everything is working.
-            json.dump(self.search_index, file, indent=4)
+            file.write(search_js)
+            # json.dump(self.search_index, file, indent=4)
 
 
 def md_document_name_to_document_name(md_document_name):

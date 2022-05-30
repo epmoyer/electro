@@ -101,36 +101,28 @@ var App = App || {}; // Create namespace
         // -----------------------
         // Get search data
         // -----------------------
-        fetch("search/search_index.json")
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                const config = App.globalConfig;
-                console.log("Fetched search index");
-                // console.log(data);
-                config.searchData = data;
-                config.searchIndex = lunr(function () {
-                    this.field("title");
-                    this.field("text");
-                    this.field("heading");
-                    this.ref("location");
+        const config = App.globalConfig;
+        config.searchIndex = lunr(function () {
+            this.field("title");
+            this.field("text");
+            this.field("heading");
+            this.ref("location");
 
-                    for (var i = 0; i < data.docs.length; i++) {
-                        var doc = data.docs[i];
-                        this.add(doc);
-                        config.documents[doc.location] = doc;
-                    }
-                });
+            for (var i = 0; i < App.searchData.docs.length; i++) {
+                var doc = App.searchData.docs[i];
+                this.add(doc);
+                config.documents[doc.location] = doc;
+            }
+        });
 
-                // Execute search query (if requested in url)
-                const searchText = App.getUrlValue('query');
-                if(searchText){
-                    document.getElementById("search-text").value = searchText;
-                    console.log('query', searchText);
-                    App.doSearch(searchText);
-                }
-            });
+        // Execute search query (if requested in url)
+        const searchText = App.getUrlValue('query');
+        if(searchText){
+            document.getElementById("search-text").value = searchText;
+            console.log('query', searchText);
+            App.doSearch(searchText);
+        }
+
 
         // -----------------------
         //  Set handler
