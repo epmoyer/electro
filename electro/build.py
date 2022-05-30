@@ -126,7 +126,7 @@ class Builder:
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
             self.build_document(path_markdown, document_name)
             subheading_menu_html = self.build_subheading_menu_html(document_name)
-            classes = "menu-node"
+            classes = ""
             if subheading_menu_html:
                 subheading_menu_html = '\n' + subheading_menu_html
                 caret_str = '<i class="caret fa fa-angle-right"></i>'
@@ -134,7 +134,7 @@ class Builder:
                 classes += ' no_child'
                 caret_str = ''
             self.menu_html += (
-                f'<li><span class="{classes}" id="menuitem_doc_{document_name}">'
+                f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
                 f'{caret_str}'
                 # f'<a href="{document_name}.html">{menu_name}</a>'
                 f'{menu_name}'
@@ -155,7 +155,8 @@ class Builder:
             heading_url = f'{document_name}.html#{heading_id}'
             menu_html += (
                 '        <li><span class="no_child">'
-                + f'<a href="{heading_url}">{heading_text}</a>'
+                # + f'<a href="{heading_url}">{heading_text}</a>'
+                + f'{heading_text}'
                 + '</span></li>\n'
             )
         if menu_html:

@@ -56,12 +56,13 @@ var App = App || {}; // Create namespace
 
                 const menu_item_id = this.id;
                 console.log('ID of clicked menu item: ' + menu_item_id);
-                const page_id = menu_item_id.replace('menuitem_doc_', '');
-                console.log('Target page id: ' + page_id);
+                // const pageId = menu_item_id.replace('menuitem_doc_', '');
+                const pageId = this.dataset.documentName;
+                console.log('Target page id: ' + pageId);
                 const pages = document.getElementsByClassName('content-page');
                 for (const page of pages) {
                     console.log(page.id);
-                    if(page.id == page_id){
+                    if(page.id == pageId){
                         page.style.display = 'inline';
                     } else {
                         page.style.display = 'none';
