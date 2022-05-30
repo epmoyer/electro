@@ -438,3 +438,26 @@ blockquote {
 .menu-tree li .navigating:hover {
     background-color: var(--color-navigating);
 }
+
+/* --------------------------
+   menu-tree manipulations
+   -------------------------- */
+.menu-text-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.menu-left-piece {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 40px;
+    /* background-color: orange; */
+}
+.menu-right-piece {
+    /* As flex child */
+    flex-grow: 1;
+    flex-shrink: 1;
+    text-align: left;
+    /* background-color: lime; */
+}

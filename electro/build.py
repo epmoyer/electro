@@ -76,6 +76,7 @@ def build_project(project_directory):
     if project_config.get('pack'):
         pack_site(path_site_directory)
 
+
 def pack_site(path_site_directory):
     print("Packing...")
     for path_file in path_site_directory.glob('*.html'):
@@ -96,7 +97,7 @@ def pack_site(path_site_directory):
         make_html_images_inline(str(path_file_stage1), str(path_file_stage2))
         make_html_fonts_inline(path_file_stage2, path_file_stage3)
         make_html_icons_inline(path_file_stage3, path_file_packed)
-        
+
 
 class Builder:
     def __init__(self):
@@ -154,9 +155,10 @@ class Builder:
             heading_id = heading_text_to_id(heading_text)
             heading_url = f'{document_name}.html#{heading_id}'
             menu_html += (
-                f'        <li><span class="no_child" data-document-name="{document_name}" data-target-heading-id="{heading_id}">'
+                f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">'
                 # + f'<a href="{heading_url}">{heading_text}</a>'
-                + f'{heading_text}'
+                # + f'{heading_text}'
+                + format_menu_heading(heading_text)
                 + '</span></li>\n'
             )
         if menu_html:
@@ -178,19 +180,16 @@ class Builder:
         # --------------------
         # Render Markdown
         # --------------------
-        extensions=[
-                'tables',
-                'fenced_code',
-                'electro.mdx_urlize:UrlizeExtension',
-                'codehilite',
-                'attr_list',
-            ]
+        extensions = [
+            'tables',
+            'fenced_code',
+            'electro.mdx_urlize:UrlizeExtension',
+            'codehilite',
+            'attr_list',
+        ]
         if not CONFIG['disable_nl2br']:
             extensions.append('nl2br')
-        document_html = markdown.markdown(
-            document_markdown,
-            extensions=extensions,
-        )
+        document_html = markdown.markdown(document_markdown, extensions=extensions,)
 
         # --------------------
         # Pre-parser
@@ -209,7 +208,9 @@ class Builder:
         # Wrap images
         img_tags = re.findall(r'<img .*?>', document_html)
         for img_tag in list(set(img_tags)):
-            document_html = document_html.replace(img_tag, f'<div class="img-wrapper">{img_tag}</div>')
+            document_html = document_html.replace(
+                img_tag, f'<div class="img-wrapper">{img_tag}</div>'
+            )
 
         # Add id tags to headings
         headings = re.findall(r'<h\d>.*<\/h\d>', document_html)
@@ -237,7 +238,6 @@ class Builder:
 
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
-
     def pre_parse_markdown(self, markdown):
         notice_start_types = re.findall(r'{{% notice (\S*) %}}', markdown)
         logger.debug(f'{notice_start_types=}')
@@ -246,7 +246,9 @@ class Builder:
             html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
             substitution = build_snippet_notice_start(notice_start_type)
             self.substitutions[html_temporary] = substitution
-            markdown = markdown.replace(r'{{% notice ' + notice_start_type + r' %}}', html_temporary)
+            markdown = markdown.replace(
+                r'{{% notice ' + notice_start_type + r' %}}', html_temporary
+            )
 
         NOTICE_END_ITEM = r'{{% /notice %}}'
         if NOTICE_END_ITEM in markdown:
@@ -423,6 +425,30 @@ class Builder:
 
 def md_document_name_to_document_name(md_document_name):
     return Path(md_document_name).stem
+
+def format_menu_heading(text):
+    """Given a menu heading, split it into two divs if it has a numeric prefix.
+
+    For headings that start with a section number (e.g. "1.5 Study Results") we
+    will split the heading into two pieces and wrap them each in a div.
+    """
+    NBSP = "\xa0"
+    if NBSP in text:
+        temp_text = text.replace(NBSP, " ")
+        pieces = temp_text.split()
+        heading_number = pieces[0]
+        logger.debug(f'{heading_number=} {text=} {temp_text=}')
+        if re.match(r'^[\d\.]+$', heading_number):
+            remaining = ' '.join(pieces[1:])
+            text = (
+                '<div class="menu-text-container">'
+                f'<div class="menu-left-piece">{heading_number}</div>'
+                f'<div class="menu-right-piece">{remaining}</div>'
+                '</div>'
+            )
+
+    logger.debug(f'format_menu_heading: result: "{text}"')
+    return text
 
 def heading_text_to_id(text):
     _id = ''
