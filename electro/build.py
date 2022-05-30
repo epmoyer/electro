@@ -381,19 +381,30 @@ class Builder:
         with open(path_template, 'r') as file:
             template_html = file.read()
 
+        # TODO: cleanup
+        path_site_document = path_site_directory / Path(f'index.html')
+        # path_site_document = path_site_directory / Path(f'{document_name}.html')
+        document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
+        document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
+        # TODO: cleanup
+        # document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
+        document_html = document_html.replace(r'{{% current_document_name %}}', "Document")
+        document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
+
+        pages_html = ""
+        style_html = ""
         for document_name, document_info in self.site_documents.items():
-            path_site_document = path_site_directory / Path(f'{document_name}.html')
-            document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
-            document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
-            document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
-            document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
-            # document_html = document_html.replace(
-            #     r'{{% content %}}', f'(Content of {document_name}.md goes here.)'
-            # )
-            document_html = document_html.replace(r'{{% content %}}', document_info['html'])
-            print(f'   Building {path_site_document}...')
-            with open(path_site_document, 'w') as file:
-                file.write(document_html)
+            pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
+            pages_html += f'(content from {document_name})<br><br>'
+            pages_html += document_info['html']
+            pages_html += '</div>'
+            # Start all subsequent pages as hidden
+            style_html = 'style="display: none"'
+
+        document_html = document_html.replace(r'{{% content %}}', pages_html)
+        print(f'   Building {path_site_document}...')
+        with open(path_site_document, 'w') as file:
+            file.write(document_html)
 
         # -------------------
         # Save search index
