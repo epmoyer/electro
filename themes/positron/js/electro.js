@@ -160,7 +160,7 @@ var App = App || {}; // Create namespace
 
         
         // Show version
-        console.log('Built with Elecro ' + App.globalConfig.electroVersion);
+        console.log('Built with Electro ' + App.globalConfig.electroVersion);
     };
 
     App.scrollToHash = (hashName) => {
