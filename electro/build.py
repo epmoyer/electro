@@ -87,10 +87,10 @@ def pack_site(path_site_directory):
         if ".inlined." in path_file.name:
             # Already packed
             continue
-        path_file_stage1 = path_file.parent / Path(f"{path_file.stem}.packed.stage1.html")
-        path_file_stage2 = path_file.parent / Path(f"{path_file.stem}.packed.stage2.html")
-        path_file_stage3 = path_file.parent / Path(f"{path_file.stem}.packed.stage3.html")
-        path_file_packed = path_file.parent / Path(f"{path_file.stem}.packed.html")
+        path_file_stage1 = path_site_directory / Path(f"{path_file.stem}.packed.stage1.html")
+        path_file_stage2 = path_site_directory / Path(f"{path_file.stem}.packed.stage2.html")
+        path_file_stage3 = path_site_directory / Path(f"{path_file.stem}.packed.stage3.html")
+        path_file_packed = path_site_directory / Path(f"{path_file.stem}.packed.html")
         print(f'packing {path_file.name} to {path_file_packed}...')
         simplepack(path_file, path_file_stage1, uglify=False)
         make_html_images_inline(str(path_file_stage1), str(path_file_stage2))
