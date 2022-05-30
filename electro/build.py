@@ -19,6 +19,7 @@ from electro.faults import FAULTS
 from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
 from electro.simplepack import simplepack
+from electro.inline_images import make_html_images_inline
 
 pprint = CONFIG['console_pprint']
 
@@ -81,9 +82,14 @@ def pack_site(path_site_directory):
         if ".packed." in path_file.name:
             # Already packed
             continue
-        path_file_out = path_file.parent / Path(f"{path_file.stem}.packed.html")
-        print(f'packing {path_file.name} to {path_file_out}')
-        simplepack(path_file, path_file_out, uglify=False)
+        if ".inlined." in path_file.name:
+            # Already packed
+            continue
+        path_file_stage1 = path_file.parent / Path(f"{path_file.stem}.packed_stage2.html")
+        path_file_packed = path_file.parent / Path(f"{path_file.stem}.packed.html")
+        print(f'packing {path_file.name} to {path_file_packed}...')
+        simplepack(path_file, path_file_stage1, uglify=False)
+        make_html_images_inline(str(path_file_stage1), str(path_file_packed))
         
 
 class Builder:
