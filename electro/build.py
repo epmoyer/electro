@@ -312,6 +312,9 @@ class Builder:
         path_css_source = path_theme_directory / Path('fonts.css')
         path_css_destination = path_site_directory / Path('fonts.css')
         shutil.copy(path_css_source, path_css_destination)
+        path_css_source = path_theme_directory / Path('fontawesome.css')
+        path_css_destination = path_site_directory / Path('fontawesome.css')
+        shutil.copy(path_css_source, path_css_destination)
 
         # -------------------
         # Copy CSS overlay
