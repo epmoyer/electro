@@ -466,7 +466,7 @@ blockquote {
 }
 .menu-tree .caret-placeholder {
     width: 17px;
-    height: 17px;
+    height: 12px;
     display: inline-block;
     /* background-color: purple; */
 }
