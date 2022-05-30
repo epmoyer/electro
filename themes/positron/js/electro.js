@@ -28,32 +28,46 @@ var App = App || {}; // Create namespace
                     old_span.classList.remove("navigating");
                 }
                 // Navigate to link, if this span contains one
-                var target_url = null;
-                const anchors = this.getElementsByTagName("a");
-                if (anchors) {
-                    for (let anchor of anchors) {
-                        target_url = anchor.href;
-                        // There should be only one anchor, but break anyway.
-                        break;
-                    }
-                }
-                if (target_url !== null){
-                    // if(App.globalConfig.currentDocumentName in 
-                    if (target_url.indexOf(App.globalConfig.currentDocumentName) > -1) {
-                        // We are navigating to the current page
-                        this.classList.add("selected");
-                    }
-                    else{
-                        // We are navigating away from the current page
-                        this.classList.add("navigating");
-                    }
-                    window.location.href = target_url;
-                }
-                else {
-                    this.classList.add("selected");
-                }
-                console.log(this.classList);
+                // var target_url = null;
+                // const anchors = this.getElementsByTagName("a");
+                // if (anchors) {
+                //     for (let anchor of anchors) {
+                //         target_url = anchor.href;
+                //         // There should be only one anchor, but break anyway.
+                //         break;
+                //     }
+                // }
+                // if (target_url !== null){
+                //     // if(App.globalConfig.currentDocumentName in 
+                //     if (target_url.indexOf(App.globalConfig.currentDocumentName) > -1) {
+                //         // We are navigating to the current page
+                //         this.classList.add("selected");
+                //     }
+                //     else{
+                //         // We are navigating away from the current page
+                //         this.classList.add("navigating");
+                //     }
+                //     window.location.href = target_url;
+                // }
+                // else {
+                //     this.classList.add("selected");
+                // }
+                // console.log(this.classList);
 
+                const menu_item_id = this.id;
+                console.log('ID of clicked menu item: ' + menu_item_id);
+                const page_id = menu_item_id.replace('menuitem_doc_', '');
+                console.log('Target page id: ' + page_id);
+                const pages = document.getElementsByClassName('content-page');
+                for (const page of pages) {
+                    console.log(page.id);
+                    if(page.id == page_id){
+                        page.style.display = 'inline';
+                    } else {
+                        page.style.display = 'none';
+                    }
+                }
+    
                 // If in responsive narrow-screen, re-hide the menu.
                 document.getElementById("sidebar-container").classList.remove("force-show");
             });
