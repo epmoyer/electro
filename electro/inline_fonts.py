@@ -26,7 +26,6 @@ def make_html_fonts_inline(path_file_in, path_file_out):
 
 
 def convert_font(path_base, line, format):
-    print(f' 🔵  Converting font in line : {line}')
     url = re.findall(r'url\(["\'](.*?)["\']\)', line)
     url_expression = re.findall(r'url\(["\'].*?["\']\)', line)
     if len(url) != 1 or len(url_expression) != 1:

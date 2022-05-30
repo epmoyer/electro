@@ -21,6 +21,7 @@ from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
 from electro.simplepack import simplepack
 from electro.inline_images import make_html_images_inline
 from electro.inline_fonts import make_html_fonts_inline
+from electro.inline_icons import make_html_icons_inline
 
 pprint = CONFIG['console_pprint']
 
@@ -88,11 +89,13 @@ def pack_site(path_site_directory):
             continue
         path_file_stage1 = path_file.parent / Path(f"{path_file.stem}.packed.stage1.html")
         path_file_stage2 = path_file.parent / Path(f"{path_file.stem}.packed.stage2.html")
+        path_file_stage3 = path_file.parent / Path(f"{path_file.stem}.packed.stage3.html")
         path_file_packed = path_file.parent / Path(f"{path_file.stem}.packed.html")
         print(f'packing {path_file.name} to {path_file_packed}...')
         simplepack(path_file, path_file_stage1, uglify=False)
         make_html_images_inline(str(path_file_stage1), str(path_file_stage2))
-        make_html_fonts_inline(path_file_stage2, path_file_packed)
+        make_html_fonts_inline(path_file_stage2, path_file_stage3)
+        make_html_icons_inline(path_file_stage3, path_file_packed)
         
 
 class Builder:
