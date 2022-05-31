@@ -33,14 +33,7 @@ var App = App || {}; // Create namespace
                 // -----------------------------
                 // Make the target page visible
                 // -----------------------------
-                const pages = document.getElementsByClassName('content-page');
-                for (const page of pages) {
-                    if(page.id == pageId){
-                        page.style.display = 'inline';
-                    } else {
-                        page.style.display = 'none';
-                    }
-                }
+                App.showPage(pageId);
 
                 // ----------------------------
                 // Scroll to the target heading
@@ -126,6 +119,18 @@ var App = App || {}; // Create namespace
             console.log('query', searchText);
             App.doSearch(searchText);
         }
+        
+        // Navigate to search result location (if requested in url)
+        const pageId = App.getUrlValue('pageId');
+        const headingId = App.getUrlValue('headingId');
+        if(location){
+            console.log('Going to location: pageId:' + pageId + ' headingId:' + headingId);
+            App.showPage(pageId);
+            if(headingId){
+                App.scrollToHash(headingId);
+            }
+        }
+        
 
 
         // -----------------------
@@ -137,6 +142,17 @@ var App = App || {}; // Create namespace
         
         // Show version
         console.log('Built with Electro ' + App.globalConfig.electroVersion);
+    };
+
+    App.showPage = (pageId) => {
+        const pages = document.getElementsByClassName('content-page');
+        for (const page of pages) {
+            if(page.id == pageId){
+                page.style.display = 'inline';
+            } else {
+                page.style.display = 'none';
+            }
+        }
     };
 
     App.scrollToHash = (hashName) => {
@@ -200,8 +216,10 @@ var App = App || {}; // Create namespace
             if (App.globalConfig.singleFile){
                 // Single file compatible link
                 const location = result.location.replace(".html", "");
-
-                html += '<h3><a href="?location=' + location + '">' + result.title + '</a></h3>';
+                const pieces = location.split("#");
+                const pageId = pieces[0];
+                const headingId = pieces[1];
+                html += '<h3><a href="?pageId=' + pageId + '&headingId=' + headingId + '">' + result.title + '</a></h3>';
             } else {
                 // Static site compatible link
                 html += '<h3><a href="' + result.location + '">' + result.title + '</a></h3>';
@@ -224,17 +242,9 @@ var App = App || {}; // Create namespace
         } else {
             // Single file document. Show search results in search page and hide other pages.
             document.getElementById("search").innerHTML = html;
-            // -----------------------------
+
             // Make the search page visible
-            // -----------------------------
-            const pages = document.getElementsByClassName('content-page');
-            for (const page of pages) {
-                if(page.id == "search"){
-                    page.style.display = 'inline';
-                } else {
-                    page.style.display = 'none';
-                }
-            }
+            App.showPage('search');
         }
     };
 
