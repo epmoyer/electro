@@ -412,6 +412,9 @@ class Builder:
         document_html = document_html.replace(
             r'{{% single_file %}}', to_json_bool(project_config.get("pack", False))
         )
+        document_html = document_html.replace(
+            r'{{% watermark %}}', project_config.get("watermark", "")
+        )
 
         pages_html = ""
         style_html = ""

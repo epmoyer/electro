@@ -130,6 +130,12 @@ var App = App || {}; // Create namespace
                 App.scrollToHash(headingId);
             }
         }
+
+        const hideWatermark = App.getUrlValue('hideWatermark');
+        if (hideWatermark == 'true'){
+            console.log('Hiding watermark because hideWatermark set in URL.');
+            document.getElementById("watermark-text").innerHTML = "";
+        }
         
 
 

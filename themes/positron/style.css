@@ -256,6 +256,9 @@ blockquote {
         /* left: -300px; */
         display: none;
     }
+    .watermark-left{
+        display: none;
+    }
    
 
     /* ::-webkit-scrollbar {
@@ -285,6 +288,9 @@ blockquote {
 }
 
 .watermark-container{
+    /* Fills the app window and floats above everything else.
+     * Contains .watermark-left (placeholder) and .watermark-right.
+     */
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -300,15 +306,21 @@ blockquote {
     pointer-events: none;
 }
 .watermark-left{
+    /* Placeholder to take up same width as .sidebar */
+
     /* as flex-child*/
     flex-shrink: 0;
     flex-grow: 0;
 
     width: var(--width-sidebar);
 
-    background-color: #00ff0030;
+    /* background-color: #00ff0030; */
 }
 .watermark-right{
+    /* Floats over the document .content-container.
+     * Watermark text is centered inside this div.
+     */
+
     /* as flex-parent */
     display: flex;
     justify-content: center;
@@ -318,7 +330,7 @@ blockquote {
     flex-shrink: 1;
     flex-grow: 1;
 
-    background-color: #00ffff30;
+    /* background-color: #00ffff30; */
 }
 .watermark-text{
     color: var(--color-watermark);
