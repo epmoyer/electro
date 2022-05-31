@@ -162,6 +162,9 @@ var App = App || {}; // Create namespace
     };
 
     App.scrollToHash = (hashName) => {
+        if(hashName==undefined){
+            return;
+        }
         const target = "#" + hashName;
         if(location.hash == target){
             // Browser thinks we are already at the target, but we might have scrolled away
