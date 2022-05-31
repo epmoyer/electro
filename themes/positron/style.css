@@ -287,16 +287,38 @@ blockquote {
 .watermark-container{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
+    flex-direction: row;
 
     position: absolute;
-    top: 0vh;
-    left: var(--width-sidebar);
+    top: 0;
+    left: 0;
 
     height: 100vh;
-    width: 100vw - var(--width-sidebar);
+    width: 100vw;
     z-index: 2;
     pointer-events: none;
+}
+.watermark-left{
+    /* as flex-child*/
+    flex-shrink: 0;
+    flex-grow: 0;
+
+    width: var(--width-sidebar);
+
+    background-color: #00ff0030;
+}
+.watermark-right{
+    /* as flex-parent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* as flex-child*/
+    flex-shrink: 1;
+    flex-grow: 1;
+
+    background-color: #00ffff30;
 }
 .watermark-text{
     color: var(--color-watermark);
