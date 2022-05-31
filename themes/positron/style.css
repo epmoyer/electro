@@ -6,12 +6,15 @@ body {
     --color-navigating: rgb(38, 114, 255);
     --color-header: #2980b9;
     --color-header-text: #fff;
+    --color-watermark: #ff000034;
 
     --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
         monospace;
+
+    --width-sidebar: 280px;
 
     --height-header: 40px;
 }
@@ -147,6 +150,7 @@ blockquote {
 }
 .content-container {
     width: 100%;
+    /* position: relative; */
     /* overflow-x: hidden; */
     /* overflow-y: auto; */
     /* background-color: palegreen; */
@@ -166,7 +170,7 @@ blockquote {
 .sidebar-container {
     flex: 0 0 auto;
     /* width: 260px; */
-    width: 280px;
+    width: var(--width-sidebar);
     height: 100vh;
     /* padding: 10px; */
     background-color: #343131;
@@ -278,6 +282,28 @@ blockquote {
     padding: 2px 5px;
     border-radius: 4px;
     color: black;
+}
+
+.watermark-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    top: 0vh;
+    left: var(--width-sidebar);
+
+    height: 100vh;
+    width: 100vw - var(--width-sidebar);
+    z-index: 2;
+    pointer-events: none;
+}
+.watermark-text{
+    color: var(--color-watermark);
+    font-size: 150px;
+    font-weight: 900;
+    transform: rotate(-45deg);
+    pointer-events: none;
 }
 /* --------------------------
    notices

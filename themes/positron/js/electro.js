@@ -123,7 +123,7 @@ var App = App || {}; // Create namespace
         // Navigate to search result location (if requested in url)
         const pageId = App.getUrlValue('pageId');
         const headingId = App.getUrlValue('headingId');
-        if(location){
+        if(pageId){
             console.log('Going to location: pageId:' + pageId + ' headingId:' + headingId);
             App.showPage(pageId);
             if(headingId){
