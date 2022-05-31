@@ -457,17 +457,6 @@ def format_menu_heading(text, on_nbsp = False):
     if (NBSP in text and on_nbsp) or (" " in text and not on_nbsp):
         temp_text = text.replace(NBSP, " ") if on_nbsp else text
         pieces = split_if_numbered(temp_text)
-        # pieces = temp_text.split()
-        # heading_number = pieces[0]
-        # logger.debug(f'{heading_number=} {text=} {temp_text=}')
-        # if re.match(r'^[\d\.]+$', heading_number):
-        #     remaining = ' '.join(pieces[1:])
-        #     text = (
-        #         '<div class="menu-text-container">'
-        #         f'<div class="menu-left-piece">{heading_number}</div>'
-        #         f'<div class="menu-right-piece">{remaining}</div>'
-        #         '</div>'
-        #     )
         if pieces:
             heading_number, heading_text = pieces
             text = (
@@ -481,6 +470,13 @@ def format_menu_heading(text, on_nbsp = False):
     return text
 
 def split_if_numbered(text):
+    """Given a menu heading, split it into two strings if it has a numeric prefix.
+
+    For headings that start with a section number (e.g. "1.5 Study Results") we
+    will split the heading into two pieces and return a tuple.
+
+    Otherwise return None
+    """
     pieces = text.split()
     heading_number = pieces[0]
     logger.debug(f'{heading_number=} {text=}')
