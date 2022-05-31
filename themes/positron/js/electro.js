@@ -35,7 +35,6 @@ var App = App || {}; // Create namespace
                 // -----------------------------
                 const pages = document.getElementsByClassName('content-page');
                 for (const page of pages) {
-                    console.log(page.id);
                     if(page.id == pageId){
                         page.style.display = 'inline';
                     } else {
@@ -91,7 +90,13 @@ var App = App || {}; // Create namespace
             function (event) {
                 if (event.keyCode == 13) {
                     event.preventDefault();
-                    App.onSearch();
+                    if (App.globalConfig.singleFile){
+                        const searchText = document.getElementById("search-text").value;
+                        App.doSearch(searchText);
+                    }
+                    else{
+                        App.onSearch();
+                    }
                 }
             },
             false
@@ -172,6 +177,11 @@ var App = App || {}; // Create namespace
     };
 
     App.onSearch = () => {
+        // Executed on static sites when user enters search text and presses return.
+        //
+        // The search is encoded as a query parameter on the URL, and the search page
+        // (search.html) is loaded. The actual searching and displaying of results will
+        // happen on that page.
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;
         console.log("searchText", searchText);
@@ -200,7 +210,24 @@ var App = App || {}; // Create namespace
         if (results.length == 0){
             html += '(no results to show)';
         }
-        document.getElementById("content").innerHTML = html;
+        if(!App.globalConfig.singleFile){
+            // Static web page. Show search results in content area
+            document.getElementById("content").innerHTML = html;
+        } else {
+            // Single file document. Show search results in search page and hide other pages.
+            document.getElementById("search").innerHTML = html;
+            // -----------------------------
+            // Make the search page visible
+            // -----------------------------
+            const pages = document.getElementsByClassName('content-page');
+            for (const page of pages) {
+                if(page.id == "search"){
+                    page.style.display = 'inline';
+                } else {
+                    page.style.display = 'none';
+                }
+            }
+        }
     };
 
     App.highlight = (searchText, html) => {

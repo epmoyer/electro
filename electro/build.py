@@ -143,9 +143,7 @@ class Builder:
             #     + format_menu_heading(menu_name)
             #     + f'</span>{subheading_menu_html}</li>\n'
             # )
-            self.menu_html += (
-                f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
-            )
+            self.menu_html += f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
             pieces = split_if_numbered(menu_name)
             if pieces:
                 heading_number, heading_text = pieces
@@ -156,12 +154,8 @@ class Builder:
                     '</div>'
                 )
             else:
-                self.menu_html += (
-                    f'{caret_str}'
-                    + format_menu_heading(menu_name)
-                )
+                self.menu_html += f'{caret_str}' + format_menu_heading(menu_name)
             self.menu_html += f'</span>{subheading_menu_html}</li>\n'
-
 
         self.menu_html += '</ul>\n'
 
@@ -415,6 +409,9 @@ class Builder:
         # document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
         document_html = document_html.replace(r'{{% current_document_name %}}', "Document")
         document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
+        document_html = document_html.replace(
+            r'{{% single_file %}}', to_json_bool(project_config.get("pack", False))
+        )
 
         pages_html = ""
         style_html = ""
@@ -437,17 +434,20 @@ class Builder:
         path_search_directory = path_site_directory / Path('search')
         path_search_directory.mkdir(parents=True, exist_ok=True)
         path_search_index = path_search_directory / Path('search_index.js')
+        # TODO: Remove this JSON indent after everything is working?
         search_js = "App.searchData = " + json.dumps(self.search_index, indent=4)
         with open(path_search_index, 'w') as file:
-            # TODO: Remove this indent after everything is working.
             file.write(search_js)
-            # json.dump(self.search_index, file, indent=4)
 
 
 def md_document_name_to_document_name(md_document_name):
     return Path(md_document_name).stem
 
-def format_menu_heading(text, on_nbsp = False):
+def to_json_bool(python_bool):
+    """Return a json compliant boolean string (given a python bool)."""
+    return 'true' if python_bool else 'false'
+
+def format_menu_heading(text, on_nbsp=False):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
     For headings that start with a section number (e.g. "1.5 Study Results") we
@@ -469,6 +469,7 @@ def format_menu_heading(text, on_nbsp = False):
     logger.debug(f'format_menu_heading: result: "{text}"')
     return text
 
+
 def split_if_numbered(text):
     """Given a menu heading, split it into two strings if it has a numeric prefix.
 
@@ -482,8 +483,9 @@ def split_if_numbered(text):
     logger.debug(f'{heading_number=} {text=}')
     if re.match(r'^[\d\.]+$', heading_number):
         remaining = ' '.join(pieces[1:])
-        return((heading_number, remaining))
+        return (heading_number, remaining)
     return None
+
 
 def heading_text_to_id(text):
     _id = ''
