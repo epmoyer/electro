@@ -197,7 +197,15 @@ var App = App || {}; // Create namespace
         var html = '<h1>Search Results</h1>\n';
         results.forEach(result => {
             html += '<hr>';
-            html += '<h3><a href="' + result.location + '">' + result.title + '</a></h3>';
+            if (App.globalConfig.singleFile){
+                // Single file compatible link
+                const location = result.location.replace(".html", "");
+
+                html += '<h3><a href="?location=' + location + '">' + result.title + '</a></h3>';
+            } else {
+                // Static site compatible link
+                html += '<h3><a href="' + result.location + '">' + result.title + '</a></h3>';
+            }
             if(result.heading){
                 html += '<h4>' + result.heading + '</h4>';
             }
