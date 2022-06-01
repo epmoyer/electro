@@ -99,16 +99,11 @@ var App = App || {}; // Create namespace
         // Home button
         // -----------------------
         if(App.globalConfig.singleFile){
-            // There are 2 versions of the home button. The default is an anchor
-            // tag, for static web sites.  For single file docs we need to hide that
-            // one and enable the one which is a plain div, then attach a click method
-            // to bring us back to the root page when clicked.
+            // There are 2 versions of the home button. The default is an anchor tag
+            // to index.html, for static web sites.  For single file docs we need to hide that
+            // one and enable the one which contains a pageId link parameter (to the doc_info page).
             document.getElementById("home-button-static").style.display = 'none';
-            var button = document.getElementById("home-button-single-page");
-            button.style.display = 'inline';
-            button.addEventListener("click", function () {
-                App.showPage('doc_info');
-            });
+            document.getElementById("home-button-single-file").style.display = 'inline';
         }
 
         // -----------------------
@@ -149,7 +144,7 @@ var App = App || {}; // Create namespace
 
         const hideWatermark = App.getUrlValue('nowm');
         if (hideWatermark == 'true'){
-            console.log('Hiding watermark because hideWatermark set in URL.');
+            console.log('Hiding watermark because nowm set in URL.');
             document.getElementById("watermark-text").innerHTML = "";
         }
 
