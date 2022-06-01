@@ -80,24 +80,17 @@ def build_project(project_directory):
 
 def pack_site(path_site_directory):
     print("Packing...")
-    for path_file in path_site_directory.glob('*.html'):
-        if path_file.name == "search.html":
-            continue
-        if ".packed." in path_file.name:
-            # Already packed
-            continue
-        if ".inlined." in path_file.name:
-            # Already packed
-            continue
-        path_file_stage1 = path_site_directory / Path(f"{path_file.stem}.packed.stage1.html")
-        path_file_stage2 = path_site_directory / Path(f"{path_file.stem}.packed.stage2.html")
-        path_file_stage3 = path_site_directory / Path(f"{path_file.stem}.packed.stage3.html")
-        path_file_packed = path_site_directory / Path(f"{path_file.stem}.packed.html")
-        print(f'packing {path_file.name} to {path_file_packed}...')
-        simplepack(path_file, path_file_stage1, uglify=False)
-        make_html_images_inline(str(path_file_stage1), str(path_file_stage2))
-        make_html_fonts_inline(path_file_stage2, path_file_stage3)
-        make_html_icons_inline(path_file_stage3, path_file_packed)
+
+    path_file = path_site_directory / Path('index.raw.html')
+    path_file_stage1 = path_site_directory / Path("index.packed.stage1.html")
+    path_file_stage2 = path_site_directory / Path("index.packed.stage2.html")
+    path_file_stage3 = path_site_directory / Path("index.packed.stage3.html")
+    path_file_packed = path_site_directory / Path("index.html")
+    print(f'packing {path_file.name} to {path_file_packed}...')
+    simplepack(path_file, path_file_stage1, uglify=False)
+    make_html_images_inline(str(path_file_stage1), str(path_file_stage2))
+    make_html_fonts_inline(path_file_stage2, path_file_stage3)
+    make_html_icons_inline(path_file_stage3, path_file_packed)
 
 
 class Builder:
@@ -402,7 +395,7 @@ class Builder:
             template_html = file.read()
 
         # TODO: cleanup
-        path_site_document = path_site_directory / Path(f'index.html')
+        path_site_document = path_site_directory / Path(f'index.raw.html')
         # path_site_document = path_site_directory / Path(f'{document_name}.html')
         document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
         document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
