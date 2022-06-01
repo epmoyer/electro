@@ -5,6 +5,7 @@ import shutil
 import shutil
 import re
 from textwrap import indent
+from datetime import datetime
 
 # Library
 from prettyprinter import pformat
@@ -408,7 +409,6 @@ class Builder:
         # TODO: cleanup
         # document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
         document_html = document_html.replace(r'{{% current_document_name %}}', "Document")
-        document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
         document_html = document_html.replace(
             r'{{% single_file %}}', to_json_bool(project_config.get("pack", False))
         )
@@ -427,6 +427,14 @@ class Builder:
             style_html = 'style="display: none"'
 
         document_html = document_html.replace(r'{{% content %}}', pages_html)
+
+        # Items replaced here will also target user content, since user content has been merged by
+        # now.
+        document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
+        document_html = document_html.replace(
+            r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
+        )
+
         print(f'   Building {path_site_document}...')
         with open(path_site_document, 'w') as file:
             file.write(document_html)
@@ -446,9 +454,11 @@ class Builder:
 def md_document_name_to_document_name(md_document_name):
     return Path(md_document_name).stem
 
+
 def to_json_bool(python_bool):
     """Return a json compliant boolean string (given a python bool)."""
     return 'true' if python_bool else 'false'
+
 
 def format_menu_heading(text, on_nbsp=False):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
