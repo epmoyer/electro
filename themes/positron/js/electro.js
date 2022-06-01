@@ -147,13 +147,11 @@ var App = App || {}; // Create namespace
             }
         }
 
-        const hideWatermark = App.getUrlValue('hideWatermark');
+        const hideWatermark = App.getUrlValue('nowm');
         if (hideWatermark == 'true'){
             console.log('Hiding watermark because hideWatermark set in URL.');
             document.getElementById("watermark-text").innerHTML = "";
         }
-        
-
 
         // -----------------------
         //  Set handler
