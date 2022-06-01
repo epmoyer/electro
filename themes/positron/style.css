@@ -339,6 +339,9 @@ blockquote {
     transform: rotate(-45deg);
     pointer-events: none;
 }
+#home-button-single-page{
+    cursor: pointer;
+}
 /* --------------------------
    notices
    -------------------------- */
