@@ -5,7 +5,7 @@ import shutil
 import shutil
 import re
 from textwrap import indent
-from datetime import datetime
+from datetime import datetime, date
 
 # Library
 from prettyprinter import pformat
@@ -426,6 +426,9 @@ class Builder:
         document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
         document_html = document_html.replace(
             r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
+        )
+        document_html = document_html.replace(
+            r'{{% year %}}', str(date.today().year)
         )
 
         print(f'   Building {path_site_document}...')
