@@ -500,6 +500,13 @@ def heading_text_to_id(text):
     _id = ''
     dash_appended = False
     text = text.replace('&nbsp;', '')
+    # NOTE: This transformation is subtle. We need heading_text_to_id() to output identical
+    #       id strings for both "raw" heading text (parsed from markdown text directly) and
+    #       For heading text which has already been pre-processed by the markdown converter.
+    #       The markdown converter changes '&' to '&amp;', so in order to make both ids
+    #       Identical we change it BACK to '&', which will then get DROPPED by the
+    #       ID conversion.
+    text = text.replace('&amp;', '&')
     for char in text.lower():
         if char == ' ':
             if not dash_appended:
@@ -508,6 +515,7 @@ def heading_text_to_id(text):
         elif re.match(r'[a-z0-9]', char):
             _id += char
             dash_appended = False
+    logger.debug(f'heading_text_to_id() "{text}" -> "{_id}"')
     return _id
 
 
