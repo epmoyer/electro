@@ -188,10 +188,8 @@ blockquote {
     align-content: center;
     justify-content: center;
     font-family: var(--font-sidebar);
-    /* justify-content: center; */
-    /* align-content: center; */
+
     color: white;
-    /* height: 55px; */
     background-color: var(--color-header);
 }
 .sidebar-header i {
