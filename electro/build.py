@@ -243,7 +243,8 @@ class Builder:
         # ---------------------
         # Search
         # ---------------------
-        self.add_document_to_search(document_name, document_html)
+        if path_markdown.name not in CONFIG['project_config'].get('exclude_from_search', []):
+            self.add_document_to_search(document_name, document_html)
 
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
