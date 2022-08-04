@@ -36,7 +36,7 @@ var App = App || {}; // Create namespace
                 App.showPage(pageId);
 
                 // ----------------------------
-                // Scroll to the target heading
+                // Scroll to the target heading (or to top if no HeadingId exists)
                 // -----------------------------
                 App.scrollToHash(targetHeadingId);
 
@@ -171,7 +171,10 @@ var App = App || {}; // Create namespace
     };
 
     App.scrollToHash = (hashName) => {
-        if(hashName==undefined){
+        if(!hashName){
+            // Scroll to the top if no hashName was given
+            var content_div = document.getElementsByClassName("main-container")[0];
+            content_div.scrollTop = 0;
             return;
         }
         const target = "#" + hashName;
