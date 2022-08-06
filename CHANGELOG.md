@@ -8,11 +8,16 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 0.1.5 2022-08-06
+### Fixed
+-  Refine heading_text_to_id 
+
 ## 0.1.4 2022-08-04
-- Fixed
-    - Scroll to top of page when clicking on top level item in sidebar.
+### Fixed
+- Scroll to top of page when clicking on top level item in sidebar.
+
 ## 0.1.3 2022-05-56
-### added
+### Added
 - Add `--nobreak` option (to disable nl2br)
 - Use `overlay.css` if provided in a project's `docs/` directory.
 

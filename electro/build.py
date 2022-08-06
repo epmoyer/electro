@@ -513,9 +513,13 @@ def heading_text_to_id(text):
             if not dash_appended:
                 _id += '-'
                 dash_appended = True
-        elif re.match(r'[a-z0-9]', char):
+        elif re.match(r'[a-z0-9\-]', char):
             _id += char
             dash_appended = False
+
+    # Combine multiple dashes into single dash
+    _id = re.sub(r'\-+', '-', _id)
+
     logger.debug(f'heading_text_to_id() "{text}" -> "{_id}"')
     return _id
 
