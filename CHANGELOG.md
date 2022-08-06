@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 0.1.6 2022-08-06
+### Fixed
+-  Refine heading_text_to_id 
+
 ## 0.1.5 2022-08-06
 ### Fixed
 -  Refine heading_text_to_id 

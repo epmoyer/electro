@@ -498,9 +498,10 @@ def split_if_numbered(text):
 
 
 def heading_text_to_id(text):
+    original_text = text
     _id = ''
     dash_appended = False
-    text = text.replace('&nbsp;', '')
+    text = text.replace('&nbsp;', ' ')
     # NOTE: This transformation is subtle. We need heading_text_to_id() to output identical
     #       id strings for both "raw" heading text (parsed from markdown text directly) and
     #       For heading text which has already been pre-processed by the markdown converter.
@@ -508,6 +509,9 @@ def heading_text_to_id(text):
     #       Identical we change it BACK to '&', which will then get DROPPED by the
     #       ID conversion.
     text = text.replace('&amp;', '&')
+    # Replace decimal with dashes so that heading numbers like "3.12" vs "31.2" remain 
+    # unique.
+    text = text.replace('.', '-')
     for char in text.lower():
         if char == ' ':
             if not dash_appended:
@@ -520,7 +524,7 @@ def heading_text_to_id(text):
     # Combine multiple dashes into single dash
     _id = re.sub(r'\-+', '-', _id)
 
-    logger.debug(f'heading_text_to_id() "{text}" -> "{_id}"')
+    logger.debug(f'heading_text_to_id() "{original_text}" -> "{_id}"')
     return _id
 
 
