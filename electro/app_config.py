@@ -17,7 +17,7 @@ CONSOLE = Console(highlight=False, color_system='256', theme=THEME)
 CONSOLE_PPRINT = Console(highlight=True, color_system='256', theme=THEME)
 
 CONFIG = {
-    'version': '0.1.4',
+    'version': '0.1.5',
     'app_name': 'electro',
     'enable_debug_logging': True,
     'console_print': CONSOLE.print,
