@@ -498,10 +498,12 @@ def split_if_numbered(text):
 
 
 def heading_text_to_id(text):
+    NBSP = '\u00a0'
     original_text = text
     _id = ''
     dash_appended = False
     text = text.replace('&nbsp;', ' ')
+    text = text.replace(NBSP, ' ')
     # NOTE: This transformation is subtle. We need heading_text_to_id() to output identical
     #       id strings for both "raw" heading text (parsed from markdown text directly) and
     #       For heading text which has already been pre-processed by the markdown converter.
