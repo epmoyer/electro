@@ -36,6 +36,9 @@ class Faults:
 
     def has_errors(self):
         return any(fault.fault_type == FaultType.ERROR for fault in self.faults)
+    
+    def has_warnings(self):
+        return any(fault.fault_type == FaultType.WARNING for fault in self.faults)
 
     def error(self, message, cluster=None):
         self.faults.append(Fault(FaultType.ERROR, message, cluster))
@@ -46,8 +49,17 @@ class Faults:
     def render(self):
         if not self.faults:
             return
-        print('\nErrors:')
+        if self.has_errors():
+            print('\nErrors:')
+            self._render_faults(FaultType.ERROR)
+        if self.has_warnings():
+            print('\nWarnings:')
+            self._render_faults(FaultType.WARNING)
+    
+    def _render_faults(self, fault_type):
         for fault in self.faults:
+            if fault.fault_type != fault_type:
+                continue
             tag = fault.fault_type.name.lower()
             print(wrap_tag(tag, fault.message))
             if fault.cluster:

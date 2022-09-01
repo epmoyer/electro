@@ -64,6 +64,17 @@ def build_project(path_build):
     # Determine output format
     # -----------------------
     CONFIG['output_format'] = project_config.get('output_format', 'static_site')
+    if 'pack' in project_config:
+        FAULTS.warning(
+            'The "pack" option is deprecated. Use "output_format" instead, and specify'
+            f' one of: {OUTPUT_FORMATS}'
+        )
+        if project_config.get('pack', False):
+            FAULTS.warning(
+                'Implicitly interpreting deprecated `"pack": true` option as'
+                ' `"output_format": "single_file"`.'
+            )
+            CONFIG['output_format'] = 'single_file'
     if CONFIG['output_format'] not in OUTPUT_FORMATS:
         FAULTS.error(
             f'Project file specified an output_format of "{CONFIG["output_format"]}". '
