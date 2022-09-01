@@ -17,10 +17,8 @@ print = CONFIG['console_print']
 
 @click.group()
 @click.option('-d', '--debug', 'enable_debug_logging', is_flag=True, help='Enable debug logging')
-@click.option('-n', '--nobreak', 'disable_nl2br', is_flag=True, help='Disable newline-to-break injection')
-def cli(enable_debug_logging, disable_nl2br):
+def cli(enable_debug_logging):
     CONFIG['enable_debug_logging'] = enable_debug_logging
-    CONFIG['disable_nl2br'] = disable_nl2br
 
     # --------------------
     # Initialize logging

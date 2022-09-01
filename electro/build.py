@@ -82,6 +82,11 @@ def build_project(path_build):
         return
 
     # -----------------------
+    # Get options
+    # -----------------------
+    CONFIG['enable_newline_to_break'] = project_config.get('enable_newline_to_break', False)
+
+    # -----------------------
     # Determine site dir
     # -----------------------
     path_site_directory = path_project_directory / Path(project_config['site_directory'])
@@ -237,7 +242,8 @@ class Builder:
             'codehilite',
             'attr_list',
         ]
-        if not CONFIG['disable_nl2br']:
+        if CONFIG['enable_newline_to_break']:
+            # Newlines in markdown will be interpreted as line breaks.
             extensions.append('nl2br')
         document_html = markdown.markdown(document_markdown, extensions=extensions,)
 
