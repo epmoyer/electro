@@ -172,38 +172,12 @@ class Builder:
             self.build_document(path_markdown, document_name)
             subheading_menu_html = self.build_subheading_menu_html(document_name)
             if subheading_menu_html:
-                # caret_str = '<i class="caret fa fa-angle-right"></i>'
                 caret_visible = True
             else:
-                # classes += ' no_child'
-                # caret_str = ''
-                # caret_str = '<i class="caret-placeholder"></i>'
                 caret_visible = False
-            # self.menu_html += (
-            #     f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
-            #     + f'{caret_str}'
-            #     # f'<a href="{document_name}.html">{menu_name}</a>'
-            #     # f'{menu_name}'
-            #     + format_menu_heading(menu_name)
-            #     + f'</span>{subheading_menu_html}</li>\n'
-            # )
             self.menu_html += (
                 f'<li><span id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
             )
-            # pieces = split_if_numbered(menu_name)
-            # if pieces:
-            #     heading_number, heading_text = pieces
-            #     self.menu_html += (
-            #         '<div class="menu-text-container">'
-            #         f'<div class="menu-left-piece wide">{caret_str}{heading_number}</div>'
-            #         f'<div class="menu-right-piece">{heading_text}</div>'
-            #         '</div>'
-            #     )
-            # else:
-            # menu_heading_html = format_menu_heading(menu_name, caret_html=caret_str)
-            # if CONFIG['output_format'] == 'static_site':
-            #     menu_heading_html = f'<a href="{document_name}.html">{menu_heading_html}</a>'
-            # self.menu_html += menu_heading_html
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
             self.menu_html += format_menu_heading(
                 menu_name, include_caret_space=True, caret_visible=caret_visible, link_url=link_url
@@ -227,8 +201,6 @@ class Builder:
                 else None
             )
             menu_heading_html = format_menu_heading(heading_text, on_nbsp=True, link_url=link_url)
-            # if CONFIG['output_format'] == 'static_site':
-            #     menu_heading_html = f'<a href="{heading_url}">{menu_heading_html}</a>'
             menu_html += (
                 f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
                 + menu_heading_html
@@ -514,47 +486,6 @@ class Builder:
                 self._render_document(
                     template_html, path_site_document, document_info['html'], document_name
                 )
-
-        # # TODO: cleanup
-        # path_site_document = path_site_directory / Path(f'index.raw.html')
-        # # path_site_document = path_site_directory / Path(f'{document_name}.html')
-        # document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
-        # document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
-        # # TODO: cleanup
-        # # document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
-        # document_html = document_html.replace(r'{{% current_document_name %}}', "Document")
-        # document_html = document_html.replace(
-        #     r'{{% single_file %}}', to_json_bool(project_config.get("pack", False))
-        # )
-        # document_html = document_html.replace(
-        #     r'{{% watermark %}}', project_config.get("watermark", "")
-        # )
-
-        # pages_html = ""
-        # style_html = ""
-        # for document_name, document_info in self.site_documents.items():
-        #     pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
-        #     # pages_html += f'(content from {document_name})<br><br>'
-        #     pages_html += document_info['html']
-        #     pages_html += '</div>'
-        #     # Start all subsequent pages as hidden
-        #     style_html = 'style="display: none"'
-
-        # document_html = document_html.replace(r'{{% content %}}', pages_html)
-
-        # # Items replaced here will also target user content, since user content has been merged by
-        # # now.
-        # document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
-        # document_html = document_html.replace(
-        #     r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
-        # )
-        # document_html = document_html.replace(
-        #     r'{{% year %}}', str(date.today().year)
-        # )
-
-        # print(f'Building {path_site_document}...')
-        # with open(path_site_document, 'w') as file:
-        #     file.write(document_html)
 
         # -------------------
         # Save search index

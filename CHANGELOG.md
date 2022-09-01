@@ -8,6 +8,16 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.0.0 2022-09-01
+### Changed
+- Accept a project file (.json) or dir as command line argument
+### Added
+- Project .json keys:
+    - `output_format`: One of "single_file" or "static_site"
+    - `enable_newline_to_break`: Optional. If `true`, then newlines in .md will be rendered as `<br>`
+## Removed
+- Command line `--nobreak` option
+
 ## 0.1.7 2022-08-06
 ### Fixed
 -  Refine heading_text_to_id (replace unicode NBSP with spaces)

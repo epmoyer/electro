@@ -18,7 +18,7 @@ CONSOLE_PPRINT = Console(highlight=True, color_system='256', theme=THEME)
 OUTPUT_FORMATS = ['static_site', 'single_file']
 
 CONFIG = {
-    'version': '0.1.7',
+    'version': '1.0.0',
     'app_name': 'electro',
     'enable_debug_logging': True,
     'console_print': CONSOLE.print,
