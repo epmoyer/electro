@@ -368,24 +368,19 @@ class Builder:
 
         project_config = CONFIG['project_config']
 
-        pages_html = ""
-        style_html = ""
-        for document_name, document_info in self.site_documents.items():
-            pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
-            pages_html += document_info['html']
-            pages_html += '</div>'
-            # Start all subsequent pages as hidden
-            style_html = 'style="display: none"'
-
-        document_html = template_html.replace(r'{{% content %}}', pages_html)
+        document_html = template_html.replace(r'{{% content %}}', content_html)
 
         # Items replaced here will also target user content, since user content has been merged by
         # now.
         document_html = document_html.replace(r'{{% site_name %}}', project_config['site_name'])
         document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
         document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
+        # NOTE: We do a weird thing here. Note that the text we are replacing INCLUDES the single
+        #       quotes surrounding it.  That violates the cleanliness of how template substitution
+        #       works, but allows us to replace the value in the template with a json boolean.
+        #
         document_html = document_html.replace(
-            r'{{% single_file %}}', to_json_bool(CONFIG['output_format'] == 'single_file')
+            r"'{{% single_file %}}'", to_json_bool(CONFIG['output_format'] == 'single_file')
         )
         document_html = document_html.replace(
             r'{{% watermark %}}', project_config.get("watermark", "")

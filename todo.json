@@ -221,6 +221,15 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "App.globalConfig.singleFile should probably be text, and be\u00a0App.globalConfig.outputFormat",
+                    "id": "151",
+                    "id_labels": [],
+                    "description": "Would match the extensibility of the json config better, and would let us stop doing the strange template substitution (which includes the single quotes today).",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
                 }
             ],
             "archived": false
