@@ -3,57 +3,62 @@ var App = App || {}; // Create namespace
 (function () {
     "use strict";
 
+    App.state = {
+        allMenuSpans: null
+    };
+
     App.main = () => {
         // -----------------------
         // menu-tree: Find all items (spans) in all menu-tree(s)
         // -----------------------
         const menu_trees = document.getElementsByClassName("menu-tree");
-        const all_menu_spans = [];
+        App.state.allMenuSpans = [];
         for (let menu_tree of menu_trees) {
             const menu_spans = menu_tree.getElementsByTagName("span");
             for (let span of menu_spans) {
-                all_menu_spans.push(span);
+                App.state.allMenuSpans.push(span);
             }
         }
 
         // -----------------------
         // menu-tree: Set item (span) click handler
         // -----------------------
-        for (let span of all_menu_spans) {
+        for (let span of App.state.allMenuSpans) {
             span.addEventListener("click", function () {
-                // Unselect all items in all menu-tree(s)
-                for (let old_span of all_menu_spans) {
-                    old_span.classList.remove("selected");
-                    old_span.classList.remove("navigating");
-                }
+                App.onClickMenuItem(this);
+                // // Unselect all items in all menu-tree(s)
+                // for (let old_span of App.state.allMenuSpans) {
+                //     old_span.classList.remove("selected");
+                //     old_span.classList.remove("navigating");
+                // }
 
-                const pageId = this.dataset.documentName;
-                const targetHeadingId = this.dataset.targetHeadingId;
+                // const pageId = this.dataset.documentName;
+                // const targetHeadingId = this.dataset.targetHeadingId;
                 
-                // -----------------------------
-                // Make the target page visible
-                // -----------------------------
-                App.showPage(pageId);
+                // // -----------------------------
+                // // Make the target page visible
+                // // -----------------------------
+                // App.showPage(pageId);
 
-                // ----------------------------
-                // Scroll to the target heading (or to top if no HeadingId exists)
-                // -----------------------------
-                App.scrollToHash(targetHeadingId);
+                // // ----------------------------
+                // // Scroll to the target heading (or to top if no HeadingId exists)
+                // // -----------------------------
+                // App.scrollToHash(targetHeadingId);
 
-                // -----------------------------
-                // Select the clicked menu item
-                // -----------------------------
-                this.classList.add("selected");
+                // // -----------------------------
+                // // Select the clicked menu item
+                // // -----------------------------
+                // this.classList.add("selected");
 
-                // If in responsive narrow-screen, re-hide the menu.
-                document.getElementById("sidebar-container").classList.remove("force-show");
+                // // If in responsive narrow-screen, re-hide the menu.
+                // document.getElementById("sidebar-container").classList.remove("force-show");
             });
         }
 
         // -----------------------
         // menu-tree: Select the current document (at page load)
         // -----------------------
-        for (let span of all_menu_spans) {
+        for (let span of App.state.allMenuSpans) {
             if (span.id == "menuitem_doc_" + App.globalConfig.currentDocumentName) {
                 span.classList.add("selected");
             }
@@ -157,6 +162,75 @@ var App = App || {}; // Create namespace
         
         // Show version
         console.log('Built with Electro ' + App.globalConfig.electroVersion);
+    };
+
+    App.onClickMenuItem = (self) => {
+        console.log("App.onClickMenuItem");
+        // Unselect all items in all menu-tree(s)
+        for (let old_span of App.state.allMenuSpans) {
+            old_span.classList.remove("selected");
+            old_span.classList.remove("navigating");
+        }
+        
+        if (App.globalConfig.singleFile){
+            App.onClickMenuSingleFile(self);
+        }
+        else{
+            App.onClickMenuStaticSite(self);
+        }
+    };
+    
+    App.onClickMenuSingleFile = (self) => {
+        console.log("App.onClickMenuSingleFile");
+        const pageId = self.dataset.documentName;
+        const targetHeadingId = self.dataset.targetHeadingId;
+        
+        // -----------------------------
+        // Make the target page visible
+        // -----------------------------
+        App.showPage(pageId);
+
+        // ----------------------------
+        // Scroll to the target heading (or to top if no HeadingId exists)
+        // -----------------------------
+        App.scrollToHash(targetHeadingId);
+
+        // -----------------------------
+        // Select the clicked menu item
+        // -----------------------------
+        self.classList.add("selected");
+
+        // If in responsive narrow-screen, re-hide the menu.
+        document.getElementById("sidebar-container").classList.remove("force-show");
+    };
+
+    App.onClickMenuStaticSite = (self) => {
+        console.log("App.onClickMenuStaticSite");
+        // Navigate to link, if this span contains one
+        var target_url = null;
+        const anchors = self.getElementsByTagName("a");
+        if (anchors) {
+            for (let anchor of anchors) {
+                target_url = anchor.href;
+                // There should be only one anchor, but break anyway.
+                break;
+            }
+        }
+        if (target_url !== null){
+            // if(App.globalConfig.currentDocumentName in 
+            if (target_url.indexOf(App.globalConfig.currentDocumentName) > -1) {
+                // We are navigating to the current page
+                self.classList.add("selected");
+            }
+            else{
+                // We are navigating away from the current page
+                self.classList.add("navigating");
+            }
+            window.location.href = target_url;
+        }
+        else {
+            self.classList.add("selected");
+        }
     };
 
     App.showPage = (pageId) => {

@@ -34,7 +34,8 @@ def build_project(path_build):
         # -------------------------
         FAULTS.error(
             f'Path "{path_build}" does not exist. Expected a path to an electro project directory'
-            ' or to an electro project file (i.e. ".json" file).')
+            ' or to an electro project file (i.e. ".json" file).'
+        )
         return
     if path_build.is_dir():
         # -------------------------
@@ -51,7 +52,9 @@ def build_project(path_build):
         # -------------------------
         path_project_file = path_build
         if path_project_file.suffix != '.json':
-            FAULTS.error(f'Expected project file ("{path_project_file}") to have a ".json" extension.')
+            FAULTS.error(
+                f'Expected project file ("{path_project_file}") to have a ".json" extension.'
+            )
             return
         path_project_directory = path_project_file.parent
 
@@ -78,7 +81,8 @@ def build_project(path_build):
     if CONFIG['output_format'] not in OUTPUT_FORMATS:
         FAULTS.error(
             f'Project file specified an output_format of "{CONFIG["output_format"]}". '
-            f'Expected one of: {OUTPUT_FORMATS}.')
+            f'Expected one of: {OUTPUT_FORMATS}.'
+        )
         return
 
     # -----------------------
@@ -167,13 +171,14 @@ class Builder:
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
             self.build_document(path_markdown, document_name)
             subheading_menu_html = self.build_subheading_menu_html(document_name)
-            classes = ""
             if subheading_menu_html:
-                caret_str = '<i class="caret fa fa-angle-right"></i>'
+                # caret_str = '<i class="caret fa fa-angle-right"></i>'
+                caret_visible = True
             else:
                 # classes += ' no_child'
                 # caret_str = ''
-                caret_str = '<i class="caret-placeholder"></i>'
+                # caret_str = '<i class="caret-placeholder"></i>'
+                caret_visible = False
             # self.menu_html += (
             #     f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
             #     + f'{caret_str}'
@@ -182,18 +187,27 @@ class Builder:
             #     + format_menu_heading(menu_name)
             #     + f'</span>{subheading_menu_html}</li>\n'
             # )
-            self.menu_html += f'<li><span class="{classes}" id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
-            pieces = split_if_numbered(menu_name)
-            if pieces:
-                heading_number, heading_text = pieces
-                self.menu_html += (
-                    '<div class="menu-text-container">'
-                    f'<div class="menu-left-piece wide">{caret_str}{heading_number}</div>'
-                    f'<div class="menu-right-piece">{heading_text}</div>'
-                    '</div>'
-                )
-            else:
-                self.menu_html += f'{caret_str}' + format_menu_heading(menu_name)
+            self.menu_html += (
+                f'<li><span id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
+            )
+            # pieces = split_if_numbered(menu_name)
+            # if pieces:
+            #     heading_number, heading_text = pieces
+            #     self.menu_html += (
+            #         '<div class="menu-text-container">'
+            #         f'<div class="menu-left-piece wide">{caret_str}{heading_number}</div>'
+            #         f'<div class="menu-right-piece">{heading_text}</div>'
+            #         '</div>'
+            #     )
+            # else:
+            # menu_heading_html = format_menu_heading(menu_name, caret_html=caret_str)
+            # if CONFIG['output_format'] == 'static_site':
+            #     menu_heading_html = f'<a href="{document_name}.html">{menu_heading_html}</a>'
+            # self.menu_html += menu_heading_html
+            link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
+            self.menu_html += format_menu_heading(
+                menu_name, include_caret_space=True, caret_visible=caret_visible, link_url=link_url
+            )
             self.menu_html += f'</span>{subheading_menu_html}</li>\n'
 
         self.menu_html += '</ul>\n'
@@ -207,12 +221,17 @@ class Builder:
                 menu_html = '    <ul class="nested">\n'
             heading_text = heading.text.strip()
             heading_id = heading_text_to_id(heading_text)
-            heading_url = f'{document_name}.html#{heading_id}'
+            link_url = (
+                f'{document_name}.html#{heading_id}'
+                if CONFIG['output_format'] == 'static_site'
+                else None
+            )
+            menu_heading_html = format_menu_heading(heading_text, on_nbsp=True, link_url=link_url)
+            # if CONFIG['output_format'] == 'static_site':
+            #     menu_heading_html = f'<a href="{heading_url}">{menu_heading_html}</a>'
             menu_html += (
-                f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">'
-                # + f'<a href="{heading_url}">{heading_text}</a>'
-                # + f'{heading_text}'
-                + format_menu_heading(heading_text, on_nbsp=True)
+                f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
+                + menu_heading_html
                 + '</span></li>\n'
             )
         if menu_html:
@@ -389,9 +408,7 @@ class Builder:
         document_html = document_html.replace(
             r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
         )
-        document_html = document_html.replace(
-            r'{{% year %}}', str(date.today().year)
-        )
+        document_html = document_html.replace(r'{{% year %}}', str(date.today().year))
 
         with open(path_document_out, 'w') as file:
             file.write(document_html)
@@ -494,7 +511,9 @@ class Builder:
             # -------------------
             for document_name, document_info in self.site_documents.items():
                 path_site_document = path_site_directory / Path(f'{document_name}.html')
-                self._render_document(template_html, path_site_document, document_info['html'], document_name)
+                self._render_document(
+                    template_html, path_site_document, document_info['html'], document_name
+                )
 
         # # TODO: cleanup
         # path_site_document = path_site_directory / Path(f'index.raw.html')
@@ -558,27 +577,49 @@ def to_json_bool(python_bool):
     return 'true' if python_bool else 'false'
 
 
-def format_menu_heading(text, on_nbsp=False):
+def format_menu_heading(
+    text, on_nbsp=False, include_caret_space=False, caret_visible=False, link_url=None
+):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
     For headings that start with a section number (e.g. "1.5 Study Results") we
     will split the heading into two pieces and wrap them each in a div.
     """
+    if include_caret_space:
+        caret_html = (
+            '<i class="caret fa fa-angle-right"></i>'
+            if caret_visible
+            else '<i class="caret-placeholder"></i>'
+        )
+    else:
+        caret_html = ''
+
+    html = ""
+
     NBSP = "\xa0"
     if (NBSP in text and on_nbsp) or (" " in text and not on_nbsp):
         temp_text = text.replace(NBSP, " ") if on_nbsp else text
         pieces = split_if_numbered(temp_text)
         if pieces:
-            heading_number, heading_text = pieces
-            text = (
-                '<div class="menu-text-container">'
-                f'<div class="menu-left-piece">{heading_number}</div>'
-                f'<div class="menu-right-piece">{heading_text}</div>'
-                '</div>'
-            )
+            left_content, right_content = pieces
 
-    logger.debug(f'format_menu_heading: result: "{text}"')
-    return text
+        if link_url:
+            right_content = f'<a href="{link_url}">{right_content}</a>'
+        html = (
+            '<div class="menu-text-container">\n'
+            f'<div class="menu-left-piece">{caret_html}{left_content}</div>\n'
+            f'<div class="menu-right-piece">{right_content}</div>\n'
+            '</div>\n'
+        )
+
+    if not html:
+        content_html = text
+        if link_url:
+            content_html = f'<a href="{link_url}">{content_html}</a>'
+        html = caret_html + content_html
+
+    logger.debug(f'format_menu_heading: result: "{html}"')
+    return html
 
 
 def split_if_numbered(text):
@@ -612,7 +653,7 @@ def heading_text_to_id(text):
     #       Identical we change it BACK to '&', which will then get DROPPED by the
     #       ID conversion.
     text = text.replace('&amp;', '&')
-    # Replace decimal with dashes so that heading numbers like "3.12" vs "31.2" remain 
+    # Replace decimal with dashes so that heading numbers like "3.12" vs "31.2" remain
     # unique.
     text = text.replace('.', '-')
     for char in text.lower():
