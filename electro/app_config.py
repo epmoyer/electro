@@ -15,6 +15,7 @@ THEME = Theme({
 # fmt: on
 CONSOLE = Console(highlight=False, color_system='256', theme=THEME)
 CONSOLE_PPRINT = Console(highlight=True, color_system='256', theme=THEME)
+OUTPUT_FORMATS = ['static_site', 'single_file']
 
 CONFIG = {
     'version': '0.1.7',
@@ -32,4 +33,5 @@ CONFIG = {
     'path_site_directory': None,
     'path_theme_directory': None,
     'disable_nl2br': None,
+    'output_format': None,
 }

@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 # Local
 from loguru import logger
 from pytest import mark
-from electro.app_config import CONFIG
+from electro.app_config import CONFIG, OUTPUT_FORMATS
 from electro.faults import FAULTS
 from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
@@ -43,6 +43,16 @@ def build_project(project_directory):
         project_config = json.load(file)
     CONFIG['project_config'] = project_config
     logger.info(f'Project Config:\n{pformat(project_config)}')
+
+    # -----------------------
+    # Determine output format
+    # -----------------------
+    CONFIG['output_format'] = project_config.get('output_format', 'static_site')
+    if CONFIG['output_format'] not in OUTPUT_FORMATS:
+        FAULTS.error(
+            f'Project file specified an output_format of "{CONFIG["output_format"]}". '
+            f'Expected one of: {OUTPUT_FORMATS}.')
+        return
 
     # -----------------------
     # Determine site dir
@@ -74,7 +84,7 @@ def build_project(project_directory):
         builder.add_navigation_descriptor(navigation_descriptor)
     builder.render_site()
 
-    if project_config.get('pack'):
+    if CONFIG['output_format'] == 'single_file':
         pack_site(path_site_directory)
 
 
