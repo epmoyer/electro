@@ -88,9 +88,13 @@ def pack_site(path_site_directory):
     path_file_packed = path_site_directory / Path("index.html")
     print(f'packing {path_file.name} to {path_file_packed}...')
     simplepack(path_file, path_file_stage1, uglify=False)
+    print(f'Inlining images to: {path_file_stage2}...')
     make_html_images_inline(str(path_file_stage1), str(path_file_stage2))
+    print(f'Inlining html fonts to: {path_file_stage3}...')
     make_html_fonts_inline(path_file_stage2, path_file_stage3)
+    print(f'Inlining html icons to: {path_file_packed}...')
     make_html_icons_inline(path_file_stage3, path_file_packed)
+    print("Packing complete.")
 
 
 class Builder:
