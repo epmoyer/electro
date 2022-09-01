@@ -213,6 +213,14 @@
                     "due": null,
                     "due_complete": false,
                     "repeat": null
+                },
+                {
+                    "name": "Commit to IBM plex, local, in positron theme.",
+                    "id": "150",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ],
             "archived": false
@@ -221,6 +229,14 @@
             "name": "Doing",
             "id": "3",
             "cards": [
+                {
+                    "name": "Confirm that we are NOT fetching fonts from google; local only.",
+                    "id": "149",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "---",
                     "id": "141",

@@ -169,7 +169,6 @@ class Builder:
             subheading_menu_html = self.build_subheading_menu_html(document_name)
             classes = ""
             if subheading_menu_html:
-                subheading_menu_html = '\n' + subheading_menu_html
                 caret_str = '<i class="caret fa fa-angle-right"></i>'
             else:
                 # classes += ' no_child'
@@ -217,7 +216,7 @@ class Builder:
                 + '</span></li>\n'
             )
         if menu_html:
-            menu_html += '    </ul>\n'
+            menu_html = '\n' + menu_html + '    </ul>\n'
         return menu_html
 
     def build_document(self, path_markdown, document_name):
