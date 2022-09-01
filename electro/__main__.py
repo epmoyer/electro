@@ -1,6 +1,7 @@
 """Electro App, entry point"""
 
 # Standard library
+from pathlib import Path
 
 # library
 import click
@@ -37,9 +38,17 @@ def cli(enable_debug_logging, disable_nl2br):
 
 
 @cli.command()
-@click.argument('project_directory', default='./')
-def build(project_directory):
-    build_project(project_directory)
+@click.argument('path_project_text', metavar='project_path', default='./')
+def build(path_project_text):
+    """Build the project.
+
+    The user can pass either the project directory OR a path to the project file (i.e. the 
+    project configuration JSON file).  If a directory is passed, then we will assume the
+    configuration JSON file is in that directory and has the default name.
+    """
+    path_project = Path(path_project_text)
+   
+    build_project(path_project)
     FAULTS.render()
 
 if __name__ == '__main__':

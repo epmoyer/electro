@@ -27,19 +27,35 @@ from electro.inline_icons import make_html_icons_inline
 pprint = CONFIG['console_pprint']
 
 
-def build_project(project_directory):
-    # -----------------------
-    # Load project config file
-    # -----------------------
-    path_project_directory = Path(project_directory)
-    if not path_project_directory.is_dir():
-        FAULTS.error(f'project_directory is not a directory: {project_directory}')
+def build_project(path_build):
+    if not path_build.exists():
+        # -------------------------
+        # Bad path passed
+        # -------------------------
+        FAULTS.error(
+            f'Path "{path_build}" does not exist. Expected a path to an electro project directory'
+            ' or to an electro project file (i.e. ".json" file).')
         return
-    path_project = path_project_directory / Path(CONFIG['project_filename'])
-    if not path_project.exists():
-        FAULTS.error(f'Project file {path_project} not found.')
-        return
-    with open(path_project, 'r') as file:
+    if path_build.is_dir():
+        # -------------------------
+        # Directory passed
+        # -------------------------
+        path_project_directory = path_build
+        path_project_file = path_project_directory / Path(CONFIG['project_filename'])
+        if not path_project_file.exists():
+            FAULTS.error(f'Project file {path_project_file} not found.')
+            return
+    else:
+        # -------------------------
+        # Project file path passed
+        # -------------------------
+        path_project_file = path_build
+        if path_project_file.suffix != '.json':
+            FAULTS.error(f'Expected project file ("{path_project_file}") to have a ".json" extension.')
+            return
+        path_project_directory = path_project_file.parent
+
+    with open(path_project_file, 'r') as file:
         project_config = json.load(file)
     CONFIG['project_config'] = project_config
     logger.info(f'Project Config:\n{pformat(project_config)}')
@@ -57,7 +73,7 @@ def build_project(project_directory):
     # -----------------------
     # Determine site dir
     # -----------------------
-    path_site_directory = Path(project_directory) / Path(project_config['site_directory'])
+    path_site_directory = path_project_directory / Path(project_config['site_directory'])
     if not path_site_directory.is_dir():
         FAULTS.error(f'Site directory {path_site_directory} does not exist.')
         return
@@ -446,7 +462,7 @@ class Builder:
             r'{{% year %}}', str(date.today().year)
         )
 
-        print(f'   Building {path_site_document}...')
+        print(f'Building {path_site_document}...')
         with open(path_site_document, 'w') as file:
             file.write(document_html)
 
