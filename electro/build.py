@@ -363,8 +363,45 @@ class Builder:
         doc_descriptor = {'title': title, 'location': location, 'heading': heading, 'text': text}
         self.search_index['docs'].append(doc_descriptor)
 
-    def render_site(self):
+    def _render_document(self, template_html, path_document_out, content_html, document_name):
+        print(f'Building {path_document_out}...')
+
         project_config = CONFIG['project_config']
+
+        pages_html = ""
+        style_html = ""
+        for document_name, document_info in self.site_documents.items():
+            pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
+            pages_html += document_info['html']
+            pages_html += '</div>'
+            # Start all subsequent pages as hidden
+            style_html = 'style="display: none"'
+
+        document_html = template_html.replace(r'{{% content %}}', pages_html)
+
+        # Items replaced here will also target user content, since user content has been merged by
+        # now.
+        document_html = document_html.replace(r'{{% site_name %}}', project_config['site_name'])
+        document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
+        document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
+        document_html = document_html.replace(
+            r'{{% single_file %}}', to_json_bool(CONFIG['output_format'] == 'single_file')
+        )
+        document_html = document_html.replace(
+            r'{{% watermark %}}', project_config.get("watermark", "")
+        )
+        document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
+        document_html = document_html.replace(
+            r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
+        )
+        document_html = document_html.replace(
+            r'{{% year %}}', str(date.today().year)
+        )
+
+        with open(path_document_out, 'w') as file:
+            file.write(document_html)
+
+    def render_site(self):
         path_site_directory = CONFIG['path_site_directory']
         path_theme_directory = CONFIG['path_theme_directory']
         path_project_directory = CONFIG['path_project_directory']
@@ -441,46 +478,69 @@ class Builder:
         with open(path_template, 'r') as file:
             template_html = file.read()
 
-        # TODO: cleanup
-        path_site_document = path_site_directory / Path(f'index.raw.html')
-        # path_site_document = path_site_directory / Path(f'{document_name}.html')
-        document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
-        document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
-        # TODO: cleanup
-        # document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
-        document_html = document_html.replace(r'{{% current_document_name %}}', "Document")
-        document_html = document_html.replace(
-            r'{{% single_file %}}', to_json_bool(project_config.get("pack", False))
-        )
-        document_html = document_html.replace(
-            r'{{% watermark %}}', project_config.get("watermark", "")
-        )
+        if CONFIG['output_format'] == 'single_file':
+            # -------------------
+            # Single-file document
+            # -------------------
+            pages_html = ""
+            style_html = ""
+            for document_name, document_info in self.site_documents.items():
+                pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
+                # pages_html += f'(content from {document_name})<br><br>'
+                pages_html += document_info['html']
+                pages_html += '</div>'
+                # Start all subsequent pages as hidden
+                style_html = 'style="display: none"'
+            path_site_document = path_site_directory / Path('index.raw.html')
+            self._render_document(template_html, path_site_document, pages_html, "Document")
+        else:
+            # -------------------
+            # Static site
+            # -------------------
+            for document_name, document_info in self.site_documents.items():
+                path_site_document = path_site_directory / Path(f'{document_name}.html')
+                self._render_document(template_html, path_site_document, document_info['html'], document_name)
 
-        pages_html = ""
-        style_html = ""
-        for document_name, document_info in self.site_documents.items():
-            pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
-            # pages_html += f'(content from {document_name})<br><br>'
-            pages_html += document_info['html']
-            pages_html += '</div>'
-            # Start all subsequent pages as hidden
-            style_html = 'style="display: none"'
+        # # TODO: cleanup
+        # path_site_document = path_site_directory / Path(f'index.raw.html')
+        # # path_site_document = path_site_directory / Path(f'{document_name}.html')
+        # document_html = template_html.replace(r'{{% site_name %}}', project_config['site_name'])
+        # document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
+        # # TODO: cleanup
+        # # document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
+        # document_html = document_html.replace(r'{{% current_document_name %}}', "Document")
+        # document_html = document_html.replace(
+        #     r'{{% single_file %}}', to_json_bool(project_config.get("pack", False))
+        # )
+        # document_html = document_html.replace(
+        #     r'{{% watermark %}}', project_config.get("watermark", "")
+        # )
 
-        document_html = document_html.replace(r'{{% content %}}', pages_html)
+        # pages_html = ""
+        # style_html = ""
+        # for document_name, document_info in self.site_documents.items():
+        #     pages_html += f'<div class="content-page" id="{document_name}" {style_html}>'
+        #     # pages_html += f'(content from {document_name})<br><br>'
+        #     pages_html += document_info['html']
+        #     pages_html += '</div>'
+        #     # Start all subsequent pages as hidden
+        #     style_html = 'style="display: none"'
 
-        # Items replaced here will also target user content, since user content has been merged by
-        # now.
-        document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
-        document_html = document_html.replace(
-            r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
-        )
-        document_html = document_html.replace(
-            r'{{% year %}}', str(date.today().year)
-        )
+        # document_html = document_html.replace(r'{{% content %}}', pages_html)
 
-        print(f'Building {path_site_document}...')
-        with open(path_site_document, 'w') as file:
-            file.write(document_html)
+        # # Items replaced here will also target user content, since user content has been merged by
+        # # now.
+        # document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
+        # document_html = document_html.replace(
+        #     r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
+        # )
+        # document_html = document_html.replace(
+        #     r'{{% year %}}', str(date.today().year)
+        # )
+
+        # print(f'Building {path_site_document}...')
+        # with open(path_site_document, 'w') as file:
+        #     file.write(document_html)
 
         # -------------------
         # Save search index
