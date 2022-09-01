@@ -204,6 +204,15 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Add way to specify \"home\" button target in project .json",
+                    "id": "148",
+                    "id_labels": [],
+                    "description": "Today it defaults to \"doc_info\" page, but that page may not exist for all single_file projects.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
                 }
             ],
             "archived": false
