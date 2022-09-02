@@ -78,9 +78,10 @@
                     "id_labels": [
                         "4"
                     ],
-                    "description": "",
+                    "description": "md converter is inserting an empty `<span></span>` into fenced code blocks, causing a blank space to appear before code.",
                     "due": null,
-                    "due_complete": false
+                    "due_complete": false,
+                    "repeat": null
                 },
                 {
                     "name": "Create a custom favicon/icon.",

@@ -61,6 +61,11 @@ h6 {
 b {
     color: var(--color-heading-text);
 }
+
+ul{
+    list-style-type: disc;
+}
+
 th {
     background-color: var(--color-table-header-bg);
     color: var(--color-table-header);
@@ -88,6 +93,9 @@ pre {
     color: #4a4a4a;
     background-color: #ebebeb;
     padding: 6px;
+}
+.notices code, .notices pre {
+    background-color: #dbdbdb;
 }
 a {
     color: #2980b9;
@@ -125,7 +133,7 @@ hr {
     /* background-color: pink; */
 }
 blockquote {
-    color: #9b59c7;
+    color: #888;
     border-left: 8px solid #ccc;
     padding: 0px 12px;
 }
