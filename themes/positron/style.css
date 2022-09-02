@@ -70,14 +70,24 @@ th strong {
     color: var(--color-table-header);
 }
 code {
-    color: #008c8c;
+    color: #4a4a4a;
+    background: #ebebeb;
     white-space: pre-wrap;
     word-wrap: break-word;
     padding: 2px 5px;
     font-family: var(--font-code);
-    background: #fff;
-    border: solid 1px #e1e4e5;
     font-size: 75%;
+    border: none;
+    border-radius: 4px;
+}
+pre code {
+    background: none;
+    border-radius: none;
+}
+pre {
+    color: #4a4a4a;
+    background-color: #ebebeb;
+    padding: 6px;
 }
 a {
     color: #2980b9;

@@ -73,6 +73,16 @@
                     "due_complete": false
                 },
                 {
+                    "name": "Fenced code blocks have blank space at start",
+                    "id": "153",
+                    "id_labels": [
+                        "4"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "Create a custom favicon/icon.",
                     "id": "135",
                     "id_labels": [],
