@@ -533,15 +533,14 @@ def format_menu_heading(
         pieces = split_if_numbered(temp_text)
         if pieces:
             left_content, right_content = pieces
-
-        if link_url:
-            right_content = f'<a href="{link_url}">{right_content}</a>'
-        html = (
-            '<div class="menu-text-container">\n'
-            f'<div class="menu-left-piece">{caret_html}{left_content}</div>\n'
-            f'<div class="menu-right-piece">{right_content}</div>\n'
-            '</div>\n'
-        )
+            if link_url:
+                right_content = f'<a href="{link_url}">{right_content}</a>'
+            html = (
+                '<div class="menu-text-container">\n'
+                f'<div class="menu-left-piece">{caret_html}{left_content}</div>\n'
+                f'<div class="menu-right-piece">{right_content}</div>\n'
+                '</div>\n'
+            )
 
     if not html:
         content_html = text
