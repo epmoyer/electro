@@ -51,8 +51,23 @@ h6 {
     color: var(--color-heading-text);
 }
 h1 {
-    font-size: 175%;
+    font-size: 27px;
     border-bottom: var(--color-h1-underline) solid 3px;
+}
+h2 {
+    font-size: 25px;
+}
+h3 {
+    font-size: 23px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 20px;
+}
+h6 {
+    font-size: 19px;
 }
 h3,
 h4,
