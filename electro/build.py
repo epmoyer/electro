@@ -286,6 +286,17 @@ class Builder:
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def pre_parse_markdown(self, markdown):
+        markdown = self._parse_replacements(markdown)
+        markdown = self._parse_notices(markdown)
+        return markdown
+
+    def _parse_replacements(self, markdown):
+        replacements = CONFIG['project_config'].get('replacements', ())
+        for replacement in replacements:
+            markdown = markdown.replace(replacement['find'], replacement['replace'])
+        return markdown
+    
+    def _parse_notices(self, markdown):
         notice_start_types = re.findall(r'{{% notice (\S*) %}}', markdown)
         logger.debug(f'{notice_start_types=}')
         for notice_start_type in notice_start_types:

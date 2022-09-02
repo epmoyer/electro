@@ -56,7 +56,13 @@ def make_html_images_inline(in_filepath, out_filepath):
     basepath = os.path.split(in_filepath.rstrip(os.path.sep))[0]
     soup = BeautifulSoup(open(in_filepath, 'r'), 'html.parser')
     for img in soup.find_all('img'):
-        img_path = os.path.join(basepath, img.attrs['src'])
+        source_path = img.attrs['src']
+        if source_path.startswith('/'):
+            # Absolute path
+            img_path = source_path
+        else:
+            # Relative path
+            img_path = os.path.join(basepath, img.attrs['src'])
         mimetype = guess_type(img_path)
         img.attrs['src'] = \
             "data:%s;base64,%s" % (mimetype, file_to_base64(img_path))
