@@ -180,24 +180,6 @@
             "id": "2",
             "cards": [
                 {
-                    "name": "Allow pointing to .json in launch.",
-                    "id": "147",
-                    "id_labels": [],
-                    "description": "Today you pass electro the _directory_ containing your `electro.json` file.  Should also allow passing the path to the `electro.json` file itself.   That will allow having a single test project containing two .json files for testing; one of which builds a packed (single file) output, and the other a static site.",
-                    "due": null,
-                    "due_complete": false,
-                    "repeat": null
-                },
-                {
-                    "name": "Move --nobreak option into config .json",
-                    "id": "145",
-                    "id_labels": [],
-                    "description": "And flip the sense.  no break should be the default, and there should be an option in the config to enable breaks.",
-                    "due": null,
-                    "due_complete": false,
-                    "repeat": null
-                },
-                {
                     "name": "Add markdown test cases to test project.",
                     "id": "146",
                     "id_labels": [],
@@ -245,6 +227,30 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                }
+            ]
+        },
+        {
+            "name": "Done",
+            "id": "4",
+            "cards": [
+                {
+                    "name": "Move --nobreak option into config .json",
+                    "id": "145",
+                    "id_labels": [],
+                    "description": "And flip the sense.  no break should be the default, and there should be an option in the config to enable breaks.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "Allow pointing to .json in launch.",
+                    "id": "147",
+                    "id_labels": [],
+                    "description": "Today you pass electro the _directory_ containing your `electro.json` file.  Should also allow passing the path to the `electro.json` file itself.   That will allow having a single test project containing two .json files for testing; one of which builds a packed (single file) output, and the other a static site.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
                 },
                 {
                     "name": "---",
@@ -253,13 +259,7 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
-                }
-            ]
-        },
-        {
-            "name": "Done",
-            "id": "4",
-            "cards": [
+                },
                 {
                     "name": "Scroll to top on section name click.",
                     "id": "144",
