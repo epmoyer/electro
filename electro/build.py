@@ -286,9 +286,27 @@ class Builder:
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def pre_parse_markdown(self, markdown):
+        if CONFIG['project_config'].get('strip_frontmatter', False):
+            markdown = self._strip_frontmatter(markdown)
         markdown = self._parse_replacements(markdown)
         markdown = self._parse_notices(markdown)
         return markdown
+
+    def _strip_frontmatter(self, markdown):
+        found_start = False
+        found_end = False
+        out_lines = []
+        for line in markdown.splitlines():
+            if not found_start:
+                if re.match(r'^---\s*$', line):
+                    found_start = True
+                    continue
+            elif not found_end:
+                if re.match(r'^---\s*$', line):
+                    found_end = True
+                continue
+            out_lines.append(line)
+        return '\n'.join(out_lines)
 
     def _parse_replacements(self, markdown):
         replacements = CONFIG['project_config'].get('replacements', ())

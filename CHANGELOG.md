@@ -11,10 +11,12 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## 1.0.0 2022-09-01
 ### Changed
 - Accept a project file (.json) or dir as command line argument
+- Restyle positron theme for "general case" use.
 ### Added
 - Project .json keys:
     - `output_format`: One of "single_file" or "static_site"
     - `enable_newline_to_break`: Optional. If `true`, then newlines in .md will be rendered as `<br>`
+    - `strip_frontmatter`: If `true`, strip frontmatter from .md documents (i.e. `---` enclosed block)
 ## Removed
 - Command line `--nobreak` option
 
