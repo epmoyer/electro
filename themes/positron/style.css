@@ -6,9 +6,10 @@ body {
     --color-navigating: rgb(38, 114, 255);
     --color-header: #2980b9;
     --color-header-text: #fff;
+    --color-heading-text: #444;
     --color-watermark: #ff000034;
 
-    --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
+    --font-content-header: "IBM Plex Sans", sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
@@ -44,19 +45,19 @@ h6 {
     font-family: var(--font-content-header);
     font-weight: 700;
     margin: 5px 0px;
+    color: var(--color-heading-text);
 }
 h1 {
     font-size: 175%;
-}
-h1,
-h2 {
-    color: var(--color-content);
 }
 h3,
 h4,
 h5,
 h6 {
     color: #585858;
+}
+b {
+    color: var(--color-heading-text);
 }
 code {
     color: #008c8c;
