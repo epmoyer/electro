@@ -10,7 +10,7 @@ NOTICE_ICONS = {
     'note': 'fa-exclamation-circle',
     'info': 'fa-info-circle',
     'tip': 'fa-wrench',
-    'warning': 'fa-warning',
+    'warning': 'fa-exclamation-triangle',
 }
 
 
