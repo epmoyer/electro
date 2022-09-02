@@ -10,6 +10,7 @@ body {
     --color-watermark: #ff000034;
     --color-table-header-bg: steelblue;
     --color-table-header: white;
+    --color-h1-underline: #ccc;
 
     --font-content-header: "IBM Plex Sans", sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
@@ -51,6 +52,7 @@ h6 {
 }
 h1 {
     font-size: 175%;
+    border-bottom: var(--color-h1-underline) solid 3px;
 }
 h3,
 h4,
