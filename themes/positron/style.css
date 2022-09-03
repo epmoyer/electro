@@ -3,6 +3,7 @@ body {
     font-family: "IBM Plex Sans", sans-serif;
     
     --color-content: #444;
+    --color-strong: #333;
     --color-navigating: rgb(38, 114, 255);
     --color-header: #2980b9;
     --color-header-text: #fff;
@@ -75,9 +76,6 @@ h5,
 h6 {
     color: #585858;
 }
-b {
-    color: var(--color-heading-text);
-}
 
 ul{
     list-style-type: disc;
@@ -135,7 +133,7 @@ a:hover {
 }
 strong {
     font-weight: 600;
-    color: black;
+    color: var(--color-strong);
 }
 hr {
     height: 1px;

@@ -199,31 +199,6 @@
             "id": "2",
             "cards": [
                 {
-                    "name": "Add markdown test cases to test project.",
-                    "id": "146",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
-                    "name": "Add way to specify \"home\" button target in project .json",
-                    "id": "148",
-                    "id_labels": [],
-                    "description": "Today it defaults to \"doc_info\" page, but that page may not exist for all single_file projects.",
-                    "due": null,
-                    "due_complete": false,
-                    "repeat": null
-                },
-                {
-                    "name": "Commit to IBM plex, local, in positron theme.",
-                    "id": "150",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "App.globalConfig.singleFile should probably be text, and be\u00a0App.globalConfig.outputFormat",
                     "id": "151",
                     "id_labels": [],
@@ -238,12 +213,38 @@
         {
             "name": "Doing",
             "id": "3",
-            "cards": []
+            "cards": [
+                {
+                    "name": "Option to generate menu from level 2 (instead of 1)",
+                    "id": "154",
+                    "id_labels": [],
+                    "description": "For docs that use level 1 as their title (like Notable notes)",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                }
+            ]
         },
         {
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Commit to IBM plex, local, in positron theme.",
+                    "id": "150",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Add markdown test cases to test project.",
+                    "id": "146",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Confirm that we are NOT fetching fonts from google; local only.",
                     "id": "149",
@@ -528,6 +529,15 @@
             "name": "OBE",
             "id": "6",
             "cards": [
+                {
+                    "name": "Add way to specify \"home\" button target in project .json",
+                    "id": "148",
+                    "id_labels": [],
+                    "description": "Today it defaults to \"doc_info\" page, but that page may not exist for all single_file projects.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
                 {
                     "name": "Center h1?",
                     "id": "107",
