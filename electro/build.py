@@ -203,9 +203,11 @@ class SiteBuilder:
         soup = BeautifulSoup(document_html, 'lxml')
         for heading in soup.find_all(['h2', 'h3']):
             html_tag = heading.name
-            print(f'🟣 {html_tag}: "{heading.text}"')
+            heading_text = heading.text.strip()
+            heading_id = heading_text_to_id(heading_text)
+            print(f'🟣 {html_tag}: "{heading_text}" : "{heading_id}"')
             level = int(html_tag[1]) - 1
-            self.menu_builder.add_item(level, heading.text)
+            self.menu_builder.add_item(level, heading_text, heading_id=heading_id)
 
     # *****
 
@@ -576,10 +578,11 @@ MAX_MENU_DEPTH = 3
 
 
 class MenuItem:
-    def __init__(self, display_text, link_url, document_name):
+    def __init__(self, display_text, link_url, document_name, heading_id):
         self.display_text = display_text
         self.link_url = link_url
         self.document_name = document_name
+        self.heading_id = heading_id
         self.children = []
 
 
@@ -590,12 +593,12 @@ class MenuSection:
         self.last_child_at_level = [None] * MAX_MENU_DEPTH
         self.children = []
 
-    def add(self, level, display_text, link_url, document_name):
+    def add(self, level, display_text, heading_id, link_url, document_name):
         """Add a menu item.
 
         level is 0 based.
         """
-        new_item = MenuItem(display_text, link_url, document_name)
+        new_item = MenuItem(display_text, link_url, document_name, heading_id)
         if level == 0:
             self.children.append(new_item)
             self.last_child_at_level[0] = new_item
@@ -621,11 +624,11 @@ class MenuBuilder:
         section = MenuSection(display_text)
         self.sections.append(section)
 
-    def add_item(self, level, display_text, link_url=None, document_name=None):
+    def add_item(self, level, display_text, heading_id=None, link_url=None, document_name=None):
         if document_name:
             self.current_document_name = document_name
         section = self.sections[-1]
-        section.add(level, display_text, link_url, self.current_document_name)
+        section.add(level, display_text, heading_id, link_url, self.current_document_name)
 
     def dump(self, display=False):
         for section in self.sections:
@@ -644,6 +647,7 @@ class MenuBuilder:
         if isinstance(node, MenuItem):
             aux_data['document_name'] = node.document_name
             aux_data['link_url'] = node.link_url
+            aux_data['heading_id'] = node.heading_id
         indent = '   ' * level
         text = f'{indent}🟡 "{node.display_text}" :: {aux_data}'
         logger.debug(text)
@@ -722,11 +726,18 @@ class MenuBuilder:
                 submenu_lines = []
                 caret_visible = False
             class_statement = 'class="no-child"' if level > 0 else ''
-    
+            heading_id_statement = (
+                f'data-target-heading-id={child.heading_id}' if child.heading_id else ''
+            )
+
             lines.append('<li>')
             lines.append(
-                f'<span {class_statement} id="menuitem_doc_{child.document_name}"'
-                f' data-document-name="{child.document_name}">'
+                '<span'
+                f' {class_statement}'
+                f' id="menuitem_doc_{child.document_name}"'
+                f' data-document-name="{child.document_name}"'
+                f' {heading_id_statement}'
+                '>'
             )
             lines.append(
                 format_menu_heading(
@@ -734,7 +745,7 @@ class MenuBuilder:
                     include_caret_space=(level == 0),
                     caret_visible=caret_visible,
                     link_url=child.link_url,
-                    on_nbsp=True
+                    on_nbsp=True,
                 )
             )
             lines.append('</span>')
