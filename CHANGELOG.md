@@ -17,6 +17,8 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
     - `output_format`: One of "single_file" or "static_site"
     - `enable_newline_to_break`: Optional. If `true`, then newlines in .md will be rendered as `<br>`
     - `strip_frontmatter`: If `true`, strip frontmatter from .md documents (i.e. `---` enclosed block)
+    - `number_headings`: If `true`, add numbers to headings.
+    - `number_headings_at_level`: If `number_headings` is true, then this controls the heading level at which numbering will begin. This defaults to `1`, but typically a user will set this to `2`if they have only one level 1 heading, and that heading is the title of the document.
 ## Removed
 - Command line `--nobreak` option
 

@@ -25,6 +25,7 @@ from electro.inline_fonts import make_html_fonts_inline
 from electro.inline_icons import make_html_icons_inline
 
 pprint = CONFIG['console_pprint']
+MAX_HEADING_DEPTH = 6
 
 
 def build_project(path_build):
@@ -200,7 +201,9 @@ class Builder:
                 if CONFIG['output_format'] == 'static_site'
                 else None
             )
-            menu_heading_html = format_menu_heading(heading_text, on_nbsp=True, link_url=link_url, is_level_two=True)
+            menu_heading_html = format_menu_heading(
+                heading_text, on_nbsp=True, link_url=link_url, is_level_two=True
+            )
             menu_html += (
                 f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
                 + menu_heading_html
@@ -286,8 +289,12 @@ class Builder:
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
 
     def pre_parse_markdown(self, markdown):
-        if CONFIG['project_config'].get('strip_frontmatter', False):
+        project_config = CONFIG['project_config']
+        if project_config.get('strip_frontmatter', False):
             markdown = self._strip_frontmatter(markdown)
+        if project_config.get('number_headings', False):
+            at_level = project_config.get('number_headings_at_level', 1)
+            markdown = add_heading_numbers(markdown, at_level=at_level)
         markdown = self._parse_replacements(markdown)
         markdown = self._parse_notices(markdown)
         return markdown
@@ -313,7 +320,7 @@ class Builder:
         for replacement in replacements:
             markdown = markdown.replace(replacement['find'], replacement['replace'])
         return markdown
-    
+
     def _parse_notices(self, markdown):
         notice_start_types = re.findall(r'{{% notice (\S*) %}}', markdown)
         logger.debug(f'{notice_start_types=}')
@@ -538,7 +545,12 @@ def to_json_bool(python_bool):
 
 
 def format_menu_heading(
-    text, on_nbsp=False, include_caret_space=False, caret_visible=False, link_url=None, is_level_two=False
+    text,
+    on_nbsp=False,
+    include_caret_space=False,
+    caret_visible=False,
+    link_url=None,
+    is_level_two=False,
 ):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
@@ -569,11 +581,11 @@ def format_menu_heading(
         number_item_content = f'<div class="{classes}">{number_item_content}</div>'
     if text_item_content:
         text_item_content = f'<div class="text-item">{text_item_content}</div>'
-    
+
     core_content = f'<div class="core">{number_item_content}{text_item_content}</div>'
     if link_url:
         core_content = f'<a href="{link_url}">{core_content}</a>'
-    
+
     html = f'<div class="menu-item-container">{caret_item_content}{core_content}</div>'
 
     logger.debug(f'format_menu_heading: result: "{html}"')
@@ -638,3 +650,60 @@ def copy_directory_contents(source_directory, target_directory):
         logger.debug(f'   {path_source_file.name}')
         path_destination_file = target_directory / Path(path_source_file.name)
         shutil.copy(path_source_file, path_destination_file)
+
+
+def add_heading_numbers(markdown, at_level=1):
+    """Add heading numbers to a markdown file.
+
+    Args:
+        markdown (str): Markdown text
+
+    Returns:
+        out_lines (list of strings): List of the lines in the new markdown file.
+    """
+
+    heading_manager = HeadingManager(at_level)
+    out_lines = []
+    for line in markdown.splitlines():
+        if not line.startswith("#"):
+            out_lines.append(line)
+            continue
+        pieces = line.split()
+        level = len(pieces[0])
+        if level < at_level:
+            out_lines.append(line)
+            continue
+        heading_number_text = heading_manager.get(level)
+        heading_text = " ".join(pieces[1:])
+        line = f'{pieces[0]} {heading_number_text}&nbsp;&nbsp;&nbsp;&nbsp;' f'{heading_text}'
+        out_lines.append(line)
+    return '\n'.join(out_lines)
+
+
+class HeadingManager:
+    """Assign heading numbers to document headings.
+
+    This class is a tool which returns an assigned heading number string (of the form
+    "1.2.3" etc.) to the headings of a markdown document.  The class maintains a count of the
+    current heading number for all indent depths.  Calling .get(level) for each document
+    heading in sequence, from document top to bottom, returns the appropriate heading number
+    for that heading, and updates the counters appropriately.
+    """
+
+    def __init__(self, at_level):
+        """Initialize."""
+        self.at_level = at_level
+        self.heading_number = {level: 0 for level in range(1, MAX_HEADING_DEPTH + 1)}
+
+    def get(self, level):
+        """Get the heading number for the current heading (with depth of level)."""
+
+        # Bump this heading level
+        self.heading_number[level] += 1
+        # Reset all deeper heading levels
+        for i in range(level + 1, MAX_HEADING_DEPTH):
+            self.heading_number[i] = 0
+
+        # Build heading number text
+        digits = [str(self.heading_number[i]) for i in range(self.at_level, level + 1)]
+        return ".".join(digits)
