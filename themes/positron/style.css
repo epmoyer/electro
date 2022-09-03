@@ -502,7 +502,7 @@ blockquote {
     color: rgb(139, 139, 139);
 }
 
-.menu-tree .no_child {
+.menu-tree .no-child {
     /* margin-left: 20px; */
     padding-left: 20px;
 }

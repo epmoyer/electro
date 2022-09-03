@@ -206,6 +206,7 @@ class SiteBuilder:
             print(f'🟣 {html_tag}: "{heading.text}"')
             level = int(html_tag[1]) - 1
             self.menu_builder.add_item(level, heading.text)
+
     # *****
 
     def build_subheading_menu_html(self, document_name, tag='h2'):
@@ -228,7 +229,7 @@ class SiteBuilder:
                 heading_text, on_nbsp=True, link_url=link_url, is_level_two=True
             )
             menu_html += (
-                f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
+                f'        <li><span class="no-child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
                 + menu_heading_html
                 + '</span></li>\n'
             )
@@ -452,6 +453,9 @@ class SiteBuilder:
         else:
             self.menu_builder.cull_items_below(1)
         self.menu_builder.dump(display=True)
+        menu_html = self.menu_builder.render_html()
+        with open('DEBUG_menu_html.html', 'w') as file:
+            file.write(menu_html)
         # *****
         path_site_directory = CONFIG['path_site_directory']
         path_theme_directory = CONFIG['path_theme_directory']
@@ -647,7 +651,7 @@ class MenuBuilder:
             print(text)
         for child in node.children:
             self._dump_recursive(child, display, level + 1)
-    
+
     def cull_items_above(self, level):
         """Remove all menu items ABOVE level (i.e. at an indent LESS than level).
         
@@ -659,7 +663,7 @@ class MenuBuilder:
             #       are recursing a tree where level 0 is the section node, so we add
             #       1 to the passed in level.
             section.children = self._cull_items_above_recursive(level + 1, 0, section)
-    
+
     def _cull_items_above_recursive(self, cull_level, current_level, node):
         if cull_level == current_level + 1:
             return node.children
@@ -679,7 +683,7 @@ class MenuBuilder:
             #       are recursing a tree where level 0 is the section node, so we add
             #       1 to the passed in level.
             self._cull_items_below_recursive(level + 1, 0, section)
-    
+
     def _cull_items_below_recursive(self, cull_level, current_level, node):
         if cull_level == current_level:
             node.children = []
@@ -687,6 +691,55 @@ class MenuBuilder:
 
         for child in node.children:
             self._cull_items_below_recursive(cull_level, current_level + 1, child)
+
+    def render_html(self):
+        html = ''
+        for section in self.sections:
+            html += self._render_html_section(section)
+        return html
+
+    def _render_html_section(self, section):
+        lines = []
+        if section.display_text:
+            lines.append(f'<div class="section-heading">{section.display_text}</div>')
+        lines.append('<ul class="menu-tree">')
+        lines += self._render_html_lines_children(0, section.children)
+        lines.append('</ul>')
+        return '\n'.join(lines)
+
+    def _render_html_lines_children(self, level, children):
+        lines = []
+        for child in children:
+            # Submenu items
+            if level == 0 and child.children:
+                submenu_lines = (
+                    ['<ul class="nested">']
+                    + self._render_html_lines_children(level + 1, child.children)
+                    + ['</ul>']
+                )
+                caret_visible = True
+            else:
+                submenu_lines = []
+                caret_visible = False
+            class_statement = 'class="no-child"' if level > 0 else ''
+    
+            lines.append('<li>')
+            lines.append(
+                f'<span {class_statement} id="menuitem_doc_{child.document_name}"'
+                f' data-document-name="{child.document_name}">'
+            )
+            lines.append(
+                format_menu_heading(
+                    child.display_text,
+                    include_caret_space=(level == 0),
+                    caret_visible=caret_visible,
+                    link_url=child.link_url
+                )
+            )
+            lines.append('</span>')
+            lines += submenu_lines
+            lines.append('</li>')
+        return lines
 
 
 def md_document_name_to_document_name(md_document_name):
