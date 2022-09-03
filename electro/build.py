@@ -447,6 +447,8 @@ class Builder:
         if not path_css_source.exists():
             path_css_source = path_theme_directory / Path('overlay.css')
         shutil.copy(path_css_source, path_css_destination)
+        # Append customizations to end of CSS overlay
+        append_css_customizations(path_css_destination)
 
         # -------------------
         # Copy Images
@@ -707,3 +709,21 @@ class HeadingManager:
         # Build heading number text
         digits = [str(self.heading_number[i]) for i in range(self.at_level, level + 1)]
         return ".".join(digits)
+
+
+def append_css_customizations(path_css_overlay):
+    new_lines = []
+    project_config = CONFIG['project_config']
+    
+    width = project_config.get('menu_level_two_number_prefix_width', None)
+    if width:
+        new_lines += [
+            '.menu-item-container .core .number-item.level-two {',
+            f'   width: {width};',
+            '}',
+        ]
+    if new_lines:
+        new_lines = [''] + new_lines + ['']
+        text = '\n'.join(new_lines)
+        with open(path_css_overlay, 'a') as file:
+            file.write(text)
