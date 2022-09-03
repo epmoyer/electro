@@ -555,27 +555,49 @@ blockquote {
 /* --------------------------
    menu-tree manipulations
    -------------------------- */
-.menu-text-container {
+.menu-item-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 }
-.menu-left-piece {
+
+.menu-item-container .caret {
     /* As flex child */
     flex-grow: 0;
     flex-shrink: 0;
+    width: 17px;
+    min-width: 17px;
+}
+.menu-item-container .core{
+    /* As flex child */
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    /* As flex parent */
+    display: flex;
+    flex-direction: row;
+    min-width: 0;
+    /* justify-content: flex-start; */
+}
+
+.menu-item-container .core .number-item {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 20px;
+}
+.menu-item-container .core .number-item.level-two {
     width: 40px;
-    /* background-color: orange; */
 }
-.menu-left-piece.wide {
-    width: 45px;
-}
-.menu-right-piece {
+.menu-item-container  .core .text-item {
     /* As flex child */
     flex-grow: 1;
     flex-shrink: 1;
     text-align: left;
+
+    justify-content: flex-start;
     /* background-color: lime; */
+    margin-left: 4px;
 }
 .menu-tree .caret-placeholder {
     width: 17px;

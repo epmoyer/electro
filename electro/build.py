@@ -200,7 +200,7 @@ class Builder:
                 if CONFIG['output_format'] == 'static_site'
                 else None
             )
-            menu_heading_html = format_menu_heading(heading_text, on_nbsp=True, link_url=link_url)
+            menu_heading_html = format_menu_heading(heading_text, on_nbsp=True, link_url=link_url, is_level_two=True)
             menu_html += (
                 f'        <li><span class="no_child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
                 + menu_heading_html
@@ -538,44 +538,43 @@ def to_json_bool(python_bool):
 
 
 def format_menu_heading(
-    text, on_nbsp=False, include_caret_space=False, caret_visible=False, link_url=None
+    text, on_nbsp=False, include_caret_space=False, caret_visible=False, link_url=None, is_level_two=False
 ):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
     For headings that start with a section number (e.g. "1.5 Study Results") we
     will split the heading into two pieces and wrap them each in a div.
     """
+    caret_item_content = ''
+    number_item_content = ''
+    text_item_content = text
+    core_content = ''
+
     if include_caret_space:
-        caret_html = (
+        caret_item_content = (
             '<i class="caret fa fa-angle-right"></i>'
             if caret_visible
             else '<i class="caret-placeholder"></i>'
         )
-    else:
-        caret_html = ''
-
-    html = ""
 
     NBSP = "\xa0"
     if (NBSP in text and on_nbsp) or (" " in text and not on_nbsp):
         temp_text = text.replace(NBSP, " ") if on_nbsp else text
         pieces = split_if_numbered(temp_text)
         if pieces:
-            left_content, right_content = pieces
-            if link_url:
-                right_content = f'<a href="{link_url}">{right_content}</a>'
-            html = (
-                '<div class="menu-text-container">\n'
-                f'<div class="menu-left-piece">{caret_html}{left_content}</div>\n'
-                f'<div class="menu-right-piece">{right_content}</div>\n'
-                '</div>\n'
-            )
+            number_item_content, text_item_content = pieces
 
-    if not html:
-        content_html = text
-        if link_url:
-            content_html = f'<a href="{link_url}">{content_html}</a>'
-        html = caret_html + content_html
+    if number_item_content:
+        classes = "number-item" + (" level-two" if is_level_two else "")
+        number_item_content = f'<div class="{classes}">{number_item_content}</div>'
+    if text_item_content:
+        text_item_content = f'<div class="text-item">{text_item_content}</div>'
+    
+    core_content = f'<div class="core">{number_item_content}{text_item_content}</div>'
+    if link_url:
+        core_content = f'<a href="{link_url}">{core_content}</a>'
+    
+    html = f'<div class="menu-item-container">{caret_item_content}{core_content}</div>'
 
     logger.debug(f'format_menu_heading: result: "{html}"')
     return html
