@@ -458,6 +458,7 @@ class SiteBuilder:
         menu_html = self.menu_builder.render_html()
         with open('DEBUG_menu_html.html', 'w') as file:
             file.write(menu_html)
+        self.menu_html = menu_html
         # *****
         path_site_directory = CONFIG['path_site_directory']
         path_theme_directory = CONFIG['path_theme_directory']
@@ -746,6 +747,7 @@ class MenuBuilder:
                     caret_visible=caret_visible,
                     link_url=child.link_url,
                     on_nbsp=True,
+                    is_level_two=(level > 0)
                 )
             )
             lines.append('</span>')
