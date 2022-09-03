@@ -4,7 +4,6 @@ import json
 import shutil
 import shutil
 import re
-from textwrap import indent
 from datetime import datetime, date
 
 # Library
@@ -116,7 +115,7 @@ def build_project(path_build):
     # -----------------------
     # Build menu and pase markdown
     # -----------------------
-    builder = Builder()
+    builder = SiteBuilder()
     for navigation_descriptor in project_config['navigation']:
         builder.add_navigation_descriptor(navigation_descriptor)
     builder.render_site()
@@ -144,7 +143,7 @@ def pack_site(path_site_directory):
     print("Packing complete.")
 
 
-class Builder:
+class SiteBuilder:
     def __init__(self):
         self.menu_html = ''
         self.site_documents = {}
@@ -158,10 +157,17 @@ class Builder:
             "docs": [],
         }
         self.substitutions = {}
+        # *****
+        self.menu_builder = MenuBuilder()
+        # *****
 
     def add_navigation_descriptor(self, navigation_descriptor):
-        if section_name := navigation_descriptor.get('section'):
+        section_name = navigation_descriptor.get('section')
+        if section_name:
             self.menu_html += f'<div class="section-heading">{section_name}</div>\n'
+        # *****
+        self.menu_builder.add_section(section_name)
+        # *****
         self.menu_html += '<ul class="menu-tree">\n'
         documents_dict = navigation_descriptor.get('documents')
         if documents_dict is None:
@@ -180,6 +186,10 @@ class Builder:
                 f'<li><span id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
             )
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
+            # *****
+            self.menu_builder.add_item(0, menu_name, link_url, document_name)
+            self._build_subheading_menus(document_name)
+            # *****
             self.menu_html += format_menu_heading(
                 menu_name, include_caret_space=True, caret_visible=caret_visible, link_url=link_url
             )
@@ -187,11 +197,24 @@ class Builder:
 
         self.menu_html += '</ul>\n'
 
-    def build_subheading_menu_html(self, document_name):
+    # *****
+    def _build_subheading_menus(self, document_name):
+        document_html = self.site_documents[document_name]['html']
+        soup = BeautifulSoup(document_html, 'lxml')
+        for heading in soup.find_all(['h2', 'h3']):
+            html_tag = heading.name
+            print(f'🟣 {html_tag}: "{heading.text}"')
+            level = int(html_tag[1]) - 1
+            self.menu_builder.add_item(level, heading.text)
+    # *****
+
+    def build_subheading_menu_html(self, document_name, tag='h2'):
         document_html = self.site_documents[document_name]['html']
         soup = BeautifulSoup(document_html, 'lxml')
         menu_html = ''
-        for heading in soup.find_all('h2'):
+        # for heading in soup.find_all(['h2', 'h3']):
+        #     print(f'🟣 {heading.name}: "{heading.text}"')
+        for heading in soup.find_all(tag):
             if not menu_html:
                 menu_html = '    <ul class="nested">\n'
             heading_text = heading.text.strip()
@@ -422,6 +445,9 @@ class Builder:
             file.write(document_html)
 
     def render_site(self):
+        # *****
+        self.menu_builder.dump(display=True)
+        # *****
         path_site_directory = CONFIG['path_site_directory']
         path_theme_directory = CONFIG['path_theme_directory']
         path_project_directory = CONFIG['path_project_directory']
@@ -535,6 +561,87 @@ class Builder:
         search_js = "App.searchData = " + json.dumps(self.search_index, indent=4)
         with open(path_search_index, 'w') as file:
             file.write(search_js)
+
+
+MAX_MENU_DEPTH = 3
+
+
+class MenuItem:
+    def __init__(self, display_text, link_url, document_name):
+        self.display_text = display_text
+        self.link_url = link_url
+        self.document_name = document_name
+        self.children = []
+
+
+class MenuSection:
+    def __init__(self, display_text):
+        self.display_text = display_text
+        # self.document_name = document_name
+        self.last_child_at_level = [None] * MAX_MENU_DEPTH
+        self.children = []
+
+    def add(self, level, display_text, link_url, document_name):
+        """Add a menu item.
+
+        level is 0 based.
+        """
+        new_item = MenuItem(display_text, link_url, document_name)
+        if level == 0:
+            self.children.append(new_item)
+            self.last_child_at_level[0] = new_item
+        else:
+            parent = self.last_child_at_level[level - 1]
+            parent.children.append(new_item)
+            # Clear "last child" of all levels deeper than this one.
+            # NOTE: This is not strictly necessary, but it will
+            #       defensively keep us from creating a weird tree if the
+            #       input is badly formed.
+            for i in range(level + 1, MAX_MENU_DEPTH):
+                self.last_child_at_level[i] = None
+            self.last_child_at_level[level] = new_item
+        pass
+
+
+class MenuBuilder:
+    def __init__(self):
+        self.sections = []
+        self.current_document_name = None
+
+    def add_section(self, display_text):
+        section = MenuSection(display_text)
+        self.sections.append(section)
+
+    def add_item(self, level, display_text, link_url=None, document_name=None):
+        if document_name:
+            self.current_document_name = document_name
+        section = self.sections[-1]
+        section.add(level, display_text, link_url, self.current_document_name)
+
+    def dump(self, display=False):
+        for section in self.sections:
+            self._dump_recursive(section, display)
+
+    def _dump_recursive(self, node, display, level=0):
+        """Dump node and children recursively.
+
+        Args:
+            node (MenuItem or MenuSection): A tree node
+            display (bool): If True, dump to screen. Will always dump to log.
+        """
+        aux_data = {}
+        # if isinstance(node, MenuSection):
+        #     aux_data['document_name'] = node.document_name
+        if isinstance(node, MenuItem):
+            aux_data['document_name'] = node.document_name
+            aux_data['link_url'] = node.link_url
+        indent = '   ' * level
+        text = f'{indent}🟡 "{node.display_text}" :: {aux_data}'
+        logger.debug(text)
+        if display:
+            print(text)
+        for child in node.children:
+            self._dump_recursive(child, display, level + 1)
 
 
 def md_document_name_to_document_name(md_document_name):
@@ -714,7 +821,7 @@ class HeadingManager:
 def append_css_customizations(path_css_overlay):
     new_lines = []
     project_config = CONFIG['project_config']
-    
+
     width = project_config.get('menu_level_two_number_prefix_width', None)
     if width:
         new_lines += [
