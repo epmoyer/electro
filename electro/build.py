@@ -187,7 +187,7 @@ class SiteBuilder:
             )
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
             # *****
-            self.menu_builder.add_item(0, menu_name, link_url, document_name)
+            self.menu_builder.add_item(0, menu_name, link_url=link_url, document_name=document_name)
             self._build_subheading_menus(document_name)
             # *****
             self.menu_html += format_menu_heading(
