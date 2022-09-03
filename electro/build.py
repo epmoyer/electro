@@ -446,6 +446,11 @@ class SiteBuilder:
 
     def render_site(self):
         # *****
+        project_config = CONFIG['project_config']
+        if project_config.get('level_1_headings_are_document_titles', False):
+            self.menu_builder.cull_items_above(1)
+        else:
+            self.menu_builder.cull_items_below(1)
         self.menu_builder.dump(display=True)
         # *****
         path_site_directory = CONFIG['path_site_directory']
@@ -642,6 +647,46 @@ class MenuBuilder:
             print(text)
         for child in node.children:
             self._dump_recursive(child, display, level + 1)
+    
+    def cull_items_above(self, level):
+        """Remove all menu items ABOVE level (i.e. at an indent LESS than level).
+        
+        NOTE: level is the "item" level, and does not include the section. 
+        """
+        logger.info(f"cull_items_above(): {level}")
+        for section in self.sections:
+            # NOTE: level is the "item" level depth, and does not include the section, but we
+            #       are recursing a tree where level 0 is the section node, so we add
+            #       1 to the passed in level.
+            section.children = self._cull_items_above_recursive(level + 1, 0, section)
+    
+    def _cull_items_above_recursive(self, cull_level, current_level, node):
+        if cull_level == current_level + 1:
+            return node.children
+        retained_items = []
+        for child in node.children:
+            retained_items += self._cull_items_above_recursive(cull_level, current_level + 1, child)
+        return retained_items
+
+    def cull_items_below(self, level):
+        """Remove all menu items BELOW level (i.e. at an indent GREATER than level).
+        
+        NOTE: level is the "item" level, and does not include the section. 
+        """
+        logger.info(f"cull_items_below(): {level}")
+        for section in self.sections:
+            # NOTE: level is the "item" level depth, and does not include the section, but we
+            #       are recursing a tree where level 0 is the section node, so we add
+            #       1 to the passed in level.
+            self._cull_items_below_recursive(level + 1, 0, section)
+    
+    def _cull_items_below_recursive(self, cull_level, current_level, node):
+        if cull_level == current_level:
+            node.children = []
+            return
+
+        for child in node.children:
+            self._cull_items_below_recursive(cull_level, current_level + 1, child)
 
 
 def md_document_name_to_document_name(md_document_name):
