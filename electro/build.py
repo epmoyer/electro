@@ -733,7 +733,8 @@ class MenuBuilder:
                     child.display_text,
                     include_caret_space=(level == 0),
                     caret_visible=caret_visible,
-                    link_url=child.link_url
+                    link_url=child.link_url,
+                    on_nbsp=True
                 )
             )
             lines.append('</span>')
@@ -809,11 +810,12 @@ def split_if_numbered(text):
     """
     pieces = text.split()
     heading_number = pieces[0]
-    logger.debug(f'{heading_number=} {text=}')
+    result = None
     if re.match(r'^[\d\.]+$', heading_number):
         remaining = ' '.join(pieces[1:])
-        return (heading_number, remaining)
-    return None
+        result = (heading_number, remaining)
+    logger.debug(f'split_if_numbered(): {heading_number=} {text=} => {result}')
+    return result
 
 
 def heading_text_to_id(text):
