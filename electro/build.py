@@ -403,8 +403,8 @@ class SiteBuilder:
             self.menu_builder.cull_items_below(1)
         self.menu_builder.dump(display=True)
         menu_html = self.menu_builder.render_html()
-        with open('DEBUG_menu_html.html', 'w') as file:
-            file.write(menu_html)
+        # with open('DEBUG_menu_html.html', 'w') as file:
+        #     file.write(menu_html)
         self.menu_html = menu_html
 
         path_site_directory = CONFIG['path_site_directory']
