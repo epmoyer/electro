@@ -163,8 +163,8 @@ class SiteBuilder:
 
     def add_navigation_descriptor(self, navigation_descriptor):
         section_name = navigation_descriptor.get('section')
-        if section_name:
-            self.menu_html += f'<div class="section-heading">{section_name}</div>\n'
+        # if section_name:
+        #     self.menu_html += f'<div class="section-heading">{section_name}</div>\n'
         # *****
         self.menu_builder.add_section(section_name)
         # *****
@@ -177,25 +177,25 @@ class SiteBuilder:
             document_name = md_document_name_to_document_name(md_document_name)
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
             self.build_document(path_markdown, document_name)
-            subheading_menu_html = self.build_subheading_menu_html(document_name)
-            if subheading_menu_html:
-                caret_visible = True
-            else:
-                caret_visible = False
-            self.menu_html += (
-                f'<li><span id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
-            )
+            # subheading_menu_html = self.build_subheading_menu_html(document_name)
+            # if subheading_menu_html:
+            #     caret_visible = True
+            # else:
+            #     caret_visible = False
+            # self.menu_html += (
+            #     f'<li><span id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
+            # )
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
             # *****
             self.menu_builder.add_item(0, menu_name, link_url=link_url, document_name=document_name)
             self._build_subheading_menus(document_name)
             # *****
-            self.menu_html += format_menu_heading(
-                menu_name, include_caret_space=True, caret_visible=caret_visible, link_url=link_url
-            )
-            self.menu_html += f'</span>{subheading_menu_html}</li>\n'
+            # self.menu_html += format_menu_heading(
+            #     menu_name, include_caret_space=True, caret_visible=caret_visible, link_url=link_url
+            # )
+            # self.menu_html += f'</span>{subheading_menu_html}</li>\n'
 
-        self.menu_html += '</ul>\n'
+        # self.menu_html += '</ul>\n'
 
     # *****
     def _build_subheading_menus(self, document_name):
@@ -211,33 +211,33 @@ class SiteBuilder:
 
     # *****
 
-    def build_subheading_menu_html(self, document_name, tag='h2'):
-        document_html = self.site_documents[document_name]['html']
-        soup = BeautifulSoup(document_html, 'lxml')
-        menu_html = ''
-        # for heading in soup.find_all(['h2', 'h3']):
-        #     print(f'🟣 {heading.name}: "{heading.text}"')
-        for heading in soup.find_all(tag):
-            if not menu_html:
-                menu_html = '    <ul class="nested">\n'
-            heading_text = heading.text.strip()
-            heading_id = heading_text_to_id(heading_text)
-            link_url = (
-                f'{document_name}.html#{heading_id}'
-                if CONFIG['output_format'] == 'static_site'
-                else None
-            )
-            menu_heading_html = format_menu_heading(
-                heading_text, on_nbsp=True, link_url=link_url, is_level_two=True
-            )
-            menu_html += (
-                f'        <li><span class="no-child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
-                + menu_heading_html
-                + '</span></li>\n'
-            )
-        if menu_html:
-            menu_html = '\n' + menu_html + '    </ul>\n'
-        return menu_html
+    # def build_subheading_menu_html(self, document_name, tag='h2'):
+    #     document_html = self.site_documents[document_name]['html']
+    #     soup = BeautifulSoup(document_html, 'lxml')
+    #     menu_html = ''
+    #     # for heading in soup.find_all(['h2', 'h3']):
+    #     #     print(f'🟣 {heading.name}: "{heading.text}"')
+    #     for heading in soup.find_all(tag):
+    #         if not menu_html:
+    #             menu_html = '    <ul class="nested">\n'
+    #         heading_text = heading.text.strip()
+    #         heading_id = heading_text_to_id(heading_text)
+    #         link_url = (
+    #             f'{document_name}.html#{heading_id}'
+    #             if CONFIG['output_format'] == 'static_site'
+    #             else None
+    #         )
+    #         menu_heading_html = format_menu_heading(
+    #             heading_text, on_nbsp=True, link_url=link_url, is_level_two=True
+    #         )
+    #         menu_html += (
+    #             f'        <li><span class="no-child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
+    #             + menu_heading_html
+    #             + '</span></li>\n'
+    #         )
+    #     if menu_html:
+    #         menu_html = '\n' + menu_html + '    </ul>\n'
+    #     return menu_html
 
     def build_document(self, path_markdown, document_name):
         if not path_markdown.exists():
@@ -746,7 +746,6 @@ class MenuBuilder:
                     include_caret_space=(level == 0),
                     caret_visible=caret_visible,
                     link_url=child.link_url,
-                    on_nbsp=True,
                     is_level_two=(level > 0)
                 )
             )
@@ -767,7 +766,6 @@ def to_json_bool(python_bool):
 
 def format_menu_heading(
     text,
-    on_nbsp=False,
     include_caret_space=False,
     caret_visible=False,
     link_url=None,
@@ -791,18 +789,16 @@ def format_menu_heading(
         )
 
     NBSP = "\xa0"
-    if (NBSP in text and on_nbsp) or (" " in text and not on_nbsp):
-        temp_text = text.replace(NBSP, " ") if on_nbsp else text
-        pieces = split_if_numbered(temp_text)
+    text = text.replace(NBSP, " ")
+    if " " in text:
+        pieces = split_if_numbered(text)
         if pieces:
             number_item_content, text_item_content = pieces
 
     if number_item_content:
         classes = "number-item" + (" level-two" if is_level_two else "")
         number_item_content = f'<div class="{classes}">{number_item_content}</div>'
-    if text_item_content:
-        text_item_content = f'<div class="text-item">{text_item_content}</div>'
-
+    text_item_content = f'<div class="text-item">{text_item_content}</div>'
     core_content = f'<div class="core">{number_item_content}{text_item_content}</div>'
     if link_url:
         core_content = f'<a href="{link_url}">{core_content}</a>'

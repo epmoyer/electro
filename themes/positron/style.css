@@ -53,7 +53,7 @@ h6 {
 }
 h1 {
     font-size: 27px;
-    border-bottom: var(--color-h1-underline) solid 3px;
+    border-bottom: var(--color-h1-underline) solid 1px;
 }
 h2 {
     font-size: 25px;
