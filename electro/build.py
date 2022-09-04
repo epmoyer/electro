@@ -157,17 +157,11 @@ class SiteBuilder:
             "docs": [],
         }
         self.substitutions = {}
-        # *****
         self.menu_builder = MenuBuilder()
-        # *****
 
     def add_navigation_descriptor(self, navigation_descriptor):
         section_name = navigation_descriptor.get('section')
-        # if section_name:
-        #     self.menu_html += f'<div class="section-heading">{section_name}</div>\n'
-        # *****
         self.menu_builder.add_section(section_name)
-        # *****
         self.menu_html += '<ul class="menu-tree">\n'
         documents_dict = navigation_descriptor.get('documents')
         if documents_dict is None:
@@ -177,27 +171,11 @@ class SiteBuilder:
             document_name = md_document_name_to_document_name(md_document_name)
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
             self.build_document(path_markdown, document_name)
-            # subheading_menu_html = self.build_subheading_menu_html(document_name)
-            # if subheading_menu_html:
-            #     caret_visible = True
-            # else:
-            #     caret_visible = False
-            # self.menu_html += (
-            #     f'<li><span id="menuitem_doc_{document_name}" data-document-name="{document_name}">'
-            # )
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
-            # *****
             self.menu_builder.add_item(0, menu_name, link_url=link_url, document_name=document_name)
             self._build_subheading_menus(document_name)
-            # *****
-            # self.menu_html += format_menu_heading(
-            #     menu_name, include_caret_space=True, caret_visible=caret_visible, link_url=link_url
-            # )
-            # self.menu_html += f'</span>{subheading_menu_html}</li>\n'
 
-        # self.menu_html += '</ul>\n'
 
-    # *****
     def _build_subheading_menus(self, document_name):
         document_html = self.site_documents[document_name]['html']
         soup = BeautifulSoup(document_html, 'lxml')
@@ -208,36 +186,6 @@ class SiteBuilder:
             print(f'🟣 {html_tag}: "{heading_text}" : "{heading_id}"')
             level = int(html_tag[1]) - 1
             self.menu_builder.add_item(level, heading_text, heading_id=heading_id)
-
-    # *****
-
-    # def build_subheading_menu_html(self, document_name, tag='h2'):
-    #     document_html = self.site_documents[document_name]['html']
-    #     soup = BeautifulSoup(document_html, 'lxml')
-    #     menu_html = ''
-    #     # for heading in soup.find_all(['h2', 'h3']):
-    #     #     print(f'🟣 {heading.name}: "{heading.text}"')
-    #     for heading in soup.find_all(tag):
-    #         if not menu_html:
-    #             menu_html = '    <ul class="nested">\n'
-    #         heading_text = heading.text.strip()
-    #         heading_id = heading_text_to_id(heading_text)
-    #         link_url = (
-    #             f'{document_name}.html#{heading_id}'
-    #             if CONFIG['output_format'] == 'static_site'
-    #             else None
-    #         )
-    #         menu_heading_html = format_menu_heading(
-    #             heading_text, on_nbsp=True, link_url=link_url, is_level_two=True
-    #         )
-    #         menu_html += (
-    #             f'        <li><span class="no-child menu-node" data-document-name="{document_name}" data-target-heading-id="{heading_id}">\n'
-    #             + menu_heading_html
-    #             + '</span></li>\n'
-    #         )
-    #     if menu_html:
-    #         menu_html = '\n' + menu_html + '    </ul>\n'
-    #     return menu_html
 
     def build_document(self, path_markdown, document_name):
         if not path_markdown.exists():
@@ -448,7 +396,6 @@ class SiteBuilder:
             file.write(document_html)
 
     def render_site(self):
-        # *****
         project_config = CONFIG['project_config']
         if project_config.get('level_1_headings_are_document_titles', False):
             self.menu_builder.cull_items_above(1)
@@ -459,7 +406,7 @@ class SiteBuilder:
         with open('DEBUG_menu_html.html', 'w') as file:
             file.write(menu_html)
         self.menu_html = menu_html
-        # *****
+
         path_site_directory = CONFIG['path_site_directory']
         path_theme_directory = CONFIG['path_theme_directory']
         path_project_directory = CONFIG['path_project_directory']
