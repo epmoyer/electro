@@ -263,6 +263,7 @@ class SiteBuilder:
 
     def pre_parse_markdown(self, markdown):
         project_config = CONFIG['project_config']
+        markdown = self._fix_bullet_list_starts(markdown)
         if project_config.get('strip_frontmatter', False):
             markdown = self._strip_frontmatter(markdown)
         if project_config.get('number_headings', False):
@@ -271,6 +272,33 @@ class SiteBuilder:
         markdown = self._parse_replacements(markdown)
         markdown = self._parse_notices(markdown)
         return markdown
+
+    def _fix_bullet_list_starts(self, markdown):
+        """Fix bullet lists by injecting a blank line if previous line was text.
+
+        Many markdown engines recognize a line starting with "- " or "* " as an
+        unordered list line, even if the preceding line was paragraph text. The
+        python `markdown` package does not.  We inject a blank line where needed
+        to force lists to be recognized.
+
+        The generally used VSCode markdown preview extension ("Markdown Preview Github Styling")
+        treats all "- " and "* " prefixed lines as lists, so matching that behavior here 
+        ensures that people composing in VSCode will get the same output they see in
+        VSCode's previewer.
+        """
+        previous_was_list = False
+        previous_was_blank = True
+        out_lines = []
+        for line in markdown.splitlines():
+            stripped = line.strip()
+            is_list = (stripped.startswith('- ') or stripped.startswith('* '))
+            if is_list and not previous_was_list and not previous_was_blank:
+                # Insert a blank line to force this list to be recognized.
+                out_lines.append('')
+            out_lines.append(line)
+            previous_was_list = is_list
+            previous_was_blank = not bool(stripped)
+        return '\n'.join(out_lines)
 
     def _strip_frontmatter(self, markdown):
         found_start = False

@@ -9,6 +9,8 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## Unreleased
 (None)
 ## 1.0.1 2022-09-05
+### Changed
+- Force unordered lists following paragraph text (with no intervening blank line) to be treated as the start of a new unordered list.
 ### Removed
 - (Internal) Debug print logging
 
