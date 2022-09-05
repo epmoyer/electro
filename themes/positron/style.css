@@ -103,6 +103,7 @@ code {
 pre code {
     background: none;
     border-radius: none;
+    padding: 0px;
 }
 pre {
     color: #4a4a4a;
