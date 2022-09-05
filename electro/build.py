@@ -183,7 +183,6 @@ class SiteBuilder:
             html_tag = heading.name
             heading_text = heading.text.strip()
             heading_id = heading_text_to_id(heading_text)
-            print(f'🟣 {html_tag}: "{heading_text}" : "{heading_id}"')
             level = int(html_tag[1]) - 1
             self.menu_builder.add_item(level, heading_text, heading_id=heading_id)
 
@@ -401,7 +400,7 @@ class SiteBuilder:
             self.menu_builder.cull_items_above(1)
         else:
             self.menu_builder.cull_items_below(1)
-        self.menu_builder.dump(display=True)
+        self.menu_builder.dump()
         menu_html = self.menu_builder.render_html()
         # with open('DEBUG_menu_html.html', 'w') as file:
         #     file.write(menu_html)

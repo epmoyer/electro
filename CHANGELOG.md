@@ -8,7 +8,11 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
-## 1.0.0 2022-09-01
+## 1.0.1 2022-09-05
+### Removed
+- (Internal) Debug print logging
+
+## 1.0.0 2022-09-05
 ### Changed
 - Accept a project file (.json) or dir as command line argument
 - Restyle positron theme for "general case" use.
