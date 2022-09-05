@@ -307,7 +307,7 @@ var App = App || {}; // Create namespace
 
         var html = '<h1>Search Results</h1>\n';
         results.forEach(result => {
-            html += '<hr>';
+            // html += '<hr>';
             if (App.globalConfig.singleFile){
                 // Single file compatible link
                 const location = result.location.replace(".html", "");
