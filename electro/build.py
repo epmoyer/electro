@@ -271,6 +271,7 @@ class SiteBuilder:
             markdown = add_heading_numbers(markdown, at_level=at_level)
         markdown = self._parse_replacements(markdown)
         markdown = self._parse_notices(markdown)
+        markdown = self._parse_experimental(markdown)
         return markdown
 
     def _fix_bullet_list_starts(self, markdown):
@@ -341,6 +342,24 @@ class SiteBuilder:
             substitution = SNIPPET_NOTICE_END
             self.substitutions[html_temporary] = substitution
             markdown = markdown.replace(NOTICE_END_ITEM, html_temporary)
+        return markdown
+
+    def _parse_experimental(self, markdown):
+        index = str(len(self.substitutions))
+        html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
+        substitution = '<div class="change-bar">'
+        self.substitutions[html_temporary] = substitution
+        markdown = markdown.replace(
+                r':change_bar_start', html_temporary
+            )
+
+        index = str(len(self.substitutions))
+        html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
+        substitution = '</div>'
+        self.substitutions[html_temporary] = substitution
+        markdown = markdown.replace(
+                r':change_bar_end', html_temporary
+            )
         return markdown
 
     def post_parse_html(self, html):
