@@ -84,10 +84,17 @@ ul{
 th {
     background-color: var(--color-table-header-bg);
     color: var(--color-table-header);
-    /* pad: 2px 5px; */
 }
 th strong {
     color: var(--color-table-header);
+}
+table, th, td {
+    border-collapse: collapse;
+    border: 1px solid #444;
+    padding: 2px 6px;
+}
+table {
+    margin: 5px 0 0 0;
 }
 code {
     color: #4a4a4a;
