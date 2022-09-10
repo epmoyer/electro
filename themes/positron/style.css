@@ -620,8 +620,8 @@ blockquote {
    Change-bars
    -------------------------- */
 .change-bar{
-    /* border-left: #777 solid 2px; */
-    border-left: purple solid 2px;
+    border-left: #d8d8d8 solid 2px;
+    /* border-left: purple solid 2px; */
     padding: 11px;
     margin: -11px;
 }
