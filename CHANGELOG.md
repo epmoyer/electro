@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.0.2 2022-09-10
+### Changed
+- Search result snippets now make a best-effort to encompass the search terms.
+
 ## 1.0.1 2022-09-05
 ### Fixed
 - Correct spacing bug in preformatted code blocks (padding was making it appear as though there was a blank character preceding the first character of the text).
