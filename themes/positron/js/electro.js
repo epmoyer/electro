@@ -6,6 +6,7 @@ var App = App || {}; // Create namespace
     App.state = {
         allMenuSpans: null
     };
+    App.SEARCH_RESULT_SNIPPET_MAX_LEN = 200;
 
     App.main = () => {
         // -----------------------
@@ -373,9 +374,69 @@ var App = App || {}; // Create namespace
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             var doc = config.documents[result.ref];
-            doc.summary = doc.text.substring(0, 200);
+            doc.summary = App.truncateSearchResult(doc.text, query);
             resultDocuments.push(doc);
         }
         return resultDocuments;
+    };
+
+    /**
+     * Shorten the text of a search result to a "snippet" no longer than some max, 
+     * while attempting to include the search term(s) within that snippet.
+     * @param {string} text The search result text.
+     * @param {string} query The search query.
+     * @return {string} The snippet text.
+     */
+    App.truncateSearchResult = (text, query) => {
+        const searchWords = query.trim().split(/\s+/);
+        var hitIndex = 0;
+        for (const searchWord of searchWords){
+            const i = text.indexOf(searchWord);
+            if(i != -1){
+                if(hitIndex == -1){
+                    // First hit found
+                    hitIndex = i;
+                }
+                else{
+                    // Take the earliest of all hits found
+                    hitIndex = Math.min(i, hitIndex);
+                }
+            }
+        }
+        if(hitIndex == -1){
+            // If we were unable to find any of the search terms literally then just set
+            // the hitIndex to 0, which will cause us to create a snippet beginning at the
+            // start of the text.
+            hitIndex = 0;
+        }
+        var size = text.length;
+        var start = hitIndex - Math.floor(App.SEARCH_RESULT_SNIPPET_MAX_LEN/2);
+        var end = hitIndex + Math.floor(App.SEARCH_RESULT_SNIPPET_MAX_LEN/2);
+        var overflow;
+
+        // Slide region left to not overhang end
+        overflow = end - (size - 1);
+        if (overflow > 0){
+            end -= overflow;
+            start -= overflow;
+        }
+        // Slide region right to not overhand start
+        overflow = -start;
+        if (overflow > 0){
+            start += overflow;
+            end += overflow;
+        }
+        // Shorten region if longer than text
+        if (end > size-1){
+            end = size-1;
+        }
+        // Extract snippet and add ellipses as necessary
+        var snippet = (start > 0) ? "..." : "";
+        snippet += text.substring(start, end);
+        if (end < size - 1){
+            snippet += "...";
+        }
+        console.log({query: query, text:text, start:start, end:end, snippet:snippet});
+        return snippet;
     };
 })(); // "use strict" wrapper
