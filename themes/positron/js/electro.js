@@ -388,10 +388,13 @@ var App = App || {}; // Create namespace
      * @return {string} The snippet text.
      */
     App.truncateSearchResult = (text, query) => {
+        const compareText = text.toLowerCase();
+        query = query.toLocaleLowerCase();
+
         const searchWords = query.trim().split(/\s+/);
         var hitIndex = -1;
         for (const searchWord of searchWords){
-            const i = text.indexOf(searchWord);
+            const i = compareText.indexOf(searchWord);
             if(i != -1){
                 if(hitIndex == -1){
                     // First hit found
