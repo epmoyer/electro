@@ -389,7 +389,7 @@ var App = App || {}; // Create namespace
      */
     App.truncateSearchResult = (text, query) => {
         const searchWords = query.trim().split(/\s+/);
-        var hitIndex = 0;
+        var hitIndex = -1;
         for (const searchWord of searchWords){
             const i = text.indexOf(searchWord);
             if(i != -1){
@@ -431,12 +431,13 @@ var App = App || {}; // Create namespace
             end = size-1;
         }
         // Extract snippet and add ellipses as necessary
-        var snippet = (start > 0) ? "..." : "";
+        var snippet = (start > 0) ? "…" : "";
         snippet += text.substring(start, end);
         if (end < size - 1){
-            snippet += "...";
+            snippet += "…";
         }
-        console.log({query: query, text:text, start:start, end:end, snippet:snippet});
+        // console.log({query: query, text:text, start:start, end:end, snippet:snippet});
+        // console.log(text);
         return snippet;
     };
 })(); // "use strict" wrapper
