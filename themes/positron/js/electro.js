@@ -315,13 +315,20 @@ var App = App || {}; // Create namespace
                 const pieces = location.split("#");
                 const pageId = pieces[0];
                 const headingId = pieces[1];
-                html += '<h3><a href="?pageId=' + pageId + '&headingId=' + headingId + '">' + result.title + '</a></h3>';
+                if(result.heading){
+                    // Show document heading only, as link
+                    html += '<h4><a href="?pageId=' + pageId + '&headingId=' + headingId + '">' + result.heading + '</a></h4>';
+                }
+                else{
+                    // Show document name only, as link
+                    html += '<h3><a href="?pageId=' + pageId + '&headingId=' + headingId + '">' + result.title + '</a></h3>';
+                }
             } else {
                 // Static site compatible link
                 html += '<h3><a href="' + result.location + '">' + result.title + '</a></h3>';
-            }
-            if(result.heading){
-                html += '<h4>' + result.heading + '</h4>';
+                if(result.heading){
+                    html += '<h4>' + result.heading + '</h4>';
+                }
             }
 
             // Highlight search hits
