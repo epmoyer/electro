@@ -73,6 +73,15 @@
                     "due_complete": false
                 },
                 {
+                    "name": "Heading links that survive numbering?",
+                    "id": "156",
+                    "id_labels": [],
+                    "description": "It would be nice to automatically recognize and update internal links to headings such that they continue to work after heading numbers have been applied.\n\nYou want them to work both during authoring (VS Code etc), and after publishing.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
                     "name": "Create a custom favicon/icon.",
                     "id": "135",
                     "id_labels": [],
