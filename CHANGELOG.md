@@ -13,7 +13,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 - Search result snippets now make a best-effort to encompass the search terms.
 - Single search result links in single-file mode
 - Fix x-overflow pre when a #{heading} navigation is specified in URL.
-- Add`overflow-x: auto;` to pre elements.
+- Add`overflow-x: auto;` to pre elements, and add css to show scrollbar.
 ## 1.0.1 2022-09-05
 ### Fixed
 - Correct spacing bug in preformatted code blocks (padding was making it appear as though there was a blank character preceding the first character of the text).

@@ -454,6 +454,10 @@ blockquote {
     border-radius: 4px;
     background-color: rgb(190, 190, 190);
 }
+pre::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(190, 190, 190);
+}
 ::-webkit-scrollbar-track {
     border-radius: 4px;
 }
