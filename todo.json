@@ -214,13 +214,29 @@
             "id": "3",
             "cards": [
                 {
-                    "name": "Option to generate menu from level 2 (instead of 1)",
-                    "id": "154",
+                    "name": "CONFIG FILE: site_name -> master_title",
+                    "id": "157",
                     "id_labels": [],
-                    "description": "For docs that use level 1 as their title (like Notable notes)",
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "CONFIG FILE: copyright -> footer",
+                    "id": "158",
+                    "id_labels": [],
+                    "description": "Make sure footer div is appropriately named as well (html and css)",
                     "due": null,
                     "due_complete": false,
                     "repeat": null
+                },
+                {
+                    "name": "CONFIG FILE: site_directory -> output_directory",
+                    "id": "159",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
                 }
             ]
         },
@@ -228,6 +244,15 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "Option to generate menu from level 2 (instead of 1)",
+                    "id": "154",
+                    "id_labels": [],
+                    "description": "For docs that use level 1 as their title (like Notable notes)",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
                 {
                     "name": "Force better bullet list recognition.",
                     "id": "155",
