@@ -186,7 +186,8 @@ class SiteBuilder:
             heading_text = heading.text.strip()
             heading_id = heading_text_to_id(heading_text)
             level = int(html_tag[1]) - 1
-            self.menu_builder.add_item(level, heading_text, heading_id=heading_id)
+            link_url = f"{document_name}.html#{heading_id}" if CONFIG['output_format'] == 'static_site' else None
+            self.menu_builder.add_item(level, heading_text, link_url=link_url, heading_id=heading_id)
 
     def build_document(self, path_markdown, document_name):
         if not path_markdown.exists():
@@ -721,7 +722,9 @@ class MenuBuilder:
             else:
                 submenu_lines = []
                 caret_visible = False
-            class_statement = 'class="no-child"' if level > 0 else ''
+            classes = ['level-0'] if level == 0 else ['no-child']
+            class_list = ' '.join(classes)
+            class_statement = f'class="{class_list}"'
             heading_id_statement = (
                 f'data-target-heading-id={child.heading_id}' if child.heading_id else ''
             )

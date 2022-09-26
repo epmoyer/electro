@@ -60,7 +60,10 @@ var App = App || {}; // Create namespace
         // menu-tree: Select the current document (at page load)
         // -----------------------
         for (let span of App.state.allMenuSpans) {
-            if (span.id == "menuitem_doc_" + App.globalConfig.currentDocumentName) {
+            if (
+                (span.id == "menuitem_doc_" + App.globalConfig.currentDocumentName)
+                && (span.classList.contains("level-0"))
+            ){
                 span.classList.add("selected");
             }
         }

@@ -225,6 +225,14 @@
                     "repeat": null
                 },
                 {
+                    "name": "Should static site connect to hosted fonts or host them locally?",
+                    "id": "162",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
                     "name": "CONFIG FILE: site_name -> master_title",
                     "id": "157",
                     "id_labels": [],
