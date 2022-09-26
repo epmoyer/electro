@@ -171,6 +171,8 @@ class SiteBuilder:
             document_name = md_document_name_to_document_name(md_document_name)
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
             self.build_document(path_markdown, document_name)
+            if FAULTS.has_errors():
+                return
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
             self.menu_builder.add_item(0, menu_name, link_url=link_url, document_name=document_name)
             self._build_subheading_menus(document_name)

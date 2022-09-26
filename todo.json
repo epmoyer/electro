@@ -214,6 +214,17 @@
             "id": "3",
             "cards": [
                 {
+                    "name": "Level 2 menu items highlighted incorrectly",
+                    "id": "161",
+                    "id_labels": [
+                        "4"
+                    ],
+                    "description": "When opening a level 1 menu item( for a static site) for the current site page, the level 2 items appear highlighted (bright gray), they should be unhighlighted.\n\nThis used to work before the \"dual\" merge, so probably the old functionality  (js?) is accidentally getting skipped.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
                     "name": "CONFIG FILE: site_name -> master_title",
                     "id": "157",
                     "id_labels": [],
@@ -237,6 +248,15 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Emoli in menu title?",
+                    "id": "160",
+                    "id_labels": [],
+                    "description": "The SandCloud help used a star emoji in the \"WALKTHROUGH\" tile.  That emoji ends up taller than the text around it, which makes the caret end up in what feels like a weird place.\n\nShould we center the caret?  If we do that, then it will probably look weird for large (multi-line) titles (as appear in Cascade).",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
                 }
             ]
         },
