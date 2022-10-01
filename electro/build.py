@@ -89,7 +89,10 @@ def build_project(path_build) -> Result[str, str]:
     # -----------------------
     # Determine site dir
     # -----------------------
-    path_site_directory = path_project_directory / Path(project_config['site_directory'])
+    result = get_deprecated(project_config, 'output_directory', 'site_directory')
+    if isinstance(result, Err):
+        return result
+    path_site_directory = path_project_directory / Path(result.value)
     if not path_site_directory.is_dir():
         return Err(f'Site directory {path_site_directory} does not exist.')
     CONFIG['path_project_directory'] = path_project_directory
