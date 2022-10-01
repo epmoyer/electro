@@ -17,7 +17,7 @@ from pytest import mark
 # Local
 from electro.app_config import CONFIG, OUTPUT_FORMATS
 from electro.console import CONSOLE
-from electro.faults import FAULTS
+from electro.warnings import WARNINGS
 from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
 from electro.simplepack import simplepack
@@ -65,12 +65,12 @@ def build_project(path_build) -> Result[str, str]:
     # -----------------------
     CONFIG['output_format'] = project_config.get('output_format', 'static_site')
     if 'pack' in project_config:
-        FAULTS.warning(
+        WARNINGS.warning(
             'The "pack" option is deprecated. Use "output_format" instead, and specify'
             f' one of: {OUTPUT_FORMATS}'
         )
         if project_config.get('pack', False):
-            FAULTS.warning(
+            WARNINGS.warning(
                 'Implicitly interpreting deprecated `"pack": true` option as'
                 ' `"output_format": "single_file"`.'
             )
@@ -108,7 +108,9 @@ def build_project(path_build) -> Result[str, str]:
     # -----------------------
     builder = SiteBuilder()
     for navigation_descriptor in project_config['navigation']:
-        builder.add_navigation_descriptor(navigation_descriptor)
+        result = builder.add_navigation_descriptor(navigation_descriptor)
+        if isinstance(result, Err):
+            return result
     result = builder.render_site()
     if isinstance(result, Err):
         return result
@@ -153,7 +155,7 @@ class SiteBuilder:
         self.substitutions = {}
         self.menu_builder = MenuBuilder()
 
-    def add_navigation_descriptor(self, navigation_descriptor):
+    def add_navigation_descriptor(self, navigation_descriptor) -> Result[str, str]:
         section_name = navigation_descriptor.get('section')
         self.menu_builder.add_section(section_name)
         self.menu_html += '<ul class="menu-tree">\n'
@@ -163,12 +165,13 @@ class SiteBuilder:
         for menu_name, md_document_name in documents_dict.items():
             document_name = md_document_name_to_document_name(md_document_name)
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
-            self.build_document(path_markdown, document_name)
-            if FAULTS.has_errors():
-                return
+            result = self.build_document(path_markdown, document_name)
+            if isinstance(result, Err):
+                return result
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
             self.menu_builder.add_item(0, menu_name, link_url=link_url, document_name=document_name)
             self._build_subheading_menus(document_name)
+        return Ok()
 
 
     def _build_subheading_menus(self, document_name):
@@ -381,7 +384,7 @@ class SiteBuilder:
             document_title = element.text.strip()
             break
         if document_title is None:
-            FAULTS.warning(
+            WARNINGS.warning(
                 f'No h1 tag found in {document_name}. Cannot extract document title for search.'
             )
             document_title = '(Unknown)'
@@ -961,7 +964,7 @@ def get_deprecated(config_dict, key, deprecated_key, default=None, required=True
             f'Key "{key}" and deprecated key "{deprecated_key}" both present in config.'
             ' Remove deprecated key.')
     if deprecated_key in config_dict:
-        FAULTS.warning(f'Key "{deprecated_key}" has been deprecated.  Use "{key}" instead.')
+        WARNINGS.warning(f'Key "{deprecated_key}" has been deprecated.  Use "{key}" instead.')
         return Ok(config_dict[deprecated_key])
     if required and key not in config_dict:
         return Err(f'Required key "{key}" not present in config.')

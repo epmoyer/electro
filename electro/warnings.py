@@ -17,14 +17,14 @@ class FaultType(Enum):
     WARNING = 2
 
 
-class Fault:
+class Warning:
     def __init__(self, fault_type, message, cluster=None):
         self.fault_type = fault_type
         self.message = message
         self.cluster = cluster
 
 
-class Faults:
+class Warnings:
     def __init__(self):
         self.faults = []
 
@@ -35,12 +35,12 @@ class Faults:
         return any(fault.fault_type == FaultType.WARNING for fault in self.faults)
 
     def error(self, message, cluster=None):
-        self.faults.append(Fault(FaultType.ERROR, message, cluster))
+        self.faults.append(Warning(FaultType.ERROR, message, cluster))
 
     def warning(self, message, cluster=None):
         logger.warning(message)
         print(f'Warning: {wrap_tag("warning", message)}')
-        self.faults.append(Fault(FaultType.WARNING, message, cluster))
+        self.faults.append(Warning(FaultType.WARNING, message, cluster))
 
     def render(self):
         if not self.faults:
@@ -62,4 +62,4 @@ class Faults:
                 print(f'Line: {fault.cluster.line_number + 1}')
                 print('\n'.join(fault.cluster.lines))
 
-FAULTS = Faults()
+WARNINGS = Warnings()

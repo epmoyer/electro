@@ -2,7 +2,7 @@
 from result import Result, Ok, Err
 
 # Local
-from electro.faults import FAULTS
+from electro.warnings import WARNINGS
 
 SNIPPET_NOTICE_START_TEMPLATE = (
     '<div class="notices [[notice_type]]">'

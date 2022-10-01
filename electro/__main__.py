@@ -12,7 +12,7 @@ from result import Result, Ok, Err
 from electro.app_config import CONFIG
 from electro.console import CONSOLE, wrap_tag
 from electro.build import build_project
-from electro.faults import FAULTS
+from electro.warnings import WARNINGS
 
 # Rich console
 print = CONSOLE.print
@@ -52,7 +52,7 @@ def build(path_project_text):
     if isinstance(result, Err):
         logger.error(result.value)
         print(f'Error: {wrap_tag("error", result.value)}')
-    FAULTS.render()
+    WARNINGS.render()
 
 if __name__ == '__main__':
     cli(prog_name=CONFIG['app_name'])
