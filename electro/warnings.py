@@ -12,54 +12,20 @@ from electro.console import CONSOLE, wrap_tag
 # Rich console
 print = CONSOLE.print
 
-class FaultType(Enum):
-    ERROR = 1
-    WARNING = 2
-
-
-class Warning:
-    def __init__(self, fault_type, message, cluster=None):
-        self.fault_type = fault_type
-        self.message = message
-        self.cluster = cluster
-
-
 class Warnings:
     def __init__(self):
-        self.faults = []
+        self.warnings = []
 
-    def has_errors(self):
-        return any(fault.fault_type == FaultType.ERROR for fault in self.faults)
-    
-    def has_warnings(self):
-        return any(fault.fault_type == FaultType.WARNING for fault in self.faults)
-
-    def error(self, message, cluster=None):
-        self.faults.append(Warning(FaultType.ERROR, message, cluster))
-
-    def warning(self, message, cluster=None):
+    def warning(self, message):
         logger.warning(message)
         print(f'Warning: {wrap_tag("warning", message)}')
-        self.faults.append(Warning(FaultType.WARNING, message, cluster))
+        self.warnings.append(message)
 
     def render(self):
-        if not self.faults:
+        if not self.warnings:
             return
-        if self.has_errors():
-            print('\nErrors:')
-            self._render_faults(FaultType.ERROR)
-        if self.has_warnings():
-            print('\nWarnings:')
-            self._render_faults(FaultType.WARNING)
-    
-    def _render_faults(self, fault_type):
-        for fault in self.faults:
-            if fault.fault_type != fault_type:
-                continue
-            tag = fault.fault_type.name.lower()
-            print(f'- {wrap_tag(tag, fault.message)}')
-            if fault.cluster:
-                print(f'Line: {fault.cluster.line_number + 1}')
-                print('\n'.join(fault.cluster.lines))
+        print('\nWarnings:')
+        for message in self.warnings:
+            print(f'- {wrap_tag("warning", message)}')
 
 WARNINGS = Warnings()
