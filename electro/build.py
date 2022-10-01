@@ -92,11 +92,11 @@ def build_project(path_build) -> Result[str, str]:
     result = get_deprecated(project_config, 'output_directory', 'site_directory')
     if isinstance(result, Err):
         return result
-    path_site_directory = path_project_directory / Path(result.value)
-    if not path_site_directory.is_dir():
-        return Err(f'Site directory {path_site_directory} does not exist.')
+    path_output_directory = path_project_directory / Path(result.value)
+    if not path_output_directory.is_dir():
+        return Err(f'Site directory {path_output_directory} does not exist.')
     CONFIG['path_project_directory'] = path_project_directory
-    CONFIG['path_site_directory'] = path_site_directory
+    CONFIG['path_output_directory'] = path_output_directory
 
     # -----------------------
     # Determine template dir
@@ -119,18 +119,18 @@ def build_project(path_build) -> Result[str, str]:
         return result
 
     if CONFIG['output_format'] == 'single_file':
-        pack_site(path_site_directory)
+        pack_site(path_output_directory)
     return Ok()
 
 
-def pack_site(path_site_directory):
+def pack_site(path_output_directory):
     print("Packing...")
 
-    path_file = path_site_directory / Path('index.raw.html')
-    path_file_stage1 = path_site_directory / Path("index.packed.stage1.html")
-    path_file_stage2 = path_site_directory / Path("index.packed.stage2.html")
-    path_file_stage3 = path_site_directory / Path("index.packed.stage3.html")
-    path_file_packed = path_site_directory / Path("index.html")
+    path_file = path_output_directory / Path('index.raw.html')
+    path_file_stage1 = path_output_directory / Path("index.packed.stage1.html")
+    path_file_stage2 = path_output_directory / Path("index.packed.stage2.html")
+    path_file_stage3 = path_output_directory / Path("index.packed.stage3.html")
+    path_file_packed = path_output_directory / Path("index.html")
     print(f'packing {path_file.name} to {path_file_packed}...')
     simplepack(path_file, path_file_stage1, uglify=False)
     print(f'Inlining images to: {path_file_stage2}...')
@@ -471,7 +471,7 @@ class SiteBuilder:
         #     file.write(menu_html)
         self.menu_html = menu_html
 
-        path_site_directory = CONFIG['path_site_directory']
+        path_output_directory = CONFIG['path_output_directory']
         path_theme_directory = CONFIG['path_theme_directory']
         path_project_directory = CONFIG['path_project_directory']
 
@@ -479,19 +479,19 @@ class SiteBuilder:
         # Copy CSS
         # -------------------
         path_css_source = path_theme_directory / Path('style.css')
-        path_css_destination = path_site_directory / Path('style.css')
+        path_css_destination = path_output_directory / Path('style.css')
         shutil.copy(path_css_source, path_css_destination)
         path_css_source = path_theme_directory / Path('fonts.css')
-        path_css_destination = path_site_directory / Path('fonts.css')
+        path_css_destination = path_output_directory / Path('fonts.css')
         shutil.copy(path_css_source, path_css_destination)
         path_css_source = path_theme_directory / Path('fontawesome.css')
-        path_css_destination = path_site_directory / Path('fontawesome.css')
+        path_css_destination = path_output_directory / Path('fontawesome.css')
         shutil.copy(path_css_source, path_css_destination)
 
         # -------------------
         # Copy CSS overlay
         # -------------------
-        path_css_destination = path_site_directory / Path('overlay.css')
+        path_css_destination = path_output_directory / Path('overlay.css')
         path_css_source = path_project_directory / Path('docs') / Path('overlay.css')
         if not path_css_source.exists():
             path_css_source = path_theme_directory / Path('overlay.css')
@@ -503,35 +503,35 @@ class SiteBuilder:
         # Copy Images
         # -------------------
         path_image_source_dir = path_project_directory / Path('docs') / Path('img')
-        path_image_destination_dir = path_site_directory / Path('img')
+        path_image_destination_dir = path_output_directory / Path('img')
         copy_directory_contents(path_image_source_dir, path_image_destination_dir)
 
         # -------------------
         # Copy Fonts
         # -------------------
         path_fonts_source_dir = path_theme_directory / Path('fonts')
-        path_image_destination_dir = path_site_directory / Path('fonts')
+        path_image_destination_dir = path_output_directory / Path('fonts')
         copy_directory_contents(path_fonts_source_dir, path_image_destination_dir)
 
         # -------------------
         # Copy Attachments
         # -------------------
         path_attachment_source_dir = path_project_directory / Path('docs') / Path('attachments')
-        path_attachments_destination_dir = path_site_directory / Path('attachments')
+        path_attachments_destination_dir = path_output_directory / Path('attachments')
         copy_directory_contents(path_attachment_source_dir, path_attachments_destination_dir)
 
         # -------------------
         # Copy Favicon
         # -------------------
         path_favicon_source = path_theme_directory / Path('favicon.ico')
-        path_favicon_destination = path_site_directory / Path('img') / Path('favicon.ico')
+        path_favicon_destination = path_output_directory / Path('img') / Path('favicon.ico')
         shutil.copy(path_favicon_source, path_favicon_destination)
 
         # -------------------
         # Copy js
         # -------------------
         path_js_resource_source_dir = PATH_JS
-        path_js_destination_dir = path_site_directory / Path('js')
+        path_js_destination_dir = path_output_directory / Path('js')
         copy_directory_contents(path_js_resource_source_dir, path_js_destination_dir)
 
         path_js_theme_source_dir = path_theme_directory / Path('js')
@@ -564,7 +564,7 @@ class SiteBuilder:
                 pages_html += '</div>'
                 # Start all subsequent pages as hidden
                 style_html = 'style="display: none"'
-            path_site_document = path_site_directory / Path('index.raw.html')
+            path_site_document = path_output_directory / Path('index.raw.html')
             result = self._render_document(template_html, path_site_document, pages_html, "Document")
             if isinstance(result, Err):
                 return result
@@ -573,7 +573,7 @@ class SiteBuilder:
             # Static site
             # -------------------
             for document_name, document_info in self.site_documents.items():
-                path_site_document = path_site_directory / Path(f'{document_name}.html')
+                path_site_document = path_output_directory / Path(f'{document_name}.html')
                 result = self._render_document(
                     template_html, path_site_document, document_info['html'], document_name
                 )
@@ -583,7 +583,7 @@ class SiteBuilder:
         # -------------------
         # Save search index
         # -------------------
-        path_search_directory = path_site_directory / Path('search')
+        path_search_directory = path_output_directory / Path('search')
         path_search_directory.mkdir(parents=True, exist_ok=True)
         path_search_index = path_search_directory / Path('search_index.js')
         # TODO: Remove this JSON indent after everything is working?
