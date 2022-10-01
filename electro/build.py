@@ -10,6 +10,7 @@ from datetime import datetime, date
 from prettyprinter import pformat
 import markdown
 from bs4 import BeautifulSoup
+from result import Ok, Err, Result
 
 # Local
 from loguru import logger
@@ -27,7 +28,7 @@ pprint = CONFIG['console_pprint']
 MAX_HEADING_DEPTH = 6
 
 
-def build_project(path_build):
+def build_project(path_build) -> Result[str, str]:
     if not path_build.exists():
         # -------------------------
         # Bad path passed
@@ -118,10 +119,13 @@ def build_project(path_build):
     builder = SiteBuilder()
     for navigation_descriptor in project_config['navigation']:
         builder.add_navigation_descriptor(navigation_descriptor)
-    builder.render_site()
+    result = builder.render_site()
+    if isinstance(result, Err):
+        return result
 
     if CONFIG['output_format'] == 'single_file':
         pack_site(path_site_directory)
+    return Ok()
 
 
 def pack_site(path_site_directory):
@@ -413,7 +417,7 @@ class SiteBuilder:
         doc_descriptor = {'title': title, 'location': location, 'heading': heading, 'text': text}
         self.search_index['docs'].append(doc_descriptor)
 
-    def _render_document(self, template_html, path_document_out, content_html, document_name):
+    def _render_document(self, template_html, path_document_out, content_html, document_name) -> Result[str, str]:
         print(f'Building {path_document_out}...')
 
         project_config = CONFIG['project_config']
@@ -422,7 +426,10 @@ class SiteBuilder:
 
         # Items replaced here will also target user content, since user content has been merged by
         # now.
-        document_html = document_html.replace(r'{{% site_name %}}', project_config['site_name'])
+        result = get_deprecated(project_config, 'master_title', 'site_name', required=True)
+        if isinstance(result, Err):
+            return result
+        document_html = document_html.replace(r'{{% master_title %}}', result.value)
         document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
         document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
         # NOTE: We do a weird thing here. Note that the text we are replacing INCLUDES the single
@@ -443,8 +450,9 @@ class SiteBuilder:
 
         with open(path_document_out, 'w') as file:
             file.write(document_html)
+        return Ok()
 
-    def render_site(self):
+    def render_site(self) -> Result[str, str]:
         project_config = CONFIG['project_config']
         if project_config.get('level_1_headings_are_document_titles', False):
             self.menu_builder.cull_items_above(1)
@@ -548,16 +556,20 @@ class SiteBuilder:
                 # Start all subsequent pages as hidden
                 style_html = 'style="display: none"'
             path_site_document = path_site_directory / Path('index.raw.html')
-            self._render_document(template_html, path_site_document, pages_html, "Document")
+            result = self._render_document(template_html, path_site_document, pages_html, "Document")
+            if isinstance(result, Err):
+                return result
         else:
             # -------------------
             # Static site
             # -------------------
             for document_name, document_info in self.site_documents.items():
                 path_site_document = path_site_directory / Path(f'{document_name}.html')
-                self._render_document(
+                result = self._render_document(
                     template_html, path_site_document, document_info['html'], document_name
                 )
+                if isinstance(result, Err):
+                    return result
 
         # -------------------
         # Save search index
@@ -569,6 +581,7 @@ class SiteBuilder:
         search_js = "App.searchData = " + json.dumps(self.search_index, indent=4)
         with open(path_search_index, 'w') as file:
             file.write(search_js)
+        return Ok()
 
 
 MAX_MENU_DEPTH = 3
@@ -941,3 +954,19 @@ def append_css_customizations(path_css_overlay):
         text = '\n'.join(new_lines)
         with open(path_css_overlay, 'a') as file:
             file.write(text)
+
+def get_deprecated(config_dict, key, deprecated_key, default=None, required=True) -> Result[str, str]:
+    if key in config_dict and deprecated_key in config_dict:
+        message = (
+            f'Key "{key}" and deprecated key "{deprecated_key}" both present in config.'
+            ' Remove deprecated key.')
+        logger.error(message)
+        return Err(message)
+    if deprecated_key in config_dict:
+        logger.warning(f'Key {deprecated_key} has been deprecated.  Use "{key}" instead.')
+        return Ok(config_dict[deprecated_key])
+    if required and key not in config_dict:
+        message = f'Required key "{key}" not present in config.'
+        logger.error(message)
+        return Err(message)
+    return Ok(str(config_dict.get(key, default)))

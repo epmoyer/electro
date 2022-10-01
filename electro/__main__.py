@@ -6,6 +6,7 @@ from pathlib import Path
 # library
 import click
 from loguru import logger
+from result import Result, Ok, Err
 
 # Local
 from electro.app_config import CONFIG
@@ -46,7 +47,9 @@ def build(path_project_text):
     """
     path_project = Path(path_project_text)
    
-    build_project(path_project)
+    result = build_project(path_project)
+    if isinstance(result, Err):
+        print(f'Error: {result.value}')
     FAULTS.render()
 
 if __name__ == '__main__':
