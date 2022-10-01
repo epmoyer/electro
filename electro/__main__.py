@@ -50,6 +50,7 @@ def build(path_project_text):
    
     result = build_project(path_project)
     if isinstance(result, Err):
+        logger.error(result.value)
         print(f'Error: {wrap_tag("error", result.value)}')
     FAULTS.render()
 

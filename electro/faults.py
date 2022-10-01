@@ -4,6 +4,7 @@
 from enum import Enum
 
 # Library
+from loguru import logger
 
 # Local
 from electro.console import CONSOLE, wrap_tag
@@ -37,6 +38,8 @@ class Faults:
         self.faults.append(Fault(FaultType.ERROR, message, cluster))
 
     def warning(self, message, cluster=None):
+        logger.warning(message)
+        print(f'Warning: {wrap_tag("warning", message)}')
         self.faults.append(Fault(FaultType.WARNING, message, cluster))
 
     def render(self):

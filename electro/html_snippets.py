@@ -1,3 +1,7 @@
+# Library
+from result import Result, Ok, Err
+
+# Local
 from electro.faults import FAULTS
 
 SNIPPET_NOTICE_START_TEMPLATE = (
@@ -14,12 +18,11 @@ NOTICE_ICONS = {
 }
 
 
-def build_snippet_notice_start(notice_type):
+def build_snippet_notice_start(notice_type) -> Result[str, str]:
     icon = NOTICE_ICONS.get(notice_type)
     if notice_type is None:
-        FAULTS.error(f'Unrecognized notice_type: {notice_type}')
-        return ''
-    return (
+        return Err(f'Unrecognized notice_type: {notice_type}.')
+    return Ok(
         SNIPPET_NOTICE_START_TEMPLATE.replace('[[notice_type]]', notice_type)
         .replace('[[icon]]', icon)
         .replace('[[title]]', notice_type.capitalize())

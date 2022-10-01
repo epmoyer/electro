@@ -11,10 +11,10 @@ from prettyprinter import pformat
 import markdown
 from bs4 import BeautifulSoup
 from result import Ok, Err, Result
-
-# Local
 from loguru import logger
 from pytest import mark
+
+# Local
 from electro.app_config import CONFIG, OUTPUT_FORMATS
 from electro.console import CONSOLE
 from electro.faults import FAULTS
@@ -34,11 +34,10 @@ def build_project(path_build) -> Result[str, str]:
         # -------------------------
         # Bad path passed
         # -------------------------
-        FAULTS.error(
-            f'Path "{path_build}" does not exist. Expected a path to an electro project directory'
+        return Err(
+             f'Path "{path_build}" does not exist. Expected a path to an electro project directory'
             ' or to an electro project file (i.e. ".json" file).'
         )
-        return
     if path_build.is_dir():
         # -------------------------
         # Directory passed
@@ -46,18 +45,14 @@ def build_project(path_build) -> Result[str, str]:
         path_project_directory = path_build
         path_project_file = path_project_directory / Path(CONFIG['project_filename'])
         if not path_project_file.exists():
-            FAULTS.error(f'Project file {path_project_file} not found.')
-            return
+            return Err(f'Project file {path_project_file} not found.')
     else:
         # -------------------------
         # Project file path passed
         # -------------------------
         path_project_file = path_build
         if path_project_file.suffix != '.json':
-            FAULTS.error(
-                f'Expected project file ("{path_project_file}") to have a ".json" extension.'
-            )
-            return
+            return Err(f'Expected project file ("{path_project_file}") to have a ".json" extension.')
         path_project_directory = path_project_file.parent
 
     with open(path_project_file, 'r') as file:
@@ -81,11 +76,10 @@ def build_project(path_build) -> Result[str, str]:
             )
             CONFIG['output_format'] = 'single_file'
     if CONFIG['output_format'] not in OUTPUT_FORMATS:
-        FAULTS.error(
+        return Err(
             f'Project file specified an output_format of "{CONFIG["output_format"]}". '
             f'Expected one of: {OUTPUT_FORMATS}.'
         )
-        return
 
     # -----------------------
     # Get options
@@ -97,8 +91,7 @@ def build_project(path_build) -> Result[str, str]:
     # -----------------------
     path_site_directory = path_project_directory / Path(project_config['site_directory'])
     if not path_site_directory.is_dir():
-        FAULTS.error(f'Site directory {path_site_directory} does not exist.')
-        return
+        return Err(f'Site directory {path_site_directory} does not exist.')
     CONFIG['path_project_directory'] = path_project_directory
     CONFIG['path_site_directory'] = path_site_directory
 
@@ -107,8 +100,7 @@ def build_project(path_build) -> Result[str, str]:
     # -----------------------
     path_theme_directory = PATH_THEMES / project_config['theme']
     if not path_theme_directory.is_dir():
-        FAULTS.error(f'Theme directory {path_theme_directory} does not exist.')
-        return
+        return Err(f'Theme directory {path_theme_directory} does not exist.')
     CONFIG['path_theme_directory'] = path_theme_directory
 
     # -----------------------
@@ -167,8 +159,7 @@ class SiteBuilder:
         self.menu_html += '<ul class="menu-tree">\n'
         documents_dict = navigation_descriptor.get('documents')
         if documents_dict is None:
-            FAULTS.error(f'No "documents" key in navigation descriptor {navigation_descriptor}.')
-            return
+            return Err(f'No "documents" key in navigation descriptor {navigation_descriptor}.')
         for menu_name, md_document_name in documents_dict.items():
             document_name = md_document_name_to_document_name(md_document_name)
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
@@ -191,17 +182,19 @@ class SiteBuilder:
             link_url = f"{document_name}.html#{heading_id}" if CONFIG['output_format'] == 'static_site' else None
             self.menu_builder.add_item(level, heading_text, link_url=link_url, heading_id=heading_id)
 
-    def build_document(self, path_markdown, document_name):
+    def build_document(self, path_markdown, document_name) -> Result[str, str]:
         if not path_markdown.exists():
-            FAULTS.error(f'Source markdown document {path_markdown} does not exist.')
-            return
+            return Err(f'Source markdown document {path_markdown} does not exist.')
         with open(path_markdown, 'r') as file:
             document_markdown = file.read()
 
         # --------------------
         # Pre-parser
         # --------------------
-        document_markdown = self.pre_parse_markdown(document_markdown)
+        result = self.pre_parse_markdown(document_markdown)
+        if isinstance(result, Err):
+            return result
+        document_markdown = result.value
 
         # --------------------
         # Render Markdown
@@ -265,8 +258,9 @@ class SiteBuilder:
             self.add_document_to_search(document_name, document_html)
 
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
+        return Ok()
 
-    def pre_parse_markdown(self, markdown):
+    def pre_parse_markdown(self, markdown) -> Result[str, str]:
         project_config = CONFIG['project_config']
         markdown = self._fix_bullet_list_starts(markdown)
         if project_config.get('strip_frontmatter', False):
@@ -275,9 +269,12 @@ class SiteBuilder:
             at_level = project_config.get('number_headings_at_level', 1)
             markdown = add_heading_numbers(markdown, at_level=at_level)
         markdown = self._parse_replacements(markdown)
-        markdown = self._parse_notices(markdown)
+        result = self._parse_notices(markdown)
+        if isinstance(result, Err):
+            return result
+        markdown = result.value
         markdown = self._parse_experimental(markdown)
-        return markdown
+        return Ok(markdown)
 
     def _fix_bullet_list_starts(self, markdown):
         """Fix bullet lists by injecting a blank line if previous line was text.
@@ -328,13 +325,16 @@ class SiteBuilder:
             markdown = markdown.replace(replacement['find'], replacement['replace'])
         return markdown
 
-    def _parse_notices(self, markdown):
+    def _parse_notices(self, markdown) -> Result[str, str]:
         notice_start_types = re.findall(r'{{% notice (\S*) %}}', markdown)
         logger.debug(f'{notice_start_types=}')
         for notice_start_type in notice_start_types:
             index = str(len(self.substitutions))
             html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
-            substitution = build_snippet_notice_start(notice_start_type)
+            result = build_snippet_notice_start(notice_start_type)
+            if isinstance(result, Err):
+                return result
+            substitution = result.value
             self.substitutions[html_temporary] = substitution
             markdown = markdown.replace(
                 r'{{% notice ' + notice_start_type + r' %}}', html_temporary
@@ -347,7 +347,7 @@ class SiteBuilder:
             substitution = SNIPPET_NOTICE_END
             self.substitutions[html_temporary] = substitution
             markdown = markdown.replace(NOTICE_END_ITEM, html_temporary)
-        return markdown
+        return Ok(markdown)
 
     def _parse_experimental(self, markdown):
         index = str(len(self.substitutions))
@@ -531,7 +531,9 @@ class SiteBuilder:
         # -------------------
         # Build search results doc
         # -------------------
-        self.build_document(PATH_SEARCH_RESULTS_MD, 'search')
+        result = self.build_document(PATH_SEARCH_RESULTS_MD, 'search')
+        if isinstance(result, Err):
+            return result
 
         # -------------------
         # Build site pages
@@ -955,18 +957,12 @@ def append_css_customizations(path_css_overlay):
 
 def get_deprecated(config_dict, key, deprecated_key, default=None, required=True) -> Result[str, str]:
     if key in config_dict and deprecated_key in config_dict:
-        message = (
+        return Err(
             f'Key "{key}" and deprecated key "{deprecated_key}" both present in config.'
             ' Remove deprecated key.')
-        logger.error(message)
-        return Err(message)
     if deprecated_key in config_dict:
-        message = f'Key "{deprecated_key}" has been deprecated.  Use "{key}" instead.'
-        logger.warning(message)
-        FAULTS.warning(message)
+        FAULTS.warning(f'Key "{deprecated_key}" has been deprecated.  Use "{key}" instead.')
         return Ok(config_dict[deprecated_key])
     if required and key not in config_dict:
-        message = f'Required key "{key}" not present in config.'
-        logger.error(message)
-        return Err(message)
+        return Err(f'Required key "{key}" not present in config.')
     return Ok(str(config_dict.get(key, default)))
