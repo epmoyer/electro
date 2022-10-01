@@ -4,20 +4,12 @@
 from enum import Enum
 
 # Library
-from rich.markup import escape
 
 # Local
-from electro.app_config import CONFIG
-from electro.console import CONSOLE
+from electro.console import CONSOLE, wrap_tag
 
 # Rich console
 print = CONSOLE.print
-
-
-def wrap_tag(tag, text, no_escape=False):
-    """Wrap text with a rich tag"""
-    return f'[{tag}]{text if no_escape else escape(text)}[/{tag}]'
-
 
 class FaultType(Enum):
     ERROR = 1

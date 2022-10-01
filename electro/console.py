@@ -3,6 +3,7 @@
 # library
 from rich.console import Console
 from rich.theme import Theme
+from rich.markup import escape
 
 # --------------------
 # Rich output console
@@ -16,4 +17,7 @@ THEME = Theme({
 
 CONSOLE = Console(highlight=False, color_system='256', theme=THEME)
 CONSOLE_PPRINT = Console(highlight=True, color_system='256', theme=THEME)
-OUTPUT_FORMATS = ['static_site', 'single_file']
+
+def wrap_tag(tag, text, no_escape=False):
+    """Wrap text with a rich tag"""
+    return f'[{tag}]{text if no_escape else escape(text)}[/{tag}]'

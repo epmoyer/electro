@@ -10,7 +10,7 @@ from result import Result, Ok, Err
 
 # Local
 from electro.app_config import CONFIG
-from electro.console import CONSOLE
+from electro.console import CONSOLE, wrap_tag
 from electro.build import build_project
 from electro.faults import FAULTS
 
