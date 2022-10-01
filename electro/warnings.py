@@ -22,7 +22,7 @@ class Warnings:
     def render(self):
         if not self.warnings:
             return
-        print('\nWarnings:')
+        print('\nWarnings Summary:')
         for message in self.warnings:
             print(f'- {wrap_tag("warning", message)}')
 
