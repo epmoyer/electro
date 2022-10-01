@@ -16,6 +16,7 @@ from result import Ok, Err, Result
 from loguru import logger
 from pytest import mark
 from electro.app_config import CONFIG, OUTPUT_FORMATS
+from electro.console import CONSOLE
 from electro.faults import FAULTS
 from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
@@ -24,7 +25,7 @@ from electro.inline_images import make_html_images_inline
 from electro.inline_fonts import make_html_fonts_inline
 from electro.inline_icons import make_html_icons_inline
 
-pprint = CONFIG['console_pprint']
+print = CONSOLE.print
 MAX_HEADING_DEPTH = 6
 
 
@@ -109,9 +110,6 @@ def build_project(path_build) -> Result[str, str]:
         FAULTS.error(f'Theme directory {path_theme_directory} does not exist.')
         return
     CONFIG['path_theme_directory'] = path_theme_directory
-
-    # print(f'build_project() {path_project_directory=}')
-    # pprint(CONFIG)
 
     # -----------------------
     # Build menu and pase markdown
@@ -963,7 +961,9 @@ def get_deprecated(config_dict, key, deprecated_key, default=None, required=True
         logger.error(message)
         return Err(message)
     if deprecated_key in config_dict:
-        logger.warning(f'Key {deprecated_key} has been deprecated.  Use "{key}" instead.')
+        message = f'Key "{deprecated_key}" has been deprecated.  Use "{key}" instead.'
+        logger.warning(message)
+        FAULTS.warning(message)
         return Ok(config_dict[deprecated_key])
     if required and key not in config_dict:
         message = f'Required key "{key}" not present in config.'

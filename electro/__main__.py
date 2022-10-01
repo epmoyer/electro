@@ -10,11 +10,12 @@ from result import Result, Ok, Err
 
 # Local
 from electro.app_config import CONFIG
+from electro.console import CONSOLE
 from electro.build import build_project
 from electro.faults import FAULTS
 
 # Rich console
-print = CONFIG['console_print']
+print = CONSOLE.print
 
 @click.group()
 @click.option('-d', '--debug', 'enable_debug_logging', is_flag=True, help='Enable debug logging')
@@ -49,7 +50,7 @@ def build(path_project_text):
    
     result = build_project(path_project)
     if isinstance(result, Err):
-        print(f'Error: {result.value}')
+        print(f'Error: {wrap_tag("error", result.value)}')
     FAULTS.render()
 
 if __name__ == '__main__':

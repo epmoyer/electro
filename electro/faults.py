@@ -8,9 +8,10 @@ from rich.markup import escape
 
 # Local
 from electro.app_config import CONFIG
+from electro.console import CONSOLE
 
 # Rich console
-print = CONFIG['console_print']
+print = CONSOLE.print
 
 
 def wrap_tag(tag, text, no_escape=False):
@@ -61,7 +62,7 @@ class Faults:
             if fault.fault_type != fault_type:
                 continue
             tag = fault.fault_type.name.lower()
-            print(wrap_tag(tag, fault.message))
+            print(f'- {wrap_tag(tag, fault.message)}')
             if fault.cluster:
                 print(f'Line: {fault.cluster.line_number + 1}')
                 print('\n'.join(fault.cluster.lines))
