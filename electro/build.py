@@ -250,9 +250,12 @@ class SiteBuilder:
             # print(f'         {replacement}')
             document_html = document_html.replace(heading, replacement)
 
-        # Add copyright text
-        if copyright_text := CONFIG['project_config'].get('copyright'):
-            document_html += '<hr />\n' f'<div class="copyright">{copyright_text}</div>'
+        # Add footer text
+        result = get_deprecated(CONFIG['project_config'], 'footer', 'copyright')
+        if isinstance(result, Err):
+            return result
+        if result.value:
+            document_html += '<hr />\n' f'<div class="footer">{result.value}</div>'
 
         # ---------------------
         # Search
