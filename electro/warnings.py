@@ -1,8 +1,5 @@
 """Fault connection, reporting."""
 
-# Standard Library
-from enum import Enum
-
 # Library
 from loguru import logger
 
@@ -11,6 +8,7 @@ from electro.console import CONSOLE, wrap_tag
 
 # Rich console
 print = CONSOLE.print
+
 
 class Warnings:
     def __init__(self):
@@ -27,5 +25,6 @@ class Warnings:
         print('\nWarnings:')
         for message in self.warnings:
             print(f'- {wrap_tag("warning", message)}')
+
 
 WARNINGS = Warnings()
