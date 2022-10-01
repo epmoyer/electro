@@ -35,7 +35,7 @@ def build_project(path_build) -> Result[str, str]:
         # Bad path passed
         # -------------------------
         return Err(
-             f'Path "{path_build}" does not exist. Expected a path to an electro project directory'
+            f'Path "{path_build}" does not exist. Expected a path to an electro project directory'
             ' or to an electro project file (i.e. ".json" file).'
         )
     if path_build.is_dir():
