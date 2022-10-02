@@ -8,6 +8,9 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.0.3 2022-09-10
+### Added
+- `timezone` option to .json config (sets timezone for `{{% timestamp %}}` injection.)
 ## 1.0.2 2022-09-10
 ### Fixed
 - Stop if a document is not found (and show fault(s) to user).

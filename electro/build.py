@@ -5,6 +5,7 @@ import shutil
 import shutil
 import re
 from datetime import datetime, date
+import pytz
 
 # Library
 from prettyprinter import pformat
@@ -52,7 +53,9 @@ def build_project(path_build) -> Result[str, str]:
         # -------------------------
         path_project_file = path_build
         if path_project_file.suffix != '.json':
-            return Err(f'Expected project file ("{path_project_file}") to have a ".json" extension.')
+            return Err(
+                f'Expected project file ("{path_project_file}") to have a ".json" extension.'
+            )
         path_project_directory = path_project_file.parent
 
     with open(path_project_file, 'r') as file:
@@ -176,7 +179,6 @@ class SiteBuilder:
             self._build_subheading_menus(document_name)
         return Ok()
 
-
     def _build_subheading_menus(self, document_name):
         document_html = self.site_documents[document_name]['html']
         soup = BeautifulSoup(document_html, 'lxml')
@@ -185,8 +187,14 @@ class SiteBuilder:
             heading_text = heading.text.strip()
             heading_id = heading_text_to_id(heading_text)
             level = int(html_tag[1]) - 1
-            link_url = f"{document_name}.html#{heading_id}" if CONFIG['output_format'] == 'static_site' else None
-            self.menu_builder.add_item(level, heading_text, link_url=link_url, heading_id=heading_id)
+            link_url = (
+                f"{document_name}.html#{heading_id}"
+                if CONFIG['output_format'] == 'static_site'
+                else None
+            )
+            self.menu_builder.add_item(
+                level, heading_text, link_url=link_url, heading_id=heading_id
+            )
 
     def build_document(self, path_markdown, document_name) -> Result[str, str]:
         if not path_markdown.exists():
@@ -303,7 +311,7 @@ class SiteBuilder:
         out_lines = []
         for line in markdown.splitlines():
             stripped = line.strip()
-            is_list = (stripped.startswith('- ') or stripped.startswith('* '))
+            is_list = stripped.startswith('- ') or stripped.startswith('* ')
             if is_list and not previous_was_list and not previous_was_blank:
                 # Insert a blank line to force this list to be recognized.
                 out_lines.append('')
@@ -363,17 +371,13 @@ class SiteBuilder:
         html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
         substitution = '<div class="change-bar">'
         self.substitutions[html_temporary] = substitution
-        markdown = markdown.replace(
-                r':change_bar_start', html_temporary
-            )
+        markdown = markdown.replace(r':change_bar_start', html_temporary)
 
         index = str(len(self.substitutions))
         html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
         substitution = '</div>'
         self.substitutions[html_temporary] = substitution
-        markdown = markdown.replace(
-                r':change_bar_end', html_temporary
-            )
+        markdown = markdown.replace(r':change_bar_end', html_temporary)
         return markdown
 
     def post_parse_html(self, html):
@@ -424,7 +428,9 @@ class SiteBuilder:
         doc_descriptor = {'title': title, 'location': location, 'heading': heading, 'text': text}
         self.search_index['docs'].append(doc_descriptor)
 
-    def _render_document(self, template_html, path_document_out, content_html, document_name) -> Result[str, str]:
+    def _render_document(
+        self, template_html, path_document_out, content_html, document_name
+    ) -> Result[str, str]:
         print(f'Building {path_document_out}...')
 
         project_config = CONFIG['project_config']
@@ -450,10 +456,13 @@ class SiteBuilder:
             r'{{% watermark %}}', project_config.get("watermark", "")
         )
         document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
-        document_html = document_html.replace(
-            r'{{% timestamp %}}', datetime.now().astimezone().replace(microsecond=0).isoformat()
-        )
         document_html = document_html.replace(r'{{% year %}}', str(date.today().year))
+        
+        timezone_name = project_config.get('timezone')
+        result = iso_timestamp_now(timezone_name)
+        if isinstance(result, Err):
+            return result
+        document_html = document_html.replace(r'{{% timestamp %}}', result.value)
 
         with open(path_document_out, 'w') as file:
             file.write(document_html)
@@ -565,7 +574,9 @@ class SiteBuilder:
                 # Start all subsequent pages as hidden
                 style_html = 'style="display: none"'
             path_site_document = path_output_directory / Path('index.raw.html')
-            result = self._render_document(template_html, path_site_document, pages_html, "Document")
+            result = self._render_document(
+                template_html, path_site_document, pages_html, "Document"
+            )
             if isinstance(result, Err):
                 return result
         else:
@@ -766,7 +777,7 @@ class MenuBuilder:
                     include_caret_space=(level == 0),
                     caret_visible=caret_visible,
                     link_url=child.link_url,
-                    is_level_two=(level > 0)
+                    is_level_two=(level > 0),
                 )
             )
             lines.append('</span>')
@@ -785,11 +796,7 @@ def to_json_bool(python_bool):
 
 
 def format_menu_heading(
-    text,
-    include_caret_space=False,
-    caret_visible=False,
-    link_url=None,
-    is_level_two=False,
+    text, include_caret_space=False, caret_visible=False, link_url=None, is_level_two=False,
 ):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
@@ -964,14 +971,32 @@ def append_css_customizations(path_css_overlay):
         with open(path_css_overlay, 'a') as file:
             file.write(text)
 
-def get_deprecated(config_dict, key, deprecated_key, default=None, required=True) -> Result[str, str]:
+
+def get_deprecated(
+    config_dict, key, deprecated_key, default=None, required=True
+) -> Result[str, str]:
     if key in config_dict and deprecated_key in config_dict:
         return Err(
             f'Key "{key}" and deprecated key "{deprecated_key}" both present in config.'
-            ' Remove deprecated key.')
+            ' Remove deprecated key.'
+        )
     if deprecated_key in config_dict:
         WARNINGS.warning(f'Key "{deprecated_key}" has been deprecated.  Use "{key}" instead.')
         return Ok(config_dict[deprecated_key])
     if required and key not in config_dict:
         return Err(f'Required key "{key}" not present in config.')
     return Ok(str(config_dict.get(key, default)))
+
+
+def iso_timestamp_now(tz_name=None) -> Result[str, str]:
+    """Get current iso timestamp of form `2022-02-19T13:08:24-08:00`.
+
+    if tz_name is not supplied, then the timestamp will default to the machine's
+    local time zone.
+    """
+    print(f'{tz_name=}')
+    try:
+        tz = pytz.timezone(tz_name) if tz_name else None
+    except pytz.exceptions.UnknownTimeZoneError as e:
+        return Err(f'Unknown time zone name: {e}')
+    return Ok(datetime.now().astimezone(tz).replace(microsecond=0).isoformat())
