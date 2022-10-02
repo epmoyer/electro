@@ -39,7 +39,7 @@
             "color": "blue"
         },
         {
-            "name": "",
+            "name": "electrobear",
             "id": "7",
             "color": "sky"
         },
@@ -64,6 +64,23 @@
             "name": "Backlog (Future)",
             "id": "5",
             "cards": [
+                {
+                    "name": "graceful error on non-existent image file",
+                    "id": "152",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Heading links that survive numbering?",
+                    "id": "156",
+                    "id_labels": [],
+                    "description": "It would be nice to automatically recognize and update internal links to headings such that they continue to work after heading numbers have been applied.\n\nYou want them to work both during authoring (VS Code etc), and after publishing.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
                 {
                     "name": "Create a custom favicon/icon.",
                     "id": "135",
@@ -121,14 +138,6 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Support Notable data dir as source.",
-                    "id": "112",
-                    "id_labels": [],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "Highlight search hits.",
                     "id": "123",
                     "id_labels": [
@@ -160,7 +169,8 @@
                     "id_labels": [],
                     "description": "Probably adopt light bulb (instead of wrench) for \"Tip\" notice at that time.",
                     "due": null,
-                    "due_complete": false
+                    "due_complete": false,
+                    "repeat": null
                 },
                 {
                     "name": "Mobile scroll when sidebar visible.",
@@ -178,7 +188,17 @@
         {
             "name": "Backlog (MVP)",
             "id": "2",
-            "cards": [],
+            "cards": [
+                {
+                    "name": "App.globalConfig.singleFile should probably be text, and be\u00a0App.globalConfig.outputFormat",
+                    "id": "151",
+                    "id_labels": [],
+                    "description": "Would match the extensibility of the json config better, and would let us stop doing the strange template substitution (which includes the single quotes today).",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                }
+            ],
             "archived": false
         },
         {
@@ -187,11 +207,28 @@
             "cards": [
                 {
                     "name": "---",
-                    "id": "141",
+                    "id": "164",
                     "id_labels": [],
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Should static site connect to hosted fonts or host them locally?",
+                    "id": "162",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Emoji in menu title?",
+                    "id": "160",
+                    "id_labels": [],
+                    "description": "The SandCloud help used a star emoji in the \"WALKTHROUGH\" tile.  That emoji ends up taller than the text around it, which makes the caret end up in what feels like a weird place.\n\nShould we center the caret?  If we do that, then it will probably look weird for large (multi-line) titles (as appear in Cascade).",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
                 }
             ]
         },
@@ -199,6 +236,147 @@
             "name": "Done",
             "id": "4",
             "cards": [
+                {
+                    "name": "CONFIG FILE: site_directory -> output_directory",
+                    "id": "159",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "CONFIG FILE: copyright -> footer",
+                    "id": "158",
+                    "id_labels": [],
+                    "description": "Make sure footer div is appropriately named as well (html and css)",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "CONFIG FILE: site_name -> master_title",
+                    "id": "157",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Level 2 menu items highlighted incorrectly",
+                    "id": "161",
+                    "id_labels": [
+                        "4"
+                    ],
+                    "description": "When opening a level 1 menu item( for a static site) for the current site page, the level 2 items appear highlighted (bright gray), they should be unhighlighted.\n\nThis used to work before the \"dual\" merge, so probably the old functionality  (js?) is accidentally getting skipped.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "---",
+                    "id": "163",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Option to generate menu from level 2 (instead of 1)",
+                    "id": "154",
+                    "id_labels": [],
+                    "description": "For docs that use level 1 as their title (like Notable notes)",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "Force better bullet list recognition.",
+                    "id": "155",
+                    "id_labels": [],
+                    "description": "Some (most) markdown engines recognize a line starting with `- ` as the start of a list **even if** the preceding line was regular text.  This one doesn't.  Consider injecting a blank line (during parsing) to force this engine to recognize those cases as lists.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "Fenced code blocks have blank space at start",
+                    "id": "153",
+                    "id_labels": [
+                        "4"
+                    ],
+                    "description": "md converter is inserting an empty `<span></span>` into fenced code blocks, causing a blank space to appear before code.\n\nFix: was a padding issue. Removed the padding from `code` when inside `pre`",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "Commit to IBM plex, local, in positron theme.",
+                    "id": "150",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Add markdown test cases to test project.",
+                    "id": "146",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Confirm that we are NOT fetching fonts from google; local only.",
+                    "id": "149",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Move --nobreak option into config .json",
+                    "id": "145",
+                    "id_labels": [],
+                    "description": "And flip the sense.  no break should be the default, and there should be an option in the config to enable breaks.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "Allow pointing to .json in launch.",
+                    "id": "147",
+                    "id_labels": [],
+                    "description": "Today you pass electro the _directory_ containing your `electro.json` file.  Should also allow passing the path to the `electro.json` file itself.   That will allow having a single test project containing two .json files for testing; one of which builds a packed (single file) output, and the other a static site.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
+                    "name": "---",
+                    "id": "141",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Scroll to top on section name click.",
+                    "id": "144",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Use IBM Plex in positron",
+                    "id": "143",
+                    "id_labels": [
+                        "7"
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Add title tag",
                     "id": "139",
@@ -432,8 +610,25 @@
             "id": "6",
             "cards": [
                 {
+                    "name": "Add way to specify \"home\" button target in project .json",
+                    "id": "148",
+                    "id_labels": [],
+                    "description": "Today it defaults to \"doc_info\" page, but that page may not exist for all single_file projects.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
                     "name": "Center h1?",
                     "id": "107",
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "Support Notable data dir as source.",
+                    "id": "112",
                     "id_labels": [],
                     "description": "",
                     "due": null,

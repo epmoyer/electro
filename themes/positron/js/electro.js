@@ -3,67 +3,67 @@ var App = App || {}; // Create namespace
 (function () {
     "use strict";
 
+    App.state = {
+        allMenuSpans: null
+    };
+    App.SEARCH_RESULT_SNIPPET_MAX_LEN = 200;
+
     App.main = () => {
         // -----------------------
         // menu-tree: Find all items (spans) in all menu-tree(s)
         // -----------------------
         const menu_trees = document.getElementsByClassName("menu-tree");
-        const all_menu_spans = [];
+        App.state.allMenuSpans = [];
         for (let menu_tree of menu_trees) {
             const menu_spans = menu_tree.getElementsByTagName("span");
-            // console.log(menu_spans);
             for (let span of menu_spans) {
-                all_menu_spans.push(span);
+                App.state.allMenuSpans.push(span);
             }
         }
 
         // -----------------------
         // menu-tree: Set item (span) click handler
         // -----------------------
-        for (let span of all_menu_spans) {
+        for (let span of App.state.allMenuSpans) {
             span.addEventListener("click", function () {
-                // Unselect all items in all menu-tree(s)
-                for (let old_span of all_menu_spans) {
-                    old_span.classList.remove("selected");
-                    old_span.classList.remove("navigating");
-                }
-                // Navigate to link, if this span contains one
-                var target_url = null;
-                const anchors = this.getElementsByTagName("a");
-                if (anchors) {
-                    for (let anchor of anchors) {
-                        target_url = anchor.href;
-                        // There should be only one anchor, but break anyway.
-                        break;
-                    }
-                }
-                if (target_url !== null){
-                    // if(App.globalConfig.currentDocumentName in 
-                    if (target_url.indexOf(App.globalConfig.currentDocumentName) > -1) {
-                        // We are navigating to the current page
-                        this.classList.add("selected");
-                    }
-                    else{
-                        // We are navigating away from the current page
-                        this.classList.add("navigating");
-                    }
-                    window.location.href = target_url;
-                }
-                else {
-                    this.classList.add("selected");
-                }
-                console.log(this.classList);
+                App.onClickMenuItem(this);
+                // // Unselect all items in all menu-tree(s)
+                // for (let old_span of App.state.allMenuSpans) {
+                //     old_span.classList.remove("selected");
+                //     old_span.classList.remove("navigating");
+                // }
 
-                // If in responsive narrow-screen, re-hide the menu.
-                document.getElementById("sidebar-container").classList.remove("force-show");
+                // const pageId = this.dataset.documentName;
+                // const targetHeadingId = this.dataset.targetHeadingId;
+                
+                // // -----------------------------
+                // // Make the target page visible
+                // // -----------------------------
+                // App.showPage(pageId);
+
+                // // ----------------------------
+                // // Scroll to the target heading (or to top if no HeadingId exists)
+                // // -----------------------------
+                // App.scrollToHash(targetHeadingId);
+
+                // // -----------------------------
+                // // Select the clicked menu item
+                // // -----------------------------
+                // this.classList.add("selected");
+
+                // // If in responsive narrow-screen, re-hide the menu.
+                // document.getElementById("sidebar-container").classList.remove("force-show");
             });
         }
 
         // -----------------------
         // menu-tree: Select the current document (at page load)
         // -----------------------
-        for (let span of all_menu_spans) {
-            if (span.id == "menuitem_doc_" + App.globalConfig.currentDocumentName) {
+        for (let span of App.state.allMenuSpans) {
+            if (
+                (span.id == "menuitem_doc_" + App.globalConfig.currentDocumentName)
+                && (span.classList.contains("level-0"))
+            ){
                 span.classList.add("selected");
             }
         }
@@ -92,45 +92,70 @@ var App = App || {}; // Create namespace
             function (event) {
                 if (event.keyCode == 13) {
                     event.preventDefault();
-                    App.onSearch();
+                    if (App.globalConfig.singleFile){
+                        const searchText = document.getElementById("search-text").value;
+                        App.doSearch(searchText);
+                    }
+                    else{
+                        App.onSearch();
+                    }
                 }
             },
             false
         );
 
         // -----------------------
+        // Home button
+        // -----------------------
+        if(App.globalConfig.singleFile){
+            // There are 2 versions of the home button. The default is an anchor tag
+            // to index.html, for static web sites.  For single file docs we need to hide that
+            // one and enable the one which contains a pageId link parameter (to the doc_info page).
+            document.getElementById("home-button-static").style.display = 'none';
+            document.getElementById("home-button-single-file").style.display = 'inline';
+        }
+
+        // -----------------------
         // Get search data
         // -----------------------
-        fetch("search/search_index.json")
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                const config = App.globalConfig;
-                console.log("Fetched search index");
-                // console.log(data);
-                config.searchData = data;
-                config.searchIndex = lunr(function () {
-                    this.field("title");
-                    this.field("text");
-                    this.field("heading");
-                    this.ref("location");
+        const config = App.globalConfig;
+        config.searchIndex = lunr(function () {
+            this.field("title");
+            this.field("text");
+            this.field("heading");
+            this.ref("location");
 
-                    for (var i = 0; i < data.docs.length; i++) {
-                        var doc = data.docs[i];
-                        this.add(doc);
-                        config.documents[doc.location] = doc;
-                    }
-                });
+            for (var i = 0; i < App.searchData.docs.length; i++) {
+                var doc = App.searchData.docs[i];
+                this.add(doc);
+                config.documents[doc.location] = doc;
+            }
+        });
 
-                // Execute search query (if requested in url)
-                const searchText = App.getUrlValue('query');
-                if(searchText){
-                    document.getElementById("search-text").value = searchText;
-                    console.log('query', searchText);
-                    App.doSearch(searchText);
-                }
-            });
+        // Execute search query (if requested in url)
+        const searchText = App.getUrlValue('query');
+        if(searchText){
+            document.getElementById("search-text").value = searchText;
+            console.log('query', searchText);
+            App.doSearch(searchText);
+        }
+        
+        // Navigate to search result location (if requested in url)
+        const pageId = App.getUrlValue('pageId');
+        const headingId = App.getUrlValue('headingId');
+        if(pageId){
+            console.log('Going to location: pageId:' + pageId + ' headingId:' + headingId);
+            App.showPage(pageId);
+            if(headingId){
+                App.scrollToHash(headingId);
+            }
+        }
+
+        const hideWatermark = App.getUrlValue('nowm');
+        if (hideWatermark == 'true'){
+            console.log('Hiding watermark because nowm set in URL.');
+            document.getElementById("watermark-text").innerHTML = "";
+        }
 
         // -----------------------
         //  Set handler
@@ -140,7 +165,106 @@ var App = App || {}; // Create namespace
 
         
         // Show version
-        console.log('Built with Elecro ' + App.globalConfig.electroVersion);
+        console.log('Built with Electro ' + App.globalConfig.electroVersion);
+    };
+
+    App.onClickMenuItem = (self) => {
+        console.log("App.onClickMenuItem");
+        // Unselect all items in all menu-tree(s)
+        for (let old_span of App.state.allMenuSpans) {
+            old_span.classList.remove("selected");
+            old_span.classList.remove("navigating");
+        }
+        
+        if (App.globalConfig.singleFile){
+            App.onClickMenuSingleFile(self);
+        }
+        else{
+            App.onClickMenuStaticSite(self);
+        }
+    };
+    
+    App.onClickMenuSingleFile = (self) => {
+        console.log("App.onClickMenuSingleFile");
+        const pageId = self.dataset.documentName;
+        const targetHeadingId = self.dataset.targetHeadingId;
+        
+        // -----------------------------
+        // Make the target page visible
+        // -----------------------------
+        App.showPage(pageId);
+
+        // ----------------------------
+        // Scroll to the target heading (or to top if no HeadingId exists)
+        // -----------------------------
+        App.scrollToHash(targetHeadingId);
+
+        // -----------------------------
+        // Select the clicked menu item
+        // -----------------------------
+        self.classList.add("selected");
+
+        // If in responsive narrow-screen, re-hide the menu.
+        document.getElementById("sidebar-container").classList.remove("force-show");
+    };
+
+    App.onClickMenuStaticSite = (self) => {
+        console.log("App.onClickMenuStaticSite");
+        // Navigate to link, if this span contains one
+        var target_url = null;
+        const anchors = self.getElementsByTagName("a");
+        if (anchors) {
+            for (let anchor of anchors) {
+                target_url = anchor.href;
+                // There should be only one anchor, but break anyway.
+                break;
+            }
+        }
+        if (target_url !== null){
+            // if(App.globalConfig.currentDocumentName in 
+            if (target_url.indexOf(App.globalConfig.currentDocumentName) > -1) {
+                // We are navigating to the current page
+                self.classList.add("selected");
+            }
+            else{
+                // We are navigating away from the current page
+                self.classList.add("navigating");
+            }
+            window.location.href = target_url;
+        }
+        else {
+            self.classList.add("selected");
+        }
+    };
+
+    App.showPage = (pageId) => {
+        const pages = document.getElementsByClassName('content-page');
+        for (const page of pages) {
+            if(page.id == pageId){
+                page.style.display = 'inline';
+            } else {
+                page.style.display = 'none';
+            }
+        }
+    };
+
+    App.scrollToHash = (hashName) => {
+        if(!hashName){
+            // Scroll to the top if no hashName was given
+            var content_div = document.getElementsByClassName("main-container")[0];
+            content_div.scrollTop = 0;
+            return;
+        }
+        const target = "#" + hashName;
+        if(location.hash == target){
+            // Browser thinks we are already at the target, but we might have scrolled away
+            // from it, so blank it and then set it back to force the document to scroll
+            location.hash = "";
+            location.hash = "#" + hashName;
+        }
+        else {
+            location.hash = "#" + hashName;
+        }
     };
 
     App.onMainTouchMove = (e) => {
@@ -168,6 +292,11 @@ var App = App || {}; // Create namespace
     };
 
     App.onSearch = () => {
+        // Executed on static sites when user enters search text and presses return.
+        //
+        // The search is encoded as a query parameter on the URL, and the search page
+        // (search.html) is loaded. The actual searching and displaying of results will
+        // happen on that page.
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;
         console.log("searchText", searchText);
@@ -182,10 +311,27 @@ var App = App || {}; // Create namespace
 
         var html = '<h1>Search Results</h1>\n';
         results.forEach(result => {
-            html += '<hr>';
-            html += '<h3><a href="' + result.location + '">' + result.title + '</a></h3>';
-            if(result.heading){
-                html += '<h4>' + result.heading + '</h4>';
+            // html += '<hr>';
+            if (App.globalConfig.singleFile){
+                // Single file compatible link
+                const location = result.location.replace(".html", "");
+                const pieces = location.split("#");
+                const pageId = pieces[0];
+                const headingId = pieces[1];
+                if(result.heading){
+                    // Show document heading only, as link
+                    html += '<h4><a href="?pageId=' + pageId + '&headingId=' + headingId + '">' + result.heading + '</a></h4>';
+                }
+                else{
+                    // Show document name only, as link
+                    html += '<h3><a href="?pageId=' + pageId + '&headingId=' + headingId + '">' + result.title + '</a></h3>';
+                }
+            } else {
+                // Static site compatible link
+                html += '<h3><a href="' + result.location + '">' + result.title + '</a></h3>';
+                if(result.heading){
+                    html += '<h4>' + result.heading + '</h4>';
+                }
             }
 
             // Highlight search hits
@@ -196,7 +342,16 @@ var App = App || {}; // Create namespace
         if (results.length == 0){
             html += '(no results to show)';
         }
-        document.getElementById("content").innerHTML = html;
+        if(!App.globalConfig.singleFile){
+            // Static web page. Show search results in content area
+            document.getElementById("content").innerHTML = html;
+        } else {
+            // Single file document. Show search results in search page and hide other pages.
+            document.getElementById("search").innerHTML = html;
+
+            // Make the search page visible
+            App.showPage('search');
+        }
     };
 
     App.highlight = (searchText, html) => {
@@ -229,9 +384,73 @@ var App = App || {}; // Create namespace
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             var doc = config.documents[result.ref];
-            doc.summary = doc.text.substring(0, 200);
+            doc.summary = App.truncateSearchResult(doc.text, query);
             resultDocuments.push(doc);
         }
         return resultDocuments;
+    };
+
+    /**
+     * Shorten the text of a search result to a "snippet" no longer than some max, 
+     * while attempting to include the search term(s) within that snippet.
+     * @param {string} text The search result text.
+     * @param {string} query The search query.
+     * @return {string} The snippet text.
+     */
+    App.truncateSearchResult = (text, query) => {
+        const compareText = text.toLowerCase();
+        query = query.toLocaleLowerCase();
+
+        const searchWords = query.trim().split(/\s+/);
+        var hitIndex = -1;
+        for (const searchWord of searchWords){
+            const i = compareText.indexOf(searchWord);
+            if(i != -1){
+                if(hitIndex == -1){
+                    // First hit found
+                    hitIndex = i;
+                }
+                else{
+                    // Take the earliest of all hits found
+                    hitIndex = Math.min(i, hitIndex);
+                }
+            }
+        }
+        if(hitIndex == -1){
+            // If we were unable to find any of the search terms literally then just set
+            // the hitIndex to 0, which will cause us to create a snippet beginning at the
+            // start of the text.
+            hitIndex = 0;
+        }
+        var size = text.length;
+        var start = hitIndex - Math.floor(App.SEARCH_RESULT_SNIPPET_MAX_LEN/2);
+        var end = hitIndex + Math.floor(App.SEARCH_RESULT_SNIPPET_MAX_LEN/2);
+        var overflow;
+
+        // Slide region left to not overhang end
+        overflow = end - (size - 1);
+        if (overflow > 0){
+            end -= overflow;
+            start -= overflow;
+        }
+        // Slide region right to not overhand start
+        overflow = -start;
+        if (overflow > 0){
+            start += overflow;
+            end += overflow;
+        }
+        // Shorten region if longer than text
+        if (end > size-1){
+            end = size-1;
+        }
+        // Extract snippet and add ellipses as necessary
+        var snippet = (start > 0) ? "…" : "";
+        snippet += text.substring(start, end);
+        if (end < size - 1){
+            snippet += "…";
+        }
+        // console.log({query: query, text:text, start:start, end:end, snippet:snippet});
+        // console.log(text);
+        return snippet;
     };
 })(); // "use strict" wrapper

@@ -1,25 +1,26 @@
 """Electro App, entry point"""
 
 # Standard library
+from pathlib import Path
 
 # library
 import click
 from loguru import logger
+from result import Result, Ok, Err
 
 # Local
 from electro.app_config import CONFIG
+from electro.console import CONSOLE, wrap_tag
 from electro.build import build_project
-from electro.faults import FAULTS
+from electro.warnings import WARNINGS
 
 # Rich console
-print = CONFIG['console_print']
+print = CONSOLE.print
 
 @click.group()
 @click.option('-d', '--debug', 'enable_debug_logging', is_flag=True, help='Enable debug logging')
-@click.option('-n', '--nobreak', 'disable_nl2br', is_flag=True, help='Disable newline-to-break injection')
-def cli(enable_debug_logging, disable_nl2br):
+def cli(enable_debug_logging):
     CONFIG['enable_debug_logging'] = enable_debug_logging
-    CONFIG['disable_nl2br'] = disable_nl2br
 
     # --------------------
     # Initialize logging
@@ -37,10 +38,21 @@ def cli(enable_debug_logging, disable_nl2br):
 
 
 @cli.command()
-@click.argument('project_directory', default='./')
-def build(project_directory):
-    build_project(project_directory)
-    FAULTS.render()
+@click.argument('path_project_text', metavar='project_path', default='./')
+def build(path_project_text):
+    """Build the project.
+
+    The user can pass either the project directory OR a path to the project file (i.e. the 
+    project configuration JSON file).  If a directory is passed, then we will assume the
+    configuration JSON file is in that directory and has the default name.
+    """
+    path_project = Path(path_project_text)
+   
+    result = build_project(path_project)
+    if isinstance(result, Err):
+        logger.error(result.value)
+        print(f'Error: {wrap_tag("error", result.value)}')
+    WARNINGS.render()
 
 if __name__ == '__main__':
     cli(prog_name=CONFIG['app_name'])

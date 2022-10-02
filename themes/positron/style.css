@@ -3,15 +3,23 @@ body {
     font-family: "IBM Plex Sans", sans-serif;
     
     --color-content: #444;
+    --color-strong: #333;
     --color-navigating: rgb(38, 114, 255);
     --color-header: #2980b9;
     --color-header-text: #fff;
+    --color-heading-text: #444;
+    --color-watermark: #ff000034;
+    --color-table-header-bg: steelblue;
+    --color-table-header: white;
+    --color-h1-underline: #ccc;
 
-    --font-content-header: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif;
+    --font-content-header: "IBM Plex Sans", sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
         monospace;
+
+    --width-sidebar: 280px;
 
     --height-header: 40px;
 }
@@ -41,13 +49,26 @@ h6 {
     font-family: var(--font-content-header);
     font-weight: 700;
     margin: 5px 0px;
+    color: var(--color-heading-text);
 }
 h1 {
-    font-size: 175%;
+    font-size: 27px;
+    border-bottom: var(--color-h1-underline) solid 1px;
 }
-h1,
 h2 {
-    color: var(--color-content);
+    font-size: 25px;
+}
+h3 {
+    font-size: 23px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 20px;
+}
+h6 {
+    font-size: 19px;
 }
 h3,
 h4,
@@ -55,26 +76,62 @@ h5,
 h6 {
     color: #585858;
 }
+
+ul{
+    list-style-type: disc;
+}
+
+th {
+    background-color: var(--color-table-header-bg);
+    color: var(--color-table-header);
+}
+th strong {
+    color: var(--color-table-header);
+}
+table, th, td {
+    border-collapse: collapse;
+    border: 1px solid #444;
+    padding: 2px 6px;
+}
+table {
+    margin: 5px 0 0 0;
+}
 code {
-    color: #008c8c;
+    color: #4a4a4a;
+    background: #ebebeb;
     white-space: pre-wrap;
     word-wrap: break-word;
     padding: 2px 5px;
     font-family: var(--font-code);
-    background: #fff;
-    border: solid 1px #e1e4e5;
     font-size: 75%;
+    border: none;
+    border-radius: 4px;
+}
+pre code {
+    background: none;
+    border-radius: none;
+    padding: 0px;
+}
+pre {
+    color: #4a4a4a;
+    background-color: #ebebeb;
+    padding: 6px;
+    overflow-x: auto;
+}
+.notices code, .notices pre {
+    background-color: #dbdbdb;
 }
 a {
     color: #2980b9;
     text-decoration: none;
     cursor: pointer;
 }
-a:hover {
-    color: #3091d1;
-}
 a:visited {
-    color: #9b59b6;
+    color: #2980b9;
+}
+a:hover {
+    color: #29adb9;
+    text-decoration: underline;
 }
 .no-anchor-style,
 .no-anchor-style:visited,
@@ -85,7 +142,7 @@ a:visited {
 }
 strong {
     font-weight: 600;
-    color: black;
+    color: var(--color-strong);
 }
 hr {
     height: 1px;
@@ -100,7 +157,7 @@ hr {
     /* background-color: pink; */
 }
 blockquote {
-    color: #9b59c7;
+    color: #888;
     border-left: 8px solid #ccc;
     padding: 0px 12px;
 }
@@ -147,6 +204,7 @@ blockquote {
 }
 .content-container {
     width: 100%;
+    /* position: relative; */
     /* overflow-x: hidden; */
     /* overflow-y: auto; */
     /* background-color: palegreen; */
@@ -154,6 +212,9 @@ blockquote {
     padding: 10px 0px 10px 20px;
     color: var(--color-content);
     font-family: var(--font-content-text);
+    /* This causes x-overflowing pre elements to behave when using #{heading} in url
+       to navigate to a subheading */
+    min-width: 0;
 }
 .content-container ul {
     line-height: 24px;
@@ -166,7 +227,7 @@ blockquote {
 .sidebar-container {
     flex: 0 0 auto;
     /* width: 260px; */
-    width: 280px;
+    width: var(--width-sidebar);
     height: 100vh;
     /* padding: 10px; */
     background-color: #343131;
@@ -184,17 +245,20 @@ blockquote {
     align-content: center;
     justify-content: center;
     font-family: var(--font-sidebar);
-    /* justify-content: center; */
-    /* align-content: center; */
+
     color: white;
-    height: 55px;
     background-color: var(--color-header);
 }
 .sidebar-header i {
     margin-right: 5px;
 }
 .sidebar-title {
-    flex: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
 
     margin-bottom: 8px;
     /* No select */
@@ -240,7 +304,7 @@ blockquote {
     /* margin: 0px 30px; */
     width: 90%;
 }
-.copyright {
+.footer {
     color: #bbb;
     font-size: 12px;
 }
@@ -250,6 +314,9 @@ blockquote {
     }
     .sidebar-container{
         /* left: -300px; */
+        display: none;
+    }
+    .watermark-left{
         display: none;
     }
    
@@ -278,6 +345,62 @@ blockquote {
     padding: 2px 5px;
     border-radius: 4px;
     color: black;
+}
+
+.watermark-container{
+    /* Fills the app window and floats above everything else.
+     * Contains .watermark-left (placeholder) and .watermark-right.
+     */
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: row;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 100vh;
+    width: 100vw;
+    z-index: 2;
+    pointer-events: none;
+}
+.watermark-left{
+    /* Placeholder to take up same width as .sidebar */
+
+    /* as flex-child*/
+    flex-shrink: 0;
+    flex-grow: 0;
+
+    width: var(--width-sidebar);
+
+    /* background-color: #00ff0030; */
+}
+.watermark-right{
+    /* Floats over the document .content-container.
+     * Watermark text is centered inside this div.
+     */
+
+    /* as flex-parent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* as flex-child*/
+    flex-shrink: 1;
+    flex-grow: 1;
+
+    /* background-color: #00ffff30; */
+}
+.watermark-text{
+    color: var(--color-watermark);
+    font-size: 150px;
+    font-weight: 900;
+    transform: rotate(-45deg);
+    pointer-events: none;
+}
+#home-button-single-file{
+    cursor: pointer;
 }
 /* --------------------------
    notices
@@ -328,6 +451,10 @@ blockquote {
     background-color: rgb(124, 124, 124);
 }
 .main-container::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(190, 190, 190);
+}
+pre::-webkit-scrollbar-thumb {
     border-radius: 4px;
     background-color: rgb(190, 190, 190);
 }
@@ -382,6 +509,7 @@ blockquote {
     /* margin: 0px 5px 0px 0px; */
     width: 17px;
     height: 17px;
+    padding-top: 1px;
     /* padding-top: 2px; */
     display: inline-block;
     /* background-color: orange; */
@@ -391,7 +519,7 @@ blockquote {
     color: rgb(139, 139, 139);
 }
 
-.menu-tree .no_child {
+.menu-tree .no-child {
     /* margin-left: 20px; */
     padding-left: 20px;
 }
@@ -437,4 +565,72 @@ blockquote {
 }
 .menu-tree li .navigating:hover {
     background-color: var(--color-navigating);
+}
+
+/* --------------------------
+   menu-tree manipulations
+   -------------------------- */
+.menu-item-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.menu-item-container .caret {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 17px;
+    min-width: 17px;
+}
+.menu-item-container .core{
+    /* As flex child */
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    /* As flex parent */
+    display: flex;
+    flex-direction: row;
+    min-width: 0;
+    /* justify-content: flex-start; */
+}
+
+.menu-item-container .core .number-item {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 20px;
+}
+.menu-item-container .core .number-item.level-two {
+    width: 40px;
+}
+.menu-item-container  .core .text-item {
+    /* As flex child */
+    flex-grow: 1;
+    flex-shrink: 1;
+    text-align: left;
+
+    justify-content: flex-start;
+    /* background-color: lime; */
+    margin-left: 4px;
+}
+.menu-tree .caret-placeholder {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    width: 17px;
+    height: 12px;
+    display: inline-block;
+    /* background-color: purple; */
+}
+
+/* --------------------------
+   Change-bars
+   -------------------------- */
+.change-bar{
+    border-left: #d8d8d8 solid 2px;
+    /* border-left: purple solid 2px; */
+    padding: 11px;
+    margin: -11px;
 }
