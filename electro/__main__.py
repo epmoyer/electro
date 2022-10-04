@@ -9,6 +9,7 @@ from loguru import logger
 from result import Result, Ok, Err
 
 # Local
+from electro.paths import PATH_LOGS
 from electro.app_config import CONFIG
 from electro.console import CONSOLE, wrap_tag
 from electro.build import build_project
@@ -19,6 +20,7 @@ print = CONSOLE.print
 
 @click.group()
 @click.option('-d', '--debug', 'enable_debug_logging', is_flag=True, help='Enable debug logging')
+@click.version_option(CONFIG['version'])
 def cli(enable_debug_logging):
     CONFIG['enable_debug_logging'] = enable_debug_logging
 
@@ -27,7 +29,7 @@ def cli(enable_debug_logging):
     # --------------------
     logger.remove()
     logger.add(
-        f'logs/{CONFIG["app_name"]}.log',
+        PATH_LOGS / Path(f'{CONFIG["app_name"]}.log'),
         rotation="1 MB",
         retention=3,
         level="DEBUG" if enable_debug_logging else "INFO",

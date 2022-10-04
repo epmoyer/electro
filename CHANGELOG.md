@@ -9,11 +9,15 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## Unreleased
 (None)
 ## 1.1.0 2022-10-04
+### Added
+- Command line option: `--version` 
 ### Changed
 - Ignore blank search text.
 - Positron (default) theme:
     - Refine heading sizes. h2 now same as h1 (h1 has underline).
     - All headings now black (h3+ were gray).
+### Fixed
+- Fix path to `logs/` so that app can be run without first changing directories to the app path.
 ## 1.0.3 2022-10-02
 ### Added
 - `timezone` option to .json config (sets timezone for `{{% timestamp %}}` injection.)
