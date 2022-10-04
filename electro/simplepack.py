@@ -16,12 +16,11 @@ from loguru import logger
 # Local
 
 
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 qlog = None  # Will assign on start
 
 BUILD_PATH = Path('project_build/')
 EVENT_DATA_PATH = BUILD_PATH / Path('app/js/event_data.js')
-LOG_PATH = BUILD_PATH / Path('logs/')
 TEMP_PATH = BUILD_PATH / Path('temp/')
 
 
@@ -37,12 +36,6 @@ REPLACEMENT_MAP = (
 
 def simplepack(path_file_in, path_file_out, debug=False, uglify=True):
     """Module entry point."""
-    # ----------------------
-    # Make local build folder if it does not exist
-    # ----------------------
-    BUILD_PATH.mkdir(parents=True, exist_ok=True)
-    LOG_PATH.mkdir(parents=True, exist_ok=True)
-    TEMP_PATH.mkdir(parents=True, exist_ok=True)
 
     logger.info(f'simplepack version {__version__}')
     logger.info(f'Args: {path_file_in=} {path_file_out=} {debug=} {uglify=}')
@@ -84,6 +77,12 @@ def get_file_lines(filename, tag_name, uglify):
         uglify
         and tag_name == 'script'
     ):
+        # ----------------------
+        # Make local build folder if it does not exist
+        # ----------------------
+        BUILD_PATH.mkdir(parents=True, exist_ok=True)
+        TEMP_PATH.mkdir(parents=True, exist_ok=True)
+
         # Minimize js using node package UglifyJS
         assert filename.startswith('project_build/app/')
         temp_filemane = TEMP_PATH / Path(filename).name

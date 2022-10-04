@@ -20,6 +20,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
     - All headings now black (h3+ were gray).
 ### Fixed
 - Fix path to `logs/` so that app can be run without first changing directories to the app path.
+- Fix `simplepack` so that it does not create working directories unless uglifying.
 ## 1.0.3 2022-10-02
 ### Added
 - `timezone` option to .json config (sets timezone for `{{% timestamp %}}` injection.)
