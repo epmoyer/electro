@@ -199,6 +199,15 @@
                     "repeat": null
                 },
                 {
+                    "name": "Adopt font \"Lato\"?",
+                    "id": "167",
+                    "id_labels": [],
+                    "description": "\"Lato\", \"proxima-nova\", \"Helvetica Neue\", Arial, sans-serif\n\nConsider Lato as the \"Base font\" with Plex for headings.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
+                {
                     "name": "pikchr?",
                     "id": "166",
                     "id_labels": [],
