@@ -13,7 +13,6 @@ import markdown
 from bs4 import BeautifulSoup
 from result import Ok, Err, Result
 from loguru import logger
-from pytest import mark
 
 # Local
 from electro.app_config import CONFIG, OUTPUT_FORMATS
@@ -290,9 +289,10 @@ class SiteBuilder:
             document_html = document_html.replace(heading, replacement)
 
         # Add footer text
-        result = get_deprecated(CONFIG['project_config'], 'footer', 'copyright')
+        result = get_deprecated(CONFIG['project_config'], 'footer', 'copyright', required=False)
         if isinstance(result, Err):
             return result
+        print(f'{result.value=}')
         if result.value:
             document_html += '<hr />\n' f'<div class="footer">{result.value}</div>'
 
@@ -467,7 +467,7 @@ class SiteBuilder:
 
         # Items replaced here will also target user content, since user content has been merged by
         # now.
-        result = get_deprecated(project_config, 'master_title', 'site_name', required=True)
+        result = get_deprecated(project_config, 'master_title', 'site_name')
         if isinstance(result, Err):
             return result
         document_html = document_html.replace(r'{{% master_title %}}', result.value)
@@ -1013,7 +1013,7 @@ def get_deprecated(
         return Ok(config_dict[deprecated_key])
     if required and key not in config_dict:
         return Err(f'Required key "{key}" not present in config.')
-    return Ok(str(config_dict.get(key, default)))
+    return Ok(config_dict.get(key, default))
 
 
 def iso_timestamp_now(tz_name=None) -> Result[str, str]:

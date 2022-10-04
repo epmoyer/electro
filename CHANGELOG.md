@@ -21,6 +21,9 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ### Fixed
 - Fix path to `logs/` so that app can be run without first changing directories to the app path.
 - Fix `simplepack` so that it does not create working directories unless uglifying.
+- Do not require `footer` in project config.
+- (internal) Allow get_deprecated() to return` None`.
+
 ## 1.0.3 2022-10-02
 ### Added
 - `timezone` option to .json config (sets timezone for `{{% timestamp %}}` injection.)
