@@ -1,4 +1,4 @@
-"""Global app config."""
+"""Rich text console."""
 
 # library
 from rich.console import Console

@@ -23,6 +23,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 - Fix `simplepack` so that it does not create working directories unless uglifying.
 - Do not require `footer` in project config.
 - (internal) Allow get_deprecated() to return` None`.
+- Unescape embedded image file paths (e.g. `%20` for space).
 
 ## 1.0.3 2022-10-02
 ### Added

@@ -10,6 +10,7 @@
 
 import os
 from bs4 import BeautifulSoup
+import urllib
 
 
 def guess_type(filepath):
@@ -57,12 +58,14 @@ def make_html_images_inline(in_filepath, out_filepath):
     soup = BeautifulSoup(open(in_filepath, 'r'), 'html.parser')
     for img in soup.find_all('img'):
         source_path = img.attrs['src']
+        # Paths may contain escaped characters (such as '%20" for space), so unescape them.
+        source_path = urllib.parse.unquote(source_path)
         if source_path.startswith('/'):
             # Absolute path
             img_path = source_path
         else:
             # Relative path
-            img_path = os.path.join(basepath, img.attrs['src'])
+            img_path = os.path.join(basepath, source_path)
         mimetype = guess_type(img_path)
         img.attrs['src'] = \
             "data:%s;base64,%s" % (mimetype, file_to_base64(img_path))
