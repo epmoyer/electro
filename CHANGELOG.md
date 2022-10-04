@@ -10,6 +10,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 (None)
 ## 1.1.0 2022-10-04
 ### Changed
+- Ignore blank search text.
 - Positron (default) theme:
     - Refine heading sizes. h2 now same as h1 (h1 has underline).
     - All headings now black (h3+ were gray).
