@@ -8,7 +8,12 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
-## 1.0.3 2022-09-10
+## 1.1.0 2022-10-04
+### Changed
+- Positron (default) theme:
+    - Refine heading sizes. h2 now same as h1 (h1 has underline).
+    - All headings now black (h3+ were gray).
+## 1.0.3 2022-10-02
 ### Added
 - `timezone` option to .json config (sets timezone for `{{% timestamp %}}` injection.)
 ## 1.0.2 2022-09-10

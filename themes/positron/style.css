@@ -56,10 +56,10 @@ h1 {
     border-bottom: var(--color-h1-underline) solid 1px;
 }
 h2 {
-    font-size: 25px;
+    font-size: 27px;
 }
 h3 {
-    font-size: 23px;
+    font-size: 22px;
 }
 h4 {
     font-size: 21px;
@@ -69,12 +69,6 @@ h5 {
 }
 h6 {
     font-size: 19px;
-}
-h3,
-h4,
-h5,
-h6 {
-    color: #585858;
 }
 
 ul{
