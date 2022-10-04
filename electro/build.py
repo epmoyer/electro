@@ -121,8 +121,36 @@ def build_project(path_build) -> Result[str, str]:
     if isinstance(result, Err):
         return result
 
+    # -----------------------
+    # If requested, publish document as a single stand-alone file
+    # -----------------------
     if CONFIG['output_format'] == 'single_file':
-        pack_site(path_output_directory)
+        result = publish_single_file(path_output_directory)
+        if isinstance(result, Err):
+            return result
+
+    return Ok()
+
+def publish_single_file(path_output_directory) -> Result[str, str]:
+    pack_site(path_output_directory)
+
+    output_file = CONFIG['project_config'].get('output_single_file', None)
+    if output_file is None:
+        return Ok()
+
+    # ----------------------------------
+    # Copy (single-file) output file
+    # ----------------------------------
+    path_destination = CONFIG['path_project_directory'] / Path(output_file)
+    if path_destination.suffix != '.html':
+        return Err(f'output_single_file suffix must be ".html".  output_single_file:"{path_destination}"')
+    path_source = path_output_directory / Path('index.html')
+    logger.info(f'Copying "{path_source}" to "{path_destination}"...')
+    try:
+        shutil.copy(path_source, path_destination)
+    except Exception as e:
+        return Err(f'Failed copying "{path_source}" to "{path_destination}".  Exception:{e}.')
+
     return Ok()
 
 

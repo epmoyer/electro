@@ -11,6 +11,8 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## 1.1.0 2022-10-04
 ### Added
 - Command line option: `--version` 
+- Project config file option: `output_single_file`.
+    - If `output_format` is `single_file`, then the (single-file) output .html document will be copied to this filename.  Must specify an .html file.  Path is relative to the project config file.
 ### Changed
 - Ignore blank search text.
 - Positron (default) theme:
