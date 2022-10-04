@@ -90,6 +90,7 @@ var App = App || {}; // Create namespace
         searchBox.addEventListener(
             "keydown",
             function (event) {
+                // Press: Enter
                 if (event.keyCode == 13) {
                     event.preventDefault();
                     if (App.globalConfig.singleFile){
@@ -169,7 +170,7 @@ var App = App || {}; // Create namespace
     };
 
     App.onClickMenuItem = (self) => {
-        console.log("App.onClickMenuItem");
+        // console.log("App.onClickMenuItem");
         // Unselect all items in all menu-tree(s)
         for (let old_span of App.state.allMenuSpans) {
             old_span.classList.remove("selected");
@@ -185,7 +186,7 @@ var App = App || {}; // Create namespace
     };
     
     App.onClickMenuSingleFile = (self) => {
-        console.log("App.onClickMenuSingleFile");
+        // console.log("App.onClickMenuSingleFile");
         const pageId = self.dataset.documentName;
         const targetHeadingId = self.dataset.targetHeadingId;
         
@@ -209,7 +210,7 @@ var App = App || {}; // Create namespace
     };
 
     App.onClickMenuStaticSite = (self) => {
-        console.log("App.onClickMenuStaticSite");
+        // console.log("App.onClickMenuStaticSite");
         // Navigate to link, if this span contains one
         var target_url = null;
         const anchors = self.getElementsByTagName("a");
@@ -299,12 +300,22 @@ var App = App || {}; // Create namespace
         // happen on that page.
         console.log("onSearch()");
         var searchText = document.getElementById("search-text").value;
+        searchText = searchText.trim();
+        if(!searchText){
+            console.log('Search text blank. Ignoring.');
+            return;
+        }
         console.log("searchText", searchText);
         window.location.href = 'search.html?query=' + searchText;
     };
 
     App.doSearch = (searchText) => {
         // console.log("doSearch()");
+        searchText = searchText.trim();
+        if(!searchText){
+            console.log('Search text blank. Ignoring.');
+            return;
+        }
         
         const results = App.search(searchText);
         // console.log(results);
