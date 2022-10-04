@@ -222,10 +222,10 @@
                     "due_complete": false
                 },
                 {
-                    "name": "Emoji in menu title?",
-                    "id": "160",
+                    "name": "Support checkboxes?",
+                    "id": "165",
                     "id_labels": [],
-                    "description": "The SandCloud help used a star emoji in the \"WALKTHROUGH\" tile.  That emoji ends up taller than the text around it, which makes the caret end up in what feels like a weird place.\n\nShould we center the caret?  If we do that, then it will probably look weird for large (multi-line) titles (as appear in Cascade).",
+                    "description": "Consider:\nhttps://github.com/FND/markdown-checklist",
                     "due": null,
                     "due_complete": false,
                     "repeat": null
@@ -633,6 +633,15 @@
                     "description": "",
                     "due": null,
                     "due_complete": false
+                },
+                {
+                    "name": "Emoji in menu title?",
+                    "id": "160",
+                    "id_labels": [],
+                    "description": "The SandCloud help used a star emoji in the \"WALKTHROUGH\" tile.  That emoji ends up taller than the text around it, which makes the caret end up in what feels like a weird place.\n\nShould we center the caret?  If we do that, then it will probably look weird for large (multi-line) titles (as appear in Cascade).\n\nSolved by using overlay.css to force line height.",
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
                 }
             ],
             "archived": false
