@@ -18,6 +18,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 - Positron (default) theme:
     - Refine heading sizes. h2 now same as h1 (h1 has underline).
     - All headings now black (h3+ were gray).
+- Adopt font `Lato` for non-heading text.
 ### Fixed
 - Fix path to `logs/` so that app can be run without first changing directories to the app path.
 - Fix `simplepack` so that it does not create working directories unless uglifying.
