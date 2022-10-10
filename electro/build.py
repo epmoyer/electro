@@ -937,8 +937,11 @@ def add_heading_numbers(markdown, at_level=1):
 
     heading_manager = HeadingManager(at_level)
     out_lines = []
+    in_fenced_block = False
     for line in markdown.splitlines():
-        if not line.startswith("#"):
+        if line.startswith("```"):
+            in_fenced_block = not in_fenced_block
+        if in_fenced_block or not line.startswith("#"):
             out_lines.append(line)
             continue
         pieces = line.split()

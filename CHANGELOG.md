@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.1.1 2022-10-10
+### Changed
+- Do not inject heading numbers inside fenced blocks.
+
 ## 1.1.0 2022-10-04
 ### Added
 - Command line option: `--version` 
