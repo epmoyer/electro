@@ -10,63 +10,63 @@
     "labels": [
         {
             "name": "",
-            "id": "1",
+            "id": 1,
             "color": "green"
         },
         {
             "name": "",
-            "id": "2",
+            "id": 2,
             "color": "yellow"
         },
         {
             "name": "",
-            "id": "3",
+            "id": 3,
             "color": "orange"
         },
         {
             "name": "Bug",
-            "id": "4",
+            "id": 4,
             "color": "red"
         },
         {
             "name": "",
-            "id": "5",
+            "id": 5,
             "color": "purple"
         },
         {
             "name": "",
-            "id": "6",
+            "id": 6,
             "color": "blue"
         },
         {
             "name": "electrobear",
-            "id": "7",
+            "id": 7,
             "color": "sky"
         },
         {
             "name": "",
-            "id": "8",
+            "id": 8,
             "color": "lime"
         },
         {
             "name": "Search",
-            "id": "9",
+            "id": 9,
             "color": "pink"
         },
         {
             "name": "",
-            "id": "10",
+            "id": 10,
             "color": "black"
         }
     ],
     "lists": [
         {
             "name": "Backlog (Future)",
-            "id": "5",
+            "id": 5,
             "cards": [
                 {
                     "name": "graceful error on non-existent image file",
-                    "id": "152",
+                    "id": 152,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -74,7 +74,7 @@
                 },
                 {
                     "name": "Heading links that survive numbering?",
-                    "id": "156",
+                    "id": 156,
                     "id_labels": [],
                     "description": "It would be nice to automatically recognize and update internal links to headings such that they continue to work after heading numbers have been applied.\n\nYou want them to work both during authoring (VS Code etc), and after publishing.",
                     "due": null,
@@ -83,7 +83,7 @@
                 },
                 {
                     "name": "Create a custom favicon/icon.",
-                    "id": "135",
+                    "id": 135,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -91,7 +91,7 @@
                 },
                 {
                     "name": "make each web page title match menu.",
-                    "id": "142",
+                    "id": 142,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -99,7 +99,7 @@
                 },
                 {
                     "name": "---",
-                    "id": "132",
+                    "id": 132,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -107,7 +107,7 @@
                 },
                 {
                     "name": "Get fenced code blocks working (Monokai)",
-                    "id": "140",
+                    "id": 140,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -115,7 +115,7 @@
                 },
                 {
                     "name": "Highlight section when click-navigating to section of different doc (and unfold).",
-                    "id": "130",
+                    "id": 130,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -123,7 +123,7 @@
                 },
                 {
                     "name": "Hover color makes caret hard to see when unfolding a selected item.",
-                    "id": "128",
+                    "id": 128,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -131,7 +131,7 @@
                 },
                 {
                     "name": "---",
-                    "id": "133",
+                    "id": 133,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -139,9 +139,9 @@
                 },
                 {
                     "name": "Highlight search hits.",
-                    "id": "123",
+                    "id": 123,
                     "id_labels": [
-                        "9"
+                        9
                     ],
                     "description": "- Make \"?query={search_text}\" part of the URL when navigating to a page while a search is running.\n- Add a \"search clear\" button.\n- Highlight (or color yellow) search hit menu items.\n    - Unfold to search hits sections?\n    - Highlight/color search hit sections?\n- Highlight search hits within text.\n    - Absolute for now.  Use a stemmer later.",
                     "due": null,
@@ -149,7 +149,7 @@
                 },
                 {
                     "name": "Consider resizing image files to be lo larger than the max supported pixel width.",
-                    "id": "126",
+                    "id": 126,
                     "id_labels": [],
                     "description": "mkdocs does NOT do this.  How does it constrain max-width in pixels AND as 100%? It does not play the \".img-wrapper\" trick we are playing.  Does some other enclosing div constrain the max size?",
                     "due": null,
@@ -157,7 +157,7 @@
                 },
                 {
                     "name": "Support h3+ headings in menu-tree.",
-                    "id": "131",
+                    "id": 131,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -165,7 +165,7 @@
                 },
                 {
                     "name": "Adopt Font Awesome 6, local, free",
-                    "id": "136",
+                    "id": 136,
                     "id_labels": [],
                     "description": "Probably adopt light bulb (instead of wrench) for \"Tip\" notice at that time.",
                     "due": null,
@@ -174,9 +174,9 @@
                 },
                 {
                     "name": "Mobile scroll when sidebar visible.",
-                    "id": "137",
+                    "id": 137,
                     "id_labels": [
-                        "4"
+                        4
                     ],
                     "description": "On mobile it is possible, with determination, to get the page to \"scroll up\" such that the content begins to scroll off the screen and the sidebar scrolls away.\n\nIt seems like touch-dragging the divider between side bar and content is one way to make it happen.",
                     "due": null,
@@ -187,11 +187,11 @@
         },
         {
             "name": "Backlog (MVP)",
-            "id": "2",
+            "id": 2,
             "cards": [
                 {
                     "name": "Support checkboxes?",
-                    "id": "165",
+                    "id": 165,
                     "id_labels": [],
                     "description": "Consider:\nhttps://github.com/FND/markdown-checklist",
                     "due": null,
@@ -200,7 +200,7 @@
                 },
                 {
                     "name": "Adopt font \"Lato\"?",
-                    "id": "167",
+                    "id": 167,
                     "id_labels": [],
                     "description": "\"Lato\", \"proxima-nova\", \"Helvetica Neue\", Arial, sans-serif\n\nConsider Lato as the \"Base font\" with Plex for headings.",
                     "due": null,
@@ -209,7 +209,7 @@
                 },
                 {
                     "name": "pikchr?",
-                    "id": "166",
+                    "id": 166,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -217,7 +217,7 @@
                 },
                 {
                     "name": "Should static site connect to hosted fonts or host them locally?",
-                    "id": "162",
+                    "id": 162,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -225,7 +225,7 @@
                 },
                 {
                     "name": "App.globalConfig.singleFile should probably be text, and be\u00a0App.globalConfig.outputFormat",
-                    "id": "151",
+                    "id": 151,
                     "id_labels": [],
                     "description": "Would match the extensibility of the json config better, and would let us stop doing the strange template substitution (which includes the single quotes today).",
                     "due": null,
@@ -237,11 +237,11 @@
         },
         {
             "name": "Doing",
-            "id": "3",
+            "id": 3,
             "cards": [
                 {
                     "name": "Possible to make right-click \"Save to Downloads\" work for embedded images?",
-                    "id": "168",
+                    "id": 168,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -249,7 +249,7 @@
                 },
                 {
                     "name": "---",
-                    "id": "164",
+                    "id": 164,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -259,11 +259,11 @@
         },
         {
             "name": "Done",
-            "id": "4",
+            "id": 4,
             "cards": [
                 {
                     "name": "CONFIG FILE: site_directory -> output_directory",
-                    "id": "159",
+                    "id": 159,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -271,7 +271,7 @@
                 },
                 {
                     "name": "CONFIG FILE: copyright -> footer",
-                    "id": "158",
+                    "id": 158,
                     "id_labels": [],
                     "description": "Make sure footer div is appropriately named as well (html and css)",
                     "due": null,
@@ -280,7 +280,7 @@
                 },
                 {
                     "name": "CONFIG FILE: site_name -> master_title",
-                    "id": "157",
+                    "id": 157,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -288,9 +288,9 @@
                 },
                 {
                     "name": "Level 2 menu items highlighted incorrectly",
-                    "id": "161",
+                    "id": 161,
                     "id_labels": [
-                        "4"
+                        4
                     ],
                     "description": "When opening a level 1 menu item( for a static site) for the current site page, the level 2 items appear highlighted (bright gray), they should be unhighlighted.\n\nThis used to work before the \"dual\" merge, so probably the old functionality  (js?) is accidentally getting skipped.",
                     "due": null,
@@ -299,7 +299,7 @@
                 },
                 {
                     "name": "---",
-                    "id": "163",
+                    "id": 163,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -307,7 +307,7 @@
                 },
                 {
                     "name": "Option to generate menu from level 2 (instead of 1)",
-                    "id": "154",
+                    "id": 154,
                     "id_labels": [],
                     "description": "For docs that use level 1 as their title (like Notable notes)",
                     "due": null,
@@ -316,7 +316,7 @@
                 },
                 {
                     "name": "Force better bullet list recognition.",
-                    "id": "155",
+                    "id": 155,
                     "id_labels": [],
                     "description": "Some (most) markdown engines recognize a line starting with `- ` as the start of a list **even if** the preceding line was regular text.  This one doesn't.  Consider injecting a blank line (during parsing) to force this engine to recognize those cases as lists.",
                     "due": null,
@@ -325,9 +325,9 @@
                 },
                 {
                     "name": "Fenced code blocks have blank space at start",
-                    "id": "153",
+                    "id": 153,
                     "id_labels": [
-                        "4"
+                        4
                     ],
                     "description": "md converter is inserting an empty `<span></span>` into fenced code blocks, causing a blank space to appear before code.\n\nFix: was a padding issue. Removed the padding from `code` when inside `pre`",
                     "due": null,
@@ -336,7 +336,7 @@
                 },
                 {
                     "name": "Commit to IBM plex, local, in positron theme.",
-                    "id": "150",
+                    "id": 150,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -344,7 +344,7 @@
                 },
                 {
                     "name": "Add markdown test cases to test project.",
-                    "id": "146",
+                    "id": 146,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -352,7 +352,7 @@
                 },
                 {
                     "name": "Confirm that we are NOT fetching fonts from google; local only.",
-                    "id": "149",
+                    "id": 149,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -360,7 +360,7 @@
                 },
                 {
                     "name": "Move --nobreak option into config .json",
-                    "id": "145",
+                    "id": 145,
                     "id_labels": [],
                     "description": "And flip the sense.  no break should be the default, and there should be an option in the config to enable breaks.",
                     "due": null,
@@ -369,7 +369,7 @@
                 },
                 {
                     "name": "Allow pointing to .json in launch.",
-                    "id": "147",
+                    "id": 147,
                     "id_labels": [],
                     "description": "Today you pass electro the _directory_ containing your `electro.json` file.  Should also allow passing the path to the `electro.json` file itself.   That will allow having a single test project containing two .json files for testing; one of which builds a packed (single file) output, and the other a static site.",
                     "due": null,
@@ -378,7 +378,7 @@
                 },
                 {
                     "name": "---",
-                    "id": "141",
+                    "id": 141,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -386,7 +386,7 @@
                 },
                 {
                     "name": "Scroll to top on section name click.",
-                    "id": "144",
+                    "id": 144,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -394,9 +394,9 @@
                 },
                 {
                     "name": "Use IBM Plex in positron",
-                    "id": "143",
+                    "id": 143,
                     "id_labels": [
-                        "7"
+                        7
                     ],
                     "description": "",
                     "due": null,
@@ -404,7 +404,7 @@
                 },
                 {
                     "name": "Add title tag",
-                    "id": "139",
+                    "id": 139,
                     "id_labels": [],
                     "description": "Add to <head> as:\n\n<title>(TITLE)</title>",
                     "due": null,
@@ -412,7 +412,7 @@
                 },
                 {
                     "name": "Simple search highlighting.",
-                    "id": "138",
+                    "id": 138,
                     "id_labels": [],
                     "description": "Better search is coming later, but for now just **at least** highlight the exact search text if/when it appears in the search preview.",
                     "due": null,
@@ -420,9 +420,9 @@
                 },
                 {
                     "name": "Support Mobile",
-                    "id": "113",
+                    "id": 113,
                     "id_labels": [
-                        "3"
+                        3
                     ],
                     "description": "",
                     "due": null,
@@ -430,7 +430,7 @@
                 },
                 {
                     "name": "Add Note/Info/Tip/Warning blocks.",
-                    "id": "111",
+                    "id": 111,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -438,7 +438,7 @@
                 },
                 {
                     "name": "Support style directive",
-                    "id": "134",
+                    "id": 134,
                     "id_labels": [],
                     "description": "Example:\n![](img/my_image_file.jpeg){: style=\"height:340px;\"}\n\nsolution: add `attr_list` markdown extension.",
                     "due": null,
@@ -446,7 +446,7 @@
                 },
                 {
                     "name": "Use blue highlight on menu for page loading indication.",
-                    "id": "120",
+                    "id": 120,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -454,7 +454,7 @@
                 },
                 {
                     "name": "Set sidebar scroll handle color so that it is more visible.",
-                    "id": "129",
+                    "id": 129,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -462,7 +462,7 @@
                 },
                 {
                     "name": "Add a home button.",
-                    "id": "109",
+                    "id": 109,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -470,9 +470,9 @@
                 },
                 {
                     "name": "use a search url \"/search.html?q=this+thing\"",
-                    "id": "124",
+                    "id": 124,
                     "id_labels": [
-                        "9"
+                        9
                     ],
                     "description": "URL for search needs to be different, otherwise links to subsections of the \"same page\" we are on won't work.",
                     "due": null,
@@ -480,7 +480,7 @@
                 },
                 {
                     "name": "Show document sections in menu-tree",
-                    "id": "119",
+                    "id": 119,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -488,7 +488,7 @@
                 },
                 {
                     "name": "Reduce sidebar font size a pinch.",
-                    "id": "127",
+                    "id": 127,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -496,7 +496,7 @@
                 },
                 {
                     "name": "Make attachment links work",
-                    "id": "117",
+                    "id": 117,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -504,7 +504,7 @@
                 },
                 {
                     "name": "Shrink images if window becomes too small to display them.",
-                    "id": "125",
+                    "id": 125,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -512,9 +512,9 @@
                 },
                 {
                     "name": "Show headings",
-                    "id": "121",
+                    "id": 121,
                     "id_labels": [
-                        "9"
+                        9
                     ],
                     "description": "",
                     "due": null,
@@ -522,9 +522,9 @@
                 },
                 {
                     "name": "Gather from lists and other tags (not just p)",
-                    "id": "122",
+                    "id": 122,
                     "id_labels": [
-                        "9"
+                        9
                     ],
                     "description": "",
                     "due": null,
@@ -532,7 +532,7 @@
                 },
                 {
                     "name": "Copy attachments dir.",
-                    "id": "116",
+                    "id": 116,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -540,9 +540,9 @@
                 },
                 {
                     "name": "Make search work.",
-                    "id": "110",
+                    "id": 110,
                     "id_labels": [
-                        "3"
+                        3
                     ],
                     "description": "",
                     "due": null,
@@ -550,7 +550,7 @@
                 },
                 {
                     "name": "In js, highlight current menu item on page load.",
-                    "id": "104",
+                    "id": 104,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -558,7 +558,7 @@
                 },
                 {
                     "name": "Clicking to right of a doc name should navigate to the doc, even though we are outside the anchor tag.",
-                    "id": "101",
+                    "id": 101,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -566,7 +566,7 @@
                 },
                 {
                     "name": "Lock sidebar width (is changing on resize)",
-                    "id": "118",
+                    "id": 118,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -574,7 +574,7 @@
                 },
                 {
                     "name": "add id to headings to urls that specify a section heading (#) work.",
-                    "id": "115",
+                    "id": 115,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -582,7 +582,7 @@
                 },
                 {
                     "name": "Make inter-document links work.",
-                    "id": "108",
+                    "id": 108,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -590,7 +590,7 @@
                 },
                 {
                     "name": "Inject copyright",
-                    "id": "114",
+                    "id": 114,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -598,7 +598,7 @@
                 },
                 {
                     "name": "Dim black font in docs to match current site.",
-                    "id": "105",
+                    "id": 105,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -606,7 +606,7 @@
                 },
                 {
                     "name": "Reduce margin on h1.",
-                    "id": "106",
+                    "id": 106,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -614,7 +614,7 @@
                 },
                 {
                     "name": "Style preformat",
-                    "id": "102",
+                    "id": 102,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -622,7 +622,7 @@
                 },
                 {
                     "name": "Style links",
-                    "id": "103",
+                    "id": 103,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -632,11 +632,11 @@
         },
         {
             "name": "OBE",
-            "id": "6",
+            "id": 6,
             "cards": [
                 {
                     "name": "Add way to specify \"home\" button target in project .json",
-                    "id": "148",
+                    "id": 148,
                     "id_labels": [],
                     "description": "Today it defaults to \"doc_info\" page, but that page may not exist for all single_file projects.",
                     "due": null,
@@ -645,7 +645,7 @@
                 },
                 {
                     "name": "Center h1?",
-                    "id": "107",
+                    "id": 107,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -653,7 +653,7 @@
                 },
                 {
                     "name": "Support Notable data dir as source.",
-                    "id": "112",
+                    "id": 112,
                     "id_labels": [],
                     "description": "",
                     "due": null,
@@ -661,7 +661,7 @@
                 },
                 {
                     "name": "Emoji in menu title?",
-                    "id": "160",
+                    "id": 160,
                     "id_labels": [],
                     "description": "The SandCloud help used a star emoji in the \"WALKTHROUGH\" tile.  That emoji ends up taller than the text around it, which makes the caret end up in what feels like a weird place.\n\nShould we center the caret?  If we do that, then it will probably look weird for large (multi-line) titles (as appear in Cascade).\n\nSolved by using overlay.css to force line height.",
                     "due": null,
