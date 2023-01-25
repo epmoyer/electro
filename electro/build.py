@@ -243,7 +243,7 @@ class SiteBuilder:
         extensions = [
             'tables',
             'fenced_code',
-            'electro.mdx_urlize:UrlizeExtension',
+            # 'electro.mdx_urlize:UrlizeExtension',
             'codehilite',
             'attr_list',
         ]

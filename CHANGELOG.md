@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.2.0 2023-01-24
+### Removed
+- Removed the `mdx_urlize` extension due to incompatibility with markdown 3.4.1.
+
 ## 1.1.1 2022-10-10
 ### Changed
 - Do not inject heading numbers inside fenced blocks.

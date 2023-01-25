@@ -69,7 +69,9 @@ class UrlizePattern(markdown.inlinepatterns.Pattern):
 class UrlizeExtension(markdown.Extension):
     """ Urlize Extension for Python-Markdown. """
 
-    def extendMarkdown(self, md, md_globals):
+    # EPM: Added md_globals=None to attempt compatibility with
+    #      markdown 3.4.1 but that fix alone is insufficient.
+    def extendMarkdown(self, md, md_globals=None):
         """ Replace autolink with UrlizePattern """
         md.inlinePatterns['autolink'] = UrlizePattern(URLIZE_RE, md)
 
