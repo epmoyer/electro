@@ -410,15 +410,34 @@ class SiteBuilder:
         markdown = markdown.replace(r':change_bar_end', html_temporary)
         return markdown
     
-    def _wrangle_inter_document_links(self, markdown):
+def _wrangle_inter_document_links(self, markdown):
         logger.info('🟠 ----------------------')
         out_lines = []
         for line in markdown.splitlines():
+            line_original = line
+
+            # ------------------------
+            # Links to .md documents
+            # ------------------------
+            md_links = re.findall(r'\[.*?\]\(.*?\.md\)', line)
+            if md_links:
+                logger.info(f'    MD_LINKS (to .md doc): {md_links}')
+            for md_link in md_links:
+                results = re.search(r'\[.*?\]\((?P<page_id>.*?).md\)', md_link)
+                groups = results.groupdict()
+                page_id = groups['page_id']
+                new_reference = f'?pageId={page_id}'
+                logger.info(f'    REPLACEMENT: {md_link} -> {new_reference}')
+                new_md_link = md_link.replace(f'{page_id}.md', f'{new_reference}')
+                logger.info(f'    NEW MD LINK: {new_md_link}')
+                line = line.replace(md_link, new_md_link)
+
+            # ------------------------
+            # Links to headings within .md documents
+            # ------------------------
             md_links = re.findall(r'\[.*?\]\(.*?\.md#.*?\)', line)
-            if not md_links:
-                out_lines.append(line)
-                continue
-            logger.info(f'    MD_LINKS: {md_links}')
+            if md_links:
+                logger.info(f'    MD_LINKS (to heading): {md_links}')
             for md_link in md_links:
                 results = re.search(r'\[.*?\]\((?P<page_id>.*?).md#(?P<heading_id>.*?)\)', md_link)
                 groups = results.groupdict()
@@ -429,7 +448,9 @@ class SiteBuilder:
                 new_md_link = md_link.replace(f'{page_id}.md#{heading_id}', f'{new_reference}')
                 logger.info(f'    NEW MD LINK: {new_md_link}')
                 line = line.replace(md_link, new_md_link)
-            logger.info(f'    NEW LINE: {line}')
+            
+            if line != line_original:
+                logger.info(f'    NEW LINE: {line}')
             out_lines.append(line)
         logger.info('🟠 ----------------------')
         return '\n'.join(out_lines)
