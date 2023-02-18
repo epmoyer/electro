@@ -27,32 +27,6 @@ var App = App || {}; // Create namespace
         for (let span of App.state.allMenuSpans) {
             span.addEventListener("click", function () {
                 App.onClickMenuItem(this);
-                // // Unselect all items in all menu-tree(s)
-                // for (let old_span of App.state.allMenuSpans) {
-                //     old_span.classList.remove("selected");
-                //     old_span.classList.remove("navigating");
-                // }
-
-                // const pageId = this.dataset.documentName;
-                // const targetHeadingId = this.dataset.targetHeadingId;
-                
-                // // -----------------------------
-                // // Make the target page visible
-                // // -----------------------------
-                // App.showPage(pageId);
-
-                // // ----------------------------
-                // // Scroll to the target heading (or to top if no HeadingId exists)
-                // // -----------------------------
-                // App.scrollToHash(targetHeadingId);
-
-                // // -----------------------------
-                // // Select the clicked menu item
-                // // -----------------------------
-                // this.classList.add("selected");
-
-                // // If in responsive narrow-screen, re-hide the menu.
-                // document.getElementById("sidebar-container").classList.remove("force-show");
             });
         }
 
