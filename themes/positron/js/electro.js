@@ -9,6 +9,12 @@ var App = App || {}; // Create namespace
     App.SEARCH_RESULT_SNIPPET_MAX_LEN = 200;
 
     App.main = () => {
+        const pageId = App.getUrlValue('pageId');
+        const headingId = App.getUrlValue('headingId');
+        if(App.globalConfig.singleFile && pageId){
+            App.globalConfig.currentDocumentName = pageId;
+        }
+
         // -----------------------
         // menu-tree: Find all items (spans) in all menu-tree(s)
         // -----------------------
@@ -116,8 +122,6 @@ var App = App || {}; // Create namespace
         }
         
         // Navigate to search result location (if requested in url)
-        const pageId = App.getUrlValue('pageId');
-        const headingId = App.getUrlValue('headingId');
         if(pageId){
             console.log('Going to location: pageId:' + pageId + ' headingId:' + headingId);
             App.showPage(pageId);
