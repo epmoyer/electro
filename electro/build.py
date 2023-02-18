@@ -319,6 +319,8 @@ class SiteBuilder:
             return result
         markdown = result.value
         markdown = self._parse_experimental(markdown)
+        if CONFIG['output_format'] == 'single_file':
+            markdown = self._wrangle_inter_document_links(markdown)
         return Ok(markdown)
 
     def _fix_bullet_list_starts(self, markdown):
@@ -407,6 +409,52 @@ class SiteBuilder:
         self.substitutions[html_temporary] = substitution
         markdown = markdown.replace(r':change_bar_end', html_temporary)
         return markdown
+    
+    def _wrangle_inter_document_links(self, markdown):
+        logger.debug('🟠 ----------------------')
+        logger.debug('_wrangle_inter_document_links()')
+        out_lines = []
+        for line in markdown.splitlines():
+            line_original = line
+
+            # ------------------------
+            # Links to .md documents
+            # ------------------------
+            md_links = re.findall(r'\[.*?\]\(.*?\.md\)', line)
+            if md_links:
+                logger.debug(f'    MD_LINKS (to .md doc): {md_links}')
+            for md_link in md_links:
+                results = re.search(r'\[.*?\]\((?P<page_id>.*?).md\)', md_link)
+                groups = results.groupdict()
+                page_id = groups['page_id']
+                new_reference = f'?pageId={page_id}'
+                logger.debug(f'    REPLACEMENT: {md_link} -> {new_reference}')
+                new_md_link = md_link.replace(f'{page_id}.md', f'{new_reference}')
+                logger.debug(f'    NEW MD LINK: {new_md_link}')
+                line = line.replace(md_link, new_md_link)
+
+            # ------------------------
+            # Links to headings within .md documents
+            # ------------------------
+            md_links = re.findall(r'\[.*?\]\(.*?\.md#.*?\)', line)
+            if md_links:
+                logger.debug(f'    MD_LINKS (to heading): {md_links}')
+            for md_link in md_links:
+                results = re.search(r'\[.*?\]\((?P<page_id>.*?).md#(?P<heading_id>.*?)\)', md_link)
+                groups = results.groupdict()
+                page_id = groups['page_id']
+                heading_id = groups['heading_id']
+                new_reference = f'?pageId={page_id}&amp;headingId={heading_id}'
+                logger.debug(f'    REPLACEMENT: {md_link} -> {new_reference}')
+                new_md_link = md_link.replace(f'{page_id}.md#{heading_id}', f'{new_reference}')
+                logger.debug(f'    NEW MD LINK: {new_md_link}')
+                line = line.replace(md_link, new_md_link)
+            
+            if line != line_original:
+                logger.debug(f'    NEW LINE: {line}')
+            out_lines.append(line)
+        logger.debug('🟠 ----------------------')
+        return '\n'.join(out_lines)
 
     def post_parse_html(self, html):
         for text_old, text_new in self.substitutions.items():

@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.3.0 2023-01-24
+**(in development)**
+### Fixed
+- Make inter-document links of the form `[](#heading-target)` work.
 ## 1.2.0 2023-01-24
 ### Removed
 - Removed the `mdx_urlize` extension due to incompatibility with markdown 3.4.1.
