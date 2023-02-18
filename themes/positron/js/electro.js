@@ -9,11 +9,11 @@ var App = App || {}; // Create namespace
     App.SEARCH_RESULT_SNIPPET_MAX_LEN = 200;
 
     App.main = () => {
+        // Show version
+        console.log('Built with Electro ' + App.globalConfig.electroVersion);
+
         const pageId = App.getUrlValue('pageId');
         const headingId = App.getUrlValue('headingId');
-        if(App.globalConfig.singleFile && pageId){
-            App.globalConfig.currentDocumentName = pageId;
-        }
 
         // -----------------------
         // menu-tree: Find all items (spans) in all menu-tree(s)
@@ -39,14 +39,16 @@ var App = App || {}; // Create namespace
         // -----------------------
         // menu-tree: Select the current document (at page load)
         // -----------------------
-        for (let span of App.state.allMenuSpans) {
-            if (
-                (span.id == "menuitem_doc_" + App.globalConfig.currentDocumentName)
-                && (span.classList.contains("level-0"))
-            ){
-                span.classList.add("selected");
+        if(App.globalConfig.singleFile){
+            if (pageId){
+                App.selectMenuItem(pageId, headingId);
             }
         }
+        else {
+            // Static site
+            App.selectMenuItem(App.globalConfig.currentDocumentName, null);
+        }
+
 
         // -----------------------
         // menu-tree: Set caret (child folding) click handler
@@ -142,9 +144,47 @@ var App = App || {}; // Create namespace
         const main_element = document.getElementsByClassName("main-container")[0];
         main_element.addEventListener('touchmove', App.onMainTouchMove, false);
 
-        
-        // Show version
-        console.log('Built with Electro ' + App.globalConfig.electroVersion);
+    };
+
+    // Highlight the sidebar menu item associated with documentName and (if non-null) headingName.
+    App.selectMenuItem = (documentName, headingName) => {
+        var spanDocument = null;
+        var spanHeading = null;
+        console.log('selectMenuItem(): ' + documentName + " :: " + headingName);
+        for (let span of App.state.allMenuSpans) {
+            if (
+                (span.id == "menuitem_doc_" + documentName)
+                && (span.classList.contains("level-0"))
+            ){
+                // Found document menu item
+                spanDocument = span;
+            }
+            if (
+                headingName
+                && (span.id == "menuitem_doc_" + documentName)
+                && (span.dataset.targetHeadingId == headingName)
+            ){
+                // Found heading menu item
+                spanHeading = span;
+            }
+        }
+        if (!spanDocument){
+            console.log('   document ' + documentName + ' not found.');
+            return;
+        }
+        if(!spanHeading){
+            console.log('   heading ' + headingName + ' not found. Selecting document menu item.');
+            spanDocument.classList.add("selected");
+        } else{
+            console.log('   heading ' + headingName + ' found. Selecting heading menu item.');
+            // Unfold the ul associated with the document menu item (so that the heading menu
+            // item will be visible).
+            var list = spanDocument.parentElement.getElementsByTagName('ul')[0];
+            list.classList.add("active");
+
+            // Select the heading menu item
+            spanHeading.classList.add("selected");
+        }
     };
 
     App.onClickMenuItem = (self) => {
@@ -268,6 +308,7 @@ var App = App || {}; // Create namespace
                 return decodeURI(KeyValuePair[1]);
             }
         }
+        return null;
     };
 
     App.onSearch = () => {
