@@ -12,6 +12,9 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 **(in development)**
 ### Fixed
 - Make inter-document links of the form `[](#heading-target)` work.
+- For singleFile projects, highlight appropriate menu item when navigating between pages.
+    - TODO: In this version, navigating to a level-3 or deeper menu item will highlight the associated document menu item but will **not** highlight the associated level-2 menu item.
+
 ## 1.2.0 2023-01-24
 ### Removed
 - Removed the `mdx_urlize` extension due to incompatibility with markdown 3.4.1.
