@@ -8,8 +8,11 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.3.1 2023-01-24
+### Fixed
+- Replace heading links to match re-numbered headings (when auto-numbering headings)
+
 ## 1.3.0 2023-01-24
-**(in development)**
 ### Fixed
 - Make inter-document links of the form `[](#heading-target)` work.
 - For singleFile projects, highlight appropriate menu item when navigating between pages.

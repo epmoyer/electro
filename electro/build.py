@@ -984,23 +984,57 @@ def add_heading_numbers(markdown, at_level=1):
     """
 
     heading_manager = HeadingManager(at_level)
-    out_lines = []
+    heading_id_to_heading_id_with_heading_number = {}
+    renumbered_lines = []
     in_fenced_block = False
     for line in markdown.splitlines():
         if line.startswith("```"):
             in_fenced_block = not in_fenced_block
         if in_fenced_block or not line.startswith("#"):
-            out_lines.append(line)
+            renumbered_lines.append(line)
             continue
         pieces = line.split()
         level = len(pieces[0])
         if level < at_level:
-            out_lines.append(line)
+            renumbered_lines.append(line)
             continue
         heading_number_text = heading_manager.get(level)
         heading_text = " ".join(pieces[1:])
+
+        id_without_heading_number = heading_text_to_id(heading_text)
+        id_with_heading_number = heading_text_to_id(f'{heading_number_text} {heading_text}')
+        heading_id_to_heading_id_with_heading_number[id_without_heading_number] = id_with_heading_number
+
         line = f'{pieces[0]} {heading_number_text}&nbsp;&nbsp;&nbsp;&nbsp;' f'{heading_text}'
+        renumbered_lines.append(line)
+
+    # --------------------------
+    # Replace heading links to match re-numbered headings
+    # --------------------------
+    logger.debug('---------- replacing links ------------')
+    out_lines = []
+    for line in renumbered_lines:
+        md_links = re.findall(r'\[.*?\]\(#.*?\)', line)
+        if not md_links:
+            out_lines.append(line)
+            continue
+        logger.debug(f'LINE: {line}')
+        for md_link in md_links:
+            results = re.search(r'\[.*?\]\(#(?P<reference>.*?)\)', md_link)
+            groups = results.groupdict()
+            reference = groups['reference']
+            id_with_heading_number = heading_id_to_heading_id_with_heading_number.get(reference)
+            if id_with_heading_number is None:
+                logger.debug('    🔴 Mapping not found')
+                continue
+            new_reference = f'#{id_with_heading_number}'
+            logger.debug(f'    REPLACEMENT: {md_link} -> {new_reference}')
+            new_md_link = md_link.replace(f'#{reference}', f'{new_reference}')
+            logger.debug(f'    NEW MD LINK: {new_md_link}')
+            line = line.replace(md_link, new_md_link)
+        logger.debug(f'    NEW LINE: {line}')
         out_lines.append(line)
+
     return '\n'.join(out_lines)
 
 
