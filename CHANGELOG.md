@@ -8,7 +8,14 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
-## 1.3.1 2023-01-24
+## 1.3.2 2023-04-08
+### Changed
+- Correctly implement code highlighting within theme(s)
+
+### Added
+- `positron_monokai` theme.
+
+## 1.3.1 2023-04-07
 ### Fixed
 - Replace heading links to match re-numbered headings (when auto-numbering headings)
 
