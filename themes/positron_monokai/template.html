@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="overlay.css">
+    <link rel="stylesheet" type="text/css" href="fonts.css">
+    <link rel="stylesheet" type="text/css" href="fontawesome.css">
+
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <title>{{% master_title %}}</title>
+
+    <script type="text/javascript" src="js/lunr.js"></script>
+    <script type="text/javascript" src="js/electro.js"></script>
+    <script type="text/javascript" src="search/search_index.js"></script>
+</head>
+
+<body>
+    <div class="root-container">
+        <div class="sidebar-container" id="sidebar-container">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <a class="no-anchor-style" href="index.html" id="home-button-static">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a class="no-anchor-style" href="?" id="home-button-single-file" style="display:none">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    {{% master_title %}}
+                </div>
+                <input id="search-text" type="text" name="q" placeholder="Search" title="Type search term here">
+            </div>
+            <div class="sidebar-main">
+                {{% sidebar_menu %}}
+            </div>
+        </div>
+        <div class="main-container">
+            <div class="nav-header">
+                <div onclick="App.toggleSidebar();">
+                <i class="fa fa-bars"></i>
+                </div>
+                <a class="no-anchor-style" href="/">{{% master_title %}}</a>
+            </div>
+            <div class="content-area">
+                <div class="content-container" id="content">
+                    <div class="watermark-container">
+                        <div class="watermark-left">
+                        </div>
+                        <div class="watermark-right">
+                            <div class="watermark-text" id="watermark-text">
+                                {{% watermark %}}
+                            </div>
+                        </div>
+                    </div>
+                    {{% content %}}
+                </div>
+                <div class="content-right-margin">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var App = App || {}; // Create namespace
+    App.globalConfig = {
+        'currentDocumentName': '{{% current_document_name %}}',
+        'electroVersion': '{{% electro_version %}}',
+        'searchData': null,
+        'searchIndex': null,
+        'documents': {},
+        'singleFile': '{{% single_file %}}'
+    };
+</script>
+
+<script>
+    // Call app main entry point
+    App.main();
+</script>
