@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.3.3 2023-04-09
+### Fixed
+- Fix colorizing of code and pre in `positron_monokai`.
+
 ## 1.3.2 2023-04-08
 ### Changed
 - Correctly implement code highlighting within theme(s)
