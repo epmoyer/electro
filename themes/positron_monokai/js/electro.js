@@ -488,10 +488,29 @@ var App = App || {}; // Create namespace
 
     App.initializeChangeBars = function() {
         console.log('App.initializeChangeBars()');
-        const elements = document.getElementsByClassName('anchor-change-bar');
-        console.log(elements);
+        var elements = document.getElementsByClassName('content-left-gutter');
+        const elGutter = elements[0];
+        elements = document.getElementsByClassName('anchor-change-bar');
+        // console.log(elements);
+        let startY = 0;
         Array.from(elements).forEach(function(el){
             console.log(el);
+            if(el.classList.contains('start')){
+                startY = el.offsetTop;
+                console.log('Found startY', startY);
+            } else if (el.classList.contains('end')){
+                let endY = el.offsetTop;
+                console.log('Found endY', endY);
+
+                const elChangeBar = document.createElement("div");
+                elChangeBar.setAttribute('class', 'change-bar');
+                elChangeBar.style.top = startY + 'px';
+                elChangeBar.style.height = (endY - startY) + 'px';
+                // elChangeBar.setAttribute('top', startY + 'px');
+                // elChangeBar.setAttribute('height', (endY - startY) + 'px');
+
+                elGutter.appendChild(elChangeBar);
+            }
         });
         // $('.anchor-change-bar').each(function (x){
         //     console.log(this);

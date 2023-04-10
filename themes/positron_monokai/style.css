@@ -12,6 +12,7 @@ body {
     --color-table-header-bg: steelblue;
     --color-table-header: white;
     --color-h1-underline: #ccc;
+    --color-change-bar: #fa15c5;
 
     --color-bg-code: #ebebeb;
     --color-text-code: #4a4a4a;
@@ -197,7 +198,7 @@ blockquote {
     /* Gutter for changebars */
     position: relative;
     width: 20px;
-    background-color: orange;
+    /* background-color: orange; */
 }
 .content-right-margin{
     /* Because scrolling happens in the enclosing .main-container,  right padding in the 
@@ -642,7 +643,7 @@ pre::-webkit-scrollbar-thumb {
     position: absolute;
     top: 20px;
     left: 6px;
-    background-color: lawngreen;
+    background-color: var(--color-change-bar);
 }
 
 /* --------------------------
