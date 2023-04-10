@@ -144,6 +144,8 @@ var App = App || {}; // Create namespace
         const main_element = document.getElementsByClassName("main-container")[0];
         main_element.addEventListener('touchmove', App.onMainTouchMove, false);
 
+
+        App.initializeChangeBars();
     };
 
     // Highlight the sidebar menu item associated with documentName and (if non-null) headingName.
@@ -482,5 +484,18 @@ var App = App || {}; // Create namespace
         // console.log({query: query, text:text, start:start, end:end, snippet:snippet});
         // console.log(text);
         return snippet;
+    };
+
+    App.initializeChangeBars = function() {
+        console.log('App.initializeChangeBars()');
+        const elements = document.getElementsByClassName('anchor-change-bar');
+        console.log(elements);
+        Array.from(elements).forEach(function(el){
+            console.log(el);
+        });
+        // $('.anchor-change-bar').each(function (x){
+        //     console.log(this);
+        //     console.log("X", x);
+        // });
     };
 })(); // "use strict" wrapper

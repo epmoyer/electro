@@ -195,6 +195,7 @@ blockquote {
 }
 .content-left-gutter{
     /* Gutter for changebars */
+    position: relative;
     width: 20px;
     background-color: orange;
 }
@@ -632,10 +633,16 @@ pre::-webkit-scrollbar-thumb {
    Change-bars
    -------------------------- */
 .change-bar{
-    border-left: #d8d8d8 solid 2px;
-    /* border-left: purple solid 2px; */
+    /* border-left: #d8d8d8 solid 2px;
     padding: 11px;
-    margin: -11px;
+    margin: -11px; */
+
+    width: 4px;
+    height: 80px;
+    position: absolute;
+    top: 20px;
+    left: 6px;
+    background-color: lawngreen;
 }
 
 /* --------------------------
