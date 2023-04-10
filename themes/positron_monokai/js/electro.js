@@ -144,8 +144,9 @@ var App = App || {}; // Create namespace
         const main_element = document.getElementsByClassName("main-container")[0];
         main_element.addEventListener('touchmove', App.onMainTouchMove, false);
 
-
-        App.initializeChangeBars();
+        window.onload = function() {
+            App.initializeChangeBars();
+        };
     };
 
     // Highlight the sidebar menu item associated with documentName and (if non-null) headingName.

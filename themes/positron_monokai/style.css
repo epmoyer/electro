@@ -645,6 +645,9 @@ pre::-webkit-scrollbar-thumb {
     left: 6px;
     background-color: var(--color-change-bar);
 }
+.anchor-change-bar{
+    visibility: hidden;
+}
 
 /* --------------------------
    Code Blocks
