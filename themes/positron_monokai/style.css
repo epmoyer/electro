@@ -193,6 +193,11 @@ blockquote {
     align-items: stretch;
     align-content: flex-start;
 }
+.content-left-gutter{
+    /* Gutter for changebars */
+    width: 20px;
+    background-color: orange;
+}
 .content-right-margin{
     /* Because scrolling happens in the enclosing .main-container,  right padding in the 
        .content-container is ignored. To create a right pad sufficient to keep text visible,
