@@ -10,6 +10,9 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 (None)
 ## 1.3.3 2023-04-09
 ### Fixed
+- Improve (sill experimental) change bar support.
+    - Bars now use anchor elements to track text position during resize and draw in their own gutter.
+    - Bars can now span arbitrarily elements, or start/end within elements.
 - Fix colorizing of code and pre in `positron_monokai`.
 
 ## 1.3.2 2023-04-08
