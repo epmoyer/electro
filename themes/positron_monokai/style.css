@@ -29,6 +29,9 @@ body {
         monospace;
 
     --width-sidebar: 280px;
+    --width-gutter: 14px;
+    --width-content-margin-perception: 20px;
+    --width-content-margin: calc(var(--width-content-margin-perception) - var(--width-gutter));
 
     --height-header: 40px;
 }
@@ -199,7 +202,7 @@ blockquote {
 .content-left-gutter{
     /* Gutter for changebars */
     position: relative;
-    width: 20px;
+    width: var(--width-gutter);
     /* background-color: orange; */
 }
 .content-right-margin{
@@ -214,14 +217,14 @@ blockquote {
     /* position: relative; */
     /* overflow-x: hidden; */
     /* overflow-y: auto; */
-    /* background-color: palegreen; */
     /* margin-right: 30px; */
-    padding: 10px 0px 10px 20px;
+    padding: 10px 0px 10px var(--width-content-margin);
     color: var(--color-content);
     font-family: var(--font-content-text);
     /* This causes x-overflowing pre elements to behave when using #{heading} in url
-       to navigate to a subheading */
+    to navigate to a subheading */
     min-width: 0;
+    /* background-color: palegreen; */
 }
 .content-container ul {
     line-height: 24px;
@@ -636,10 +639,6 @@ pre::-webkit-scrollbar-thumb {
    Change-bars
    -------------------------- */
 .change-bar{
-    /* border-left: #d8d8d8 solid 2px;
-    padding: 11px;
-    margin: -11px; */
-
     width: 6px;
     height: 80px;
     position: absolute;
