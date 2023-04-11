@@ -529,11 +529,13 @@ var App = App || {}; // Create namespace
 
     App.updateChangeBars = function() {
         console.log('App.updateChangeBars()');
+        const MIN_CHANGEBAR_HEIGHT = 20;
         App.state.changeBars.forEach(function(cb){
             const startY = cb.elAnchorStart.offsetTop;
             const endY = cb.elAnchorEnd.offsetTop;
+            var sizeY = Math.max(endY - startY, MIN_CHANGEBAR_HEIGHT);
             cb.elChangeBar.style.top = startY + 'px';
-            cb.elChangeBar.style.height = (endY - startY) + 'px';
+            cb.elChangeBar.style.height = sizeY + 'px';
             console.log(cb);
         });
     };
