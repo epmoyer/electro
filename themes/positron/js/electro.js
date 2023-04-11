@@ -4,7 +4,8 @@ var App = App || {}; // Create namespace
     "use strict";
 
     App.state = {
-        allMenuSpans: null
+        allMenuSpans: null,
+        changeBars: [],
     };
     App.SEARCH_RESULT_SNIPPET_MAX_LEN = 200;
 
@@ -144,6 +145,14 @@ var App = App || {}; // Create namespace
         const main_element = document.getElementsByClassName("main-container")[0];
         main_element.addEventListener('touchmove', App.onMainTouchMove, false);
 
+        window.onload = function() {
+            App.initializeChangeBars();
+            App.updateChangeBars();
+            window.addEventListener('resize', function() {
+                console.log('resize');
+                App.updateChangeBars();
+            }, true);
+        };
     };
 
     // Highlight the sidebar menu item associated with documentName and (if non-null) headingName.
@@ -482,5 +491,52 @@ var App = App || {}; // Create namespace
         // console.log({query: query, text:text, start:start, end:end, snippet:snippet});
         // console.log(text);
         return snippet;
+    };
+
+    App.initializeChangeBars = function() {
+        console.log('App.initializeChangeBars()');
+
+        // Clear change bar list
+        App.state.changeBars = [];
+
+        var elements = document.getElementsByClassName('content-left-gutter');
+        const elGutter = elements[0];
+        elGutter.innerHTML = '';
+
+        elements = document.getElementsByClassName('anchor-change-bar');
+
+        let elAnchorStart = undefined;
+        Array.from(elements).forEach(function(el){
+            console.log(el);
+            if(el.classList.contains('start')){
+                elAnchorStart = el;
+            } else if (el.classList.contains('end') && elAnchorStart !== undefined){
+                let elAnchorEnd = el;
+
+                const elChangeBar = document.createElement("div");
+                elChangeBar.setAttribute('class', 'change-bar');
+                elGutter.appendChild(elChangeBar);
+
+                App.state.changeBars.push({
+                    elAnchorStart: elAnchorStart,
+                    elAnchorEnd: elAnchorEnd,
+                    elChangeBar: elChangeBar
+                });
+                
+            }
+        });
+    };
+
+    App.updateChangeBars = function() {
+        console.log('App.updateChangeBars()');
+        const MIN_CHANGEBAR_HEIGHT = 20;
+        App.state.changeBars.forEach(function(cb){
+            const startY = cb.elAnchorStart.offsetTop;
+            const endY = cb.elAnchorEnd.offsetTop;
+            var sizeY = Math.max(endY - startY, MIN_CHANGEBAR_HEIGHT);
+            cb.elChangeBar.style.top = startY + 'px';
+            cb.elChangeBar.style.height = sizeY + 'px';
+            console.log(cb);
+        });
     };
 })(); // "use strict" wrapper
