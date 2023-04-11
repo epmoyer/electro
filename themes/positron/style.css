@@ -12,6 +12,15 @@ body {
     --color-table-header-bg: steelblue;
     --color-table-header: white;
     --color-h1-underline: #ccc;
+    /* --color-change-bar: #fa15c5; */
+    /* --color-change-bar: #07c687; */
+    --color-change-bar: #97baaa;
+
+    --color-bg-code: #ebebeb;
+    --color-text-code: #4a4a4a;
+    
+    --color-bg-pre: #ebebeb;
+    --color-text-pre: #4a4a4a;
 
     --font-content-header: "IBM Plex Sans", sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
@@ -20,6 +29,9 @@ body {
         monospace;
 
     --width-sidebar: 280px;
+    --width-gutter: 14px;
+    --width-content-margin-perception: 20px;
+    --width-content-margin: calc(var(--width-content-margin-perception) - var(--width-gutter));
 
     --height-header: 40px;
 }
@@ -91,8 +103,8 @@ table {
     margin: 5px 0 0 0;
 }
 code {
-    color: #4a4a4a;
-    background: #ebebeb;
+    background: var(--color-bg-code);
+    color: var(--color-text-code);
     white-space: pre-wrap;
     word-wrap: break-word;
     padding: 2px 5px;
@@ -101,19 +113,17 @@ code {
     border: none;
     border-radius: 4px;
 }
-pre code {
-    background: none;
-    border-radius: none;
-    padding: 0px;
-}
 pre {
-    color: #4a4a4a;
-    background-color: #ebebeb;
+    background-color: var(--color-bg-pre);
+    color: var(--color-text-pre);
     padding: 6px;
     overflow-x: auto;
 }
-.notices code, .notices pre {
-    background-color: #dbdbdb;
+pre code {
+    background: var(--color-bg-pre);
+    color: var(--color-text-pre);
+    border-radius: none;
+    padding: 0px;
 }
 a {
     color: #2980b9;
@@ -189,6 +199,12 @@ blockquote {
     align-items: stretch;
     align-content: flex-start;
 }
+.content-left-gutter{
+    /* Gutter for changebars */
+    position: relative;
+    width: var(--width-gutter);
+    /* background-color: orange; */
+}
 .content-right-margin{
     /* Because scrolling happens in the enclosing .main-container,  right padding in the 
        .content-container is ignored. To create a right pad sufficient to keep text visible,
@@ -201,14 +217,14 @@ blockquote {
     /* position: relative; */
     /* overflow-x: hidden; */
     /* overflow-y: auto; */
-    /* background-color: palegreen; */
     /* margin-right: 30px; */
-    padding: 10px 0px 10px 20px;
+    padding: 10px 0px 10px var(--width-content-margin);
     color: var(--color-content);
     font-family: var(--font-content-text);
     /* This causes x-overflowing pre elements to behave when using #{heading} in url
-       to navigate to a subheading */
+    to navigate to a subheading */
     min-width: 0;
+    /* background-color: palegreen; */
 }
 .content-container ul {
     line-height: 24px;
@@ -623,10 +639,15 @@ pre::-webkit-scrollbar-thumb {
    Change-bars
    -------------------------- */
 .change-bar{
-    border-left: #d8d8d8 solid 2px;
-    /* border-left: purple solid 2px; */
-    padding: 11px;
-    margin: -11px;
+    width: 6px;
+    height: 80px;
+    position: absolute;
+    top: 20px;
+    left: 6px;
+    background-color: var(--color-change-bar);
+}
+.anchor-change-bar{
+    visibility: hidden;
 }
 
 /* --------------------------
