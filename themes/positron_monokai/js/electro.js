@@ -148,6 +148,10 @@ var App = App || {}; // Create namespace
         window.onload = function() {
             App.initializeChangeBars();
             App.updateChangeBars();
+            window.addEventListener('resize', function(event) {
+                console.log('resize');
+                App.updateChangeBars();
+            }, true);
         };
     };
 
