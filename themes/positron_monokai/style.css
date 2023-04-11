@@ -12,7 +12,9 @@ body {
     --color-table-header-bg: steelblue;
     --color-table-header: white;
     --color-h1-underline: #ccc;
-    --color-change-bar: #fa15c5;
+    /* --color-change-bar: #fa15c5; */
+    /* --color-change-bar: #07c687; */
+    --color-change-bar: #97baaa;
 
     --color-bg-code: #ebebeb;
     --color-text-code: #4a4a4a;
@@ -638,7 +640,7 @@ pre::-webkit-scrollbar-thumb {
     padding: 11px;
     margin: -11px; */
 
-    width: 4px;
+    width: 6px;
     height: 80px;
     position: absolute;
     top: 20px;

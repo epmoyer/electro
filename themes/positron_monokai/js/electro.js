@@ -148,7 +148,7 @@ var App = App || {}; // Create namespace
         window.onload = function() {
             App.initializeChangeBars();
             App.updateChangeBars();
-            window.addEventListener('resize', function(event) {
+            window.addEventListener('resize', function() {
                 console.log('resize');
                 App.updateChangeBars();
             }, true);
@@ -495,31 +495,27 @@ var App = App || {}; // Create namespace
 
     App.initializeChangeBars = function() {
         console.log('App.initializeChangeBars()');
+
+        // Clear change bar list
         App.state.changeBars = [];
+
         var elements = document.getElementsByClassName('content-left-gutter');
         const elGutter = elements[0];
+        elGutter.innerHTML = '';
+
         elements = document.getElementsByClassName('anchor-change-bar');
-        // console.log(elements);
-        // let startY = 0;
+
         let elAnchorStart = undefined;
         Array.from(elements).forEach(function(el){
             console.log(el);
             if(el.classList.contains('start')){
                 elAnchorStart = el;
-                // startY = elAnchorStart.offsetTop;
-                // console.log('Found startY', startY);
             } else if (el.classList.contains('end') && elAnchorStart !== undefined){
                 let elAnchorEnd = el;
-                // let endY = elAnchorEnd.offsetTop;
-                // console.log('Found endY', endY);
 
                 const elChangeBar = document.createElement("div");
                 elChangeBar.setAttribute('class', 'change-bar');
-                // elChangeBar.style.top = startY + 'px';
-                // elChangeBar.style.height = (endY - startY) + 'px';
                 elGutter.appendChild(elChangeBar);
-
-
 
                 App.state.changeBars.push({
                     elAnchorStart: elAnchorStart,
@@ -529,10 +525,6 @@ var App = App || {}; // Create namespace
                 
             }
         });
-        // $('.anchor-change-bar').each(function (x){
-        //     console.log(this);
-        //     console.log("X", x);
-        // });
     };
 
     App.updateChangeBars = function() {
