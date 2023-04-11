@@ -399,13 +399,13 @@ class SiteBuilder:
     def _parse_experimental(self, markdown):
         index = str(len(self.substitutions))
         html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
-        substitution = '<div class="anchor-change-bar start"></div>'
+        substitution = '<span class="anchor-change-bar start"></span>'
         self.substitutions[html_temporary] = substitution
         markdown = markdown.replace(r':change_bar_start', html_temporary)
 
         index = str(len(self.substitutions))
         html_temporary = f'<div class="PRE-PARSER-SUBSTITUTION-{index}"></div>'
-        substitution = '<div class="anchor-change-bar end"></div>'
+        substitution = '<span class="anchor-change-bar end"></span>'
         self.substitutions[html_temporary] = substitution
         markdown = markdown.replace(r':change_bar_end', html_temporary)
         return markdown
