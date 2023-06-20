@@ -4588,8 +4588,8 @@ readers do not read off random characters that represent icons */
   font-display: block;
 
   src:
-  url("/fonts/fa-regular-400.woff2") format("woff2"), 
-  url("/fonts/fa-regular-400.woff") format("woff");
+  url("fonts/fa-regular-400.woff2") format("woff2"), 
+  url("fonts/fa-regular-400.woff") format("woff");
 }
 
 .far {
@@ -4602,8 +4602,8 @@ readers do not read off random characters that represent icons */
   font-display: block;
 
   src: 
-  url("/fonts/fa-solid-900.woff2") format("woff2"),
-  url("/fonts/fa-solid-900.woff") format("woff");
+  url("fonts/fa-solid-900.woff2") format("woff2"),
+  url("fonts/fa-solid-900.woff") format("woff");
 }
 
 .fa,

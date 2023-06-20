@@ -8,6 +8,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 1.4.0 2023-06-17
+### Fixed
+- Use relative path for fonts (`fonts/{file}` instead of `\founts/{file}`)
+
 ## 1.3.3 2023-04-09
 ### Fixed
 - Improve (sill experimental) change bar support.
