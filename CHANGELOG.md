@@ -8,7 +8,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
-## 1.4.0 2023-06-17
+## 1.4.2 2023-06-17
 ### Fixed
 - Use relative path for fonts (`fonts/{file}` instead of `\founts/{file}`)
 
