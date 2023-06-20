@@ -528,8 +528,11 @@ class SiteBuilder:
         document_html = document_html.replace(
             r"'{{% single_file %}}'", to_json_bool(CONFIG['output_format'] == 'single_file')
         )
+        watermark_text = project_config.get("watermark", "")
+        if watermark_text is None:
+            watermark_text = ""
         document_html = document_html.replace(
-            r'{{% watermark %}}', project_config.get("watermark", "")
+            r'{{% watermark %}}', watermark_text
         )
         document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
         document_html = document_html.replace(r'{{% year %}}', str(date.today().year))
