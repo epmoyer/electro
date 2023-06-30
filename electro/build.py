@@ -242,7 +242,7 @@ class SiteBuilder:
         # --------------------
         extensions = [
             'tables',
-            'fenced_code',
+            'pymdownx.superfences',
             # 'electro.mdx_urlize:UrlizeExtension',
             'codehilite',
             'attr_list',
@@ -335,13 +335,21 @@ class SiteBuilder:
         treats all "- " and "* " prefixed lines as lists, so matching that behavior here 
         ensures that people composing in VSCode will get the same output they see in
         VSCode's previewer.
+
+        IMPORTANT:
+            Electro 1.4.3 added support for "superfences", which allow fenced code
+            blocks to appear within (among other things) unordered lists.
+            For that reason we now consider a line beginning with "```" or "~~~" to
+            (for the purposes fo this function) be a "list" line, so that we DONT
+            inject a blank like after it (if we did, then we would break the
+            continuity of the unordered list).
         """
         previous_was_list = False
         previous_was_blank = True
         out_lines = []
         for line in markdown.splitlines():
             stripped = line.strip()
-            is_list = stripped.startswith('- ') or stripped.startswith('* ')
+            is_list = stripped.startswith('- ') or stripped.startswith('* ') or stripped.startswith('```') or stripped.startswith('~~~')
             if is_list and not previous_was_list and not previous_was_blank:
                 # Insert a blank line to force this list to be recognized.
                 out_lines.append('')
