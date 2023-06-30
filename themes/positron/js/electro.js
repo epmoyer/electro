@@ -406,7 +406,7 @@ var App = App || {}; // Create namespace
         const unique = Array.from(new Set(match_words));
         for(match of unique){
             html = html.replace(
-                match, '<span class="highlight">' + match + '</span>');
+                match, '<span class="search-highlight">' + match + '</span>');
         }
         return(html);
     };

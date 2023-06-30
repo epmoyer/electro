@@ -14,6 +14,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
     - Internal:
         - `.highlight` class changed to `.search-highlight` because the `pymdownx.superfences` markdown plugin injects a `.highlight` class to identify syntax-highlighted `code` blocks (rather than the former `fenced_code` markdown plugin, which injected the `.codehilite` class).
         - Change CSS injections for pygments syntax highlighting from `.codehilite` to `.highlight` (to match the `.highlight` class injected by the `pymdownx.superfences` markdown plugin).
+    - Update pygments colors for Generic.Heading (`.gh`) and Generic.Subheading (`.gu`) in `positron_monokai` style.
 ## 1.4.2 2023-06-17
 ### Fixed
 - Use relative path for fonts (`fonts/{file}` instead of `\founts/{file}`)

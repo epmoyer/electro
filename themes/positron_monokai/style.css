@@ -685,7 +685,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .go { color: #66d9ef } /* Generic.Output */
 .highlight .gp { color: #f92672; font-weight: bold } /* Generic.Prompt */
 .highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #75715e } /* Generic.Subheading */
+.highlight .gh { color: #A6E32D } /* Generic.Heading */
+.highlight .gu { color: #A6E32D } /* Generic.Subheading */
 .highlight .kc { color: #66d9ef } /* Keyword.Constant */
 .highlight .kd { color: #66d9ef } /* Keyword.Declaration */
 .highlight .kn { color: #f92672 } /* Keyword.Namespace */
