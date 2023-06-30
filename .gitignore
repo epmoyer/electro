@@ -3,6 +3,9 @@ __pycache__/
 .DS_Store
 .vscode/
 
+# Python virtual environment
+/venv
+
 # Untracked
 untracked/
 logs/
