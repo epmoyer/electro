@@ -21,7 +21,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
     - Update pygments colors for Generic.Heading (`.gh`) and Generic.Subheading (`.gu`) in `positron_monokai` style.
 ## 1.4.2 2023-06-17
 ### Fixed
-- Use relative path for fonts (`fonts/{file}` instead of `\founts/{file}`)
+- Use relative path for fonts (`fonts/{file}` instead of `\fonts/{file}`)
 
 ## 1.3.3 2023-04-09
 ### Fixed
