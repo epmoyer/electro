@@ -466,7 +466,7 @@ class SiteBuilder:
 
     def post_parse_html(self, html):
         for text_old, text_new in self.substitutions.items():
-            logger.debug(f'Subsitituting: {text_old=} {text_new=}')
+            logger.debug(f'Substituting: {text_old=} {text_new=}')
             html = html.replace(text_old, text_new)
         return html
 
