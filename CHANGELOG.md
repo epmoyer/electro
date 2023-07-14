@@ -12,6 +12,9 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ### Changed
 - Update `requirements.txt` for all missing packages. This project now works in a fresh Python 3.9 venv using `python -m pip install -r requirements.txt`.
 
+## 1.5.0 2023-07-14
+### Added
+- Add theme `positron_monokai_wide_image`
 ## 1.4.3 2023-06-29
 ### Changed
 - Add support for "superfences"
