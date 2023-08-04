@@ -146,6 +146,7 @@ a:visited:hover, a:hover {
 }
 .content-page table {
     margin-top: 5px;
+    border-collapse: collapse;
 }
 .content-page th, td {
     border-collapse: collapse;

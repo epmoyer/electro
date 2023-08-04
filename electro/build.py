@@ -128,7 +128,7 @@ def build_project(path_build) -> Result[str, str]:
         if isinstance(result, Err):
             return result
 
-    return Ok()
+    return Ok(None)
 
 
 def publish_single_file(path_output_directory) -> Result[str, str]:
@@ -136,7 +136,7 @@ def publish_single_file(path_output_directory) -> Result[str, str]:
 
     output_file = CONFIG['project_config'].get('output_single_file', None)
     if output_file is None:
-        return Ok()
+        return Ok(None)
 
     # ----------------------------------
     # Copy (single-file) output file
@@ -153,7 +153,7 @@ def publish_single_file(path_output_directory) -> Result[str, str]:
     except Exception as e:
         return Err(f'Failed copying "{path_source}" to "{path_destination}".  Exception:{e}.')
 
-    return Ok()
+    return Ok(None)
 
 
 def pack_site(path_output_directory):
@@ -207,7 +207,7 @@ class SiteBuilder:
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
             self.menu_builder.add_item(0, menu_name, link_url=link_url, document_name=document_name)
             self._build_subheading_menus(document_name)
-        return Ok()
+        return Ok(None)
 
     def _build_subheading_menus(self, document_name):
         document_html = self.site_documents[document_name]['html']
@@ -309,7 +309,7 @@ class SiteBuilder:
             self.add_document_to_search(document_name, document_html)
 
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
-        return Ok()
+        return Ok(None)
 
     def pre_parse_markdown(self, markdown) -> Result[str, str]:
         project_config = CONFIG['project_config']
@@ -562,7 +562,7 @@ class SiteBuilder:
 
         with open(path_document_out, 'w') as file:
             file.write(document_html)
-        return Ok()
+        return Ok(None)
 
     def render_site(self) -> Result[str, str]:
         project_config = CONFIG['project_config']
@@ -713,7 +713,7 @@ class SiteBuilder:
         search_js = "App.searchData = " + json.dumps(self.search_index, indent=4)
         with open(path_search_index, 'w') as file:
             file.write(search_js)
-        return Ok()
+        return Ok(None)
 
 
 MAX_MENU_DEPTH = 3
