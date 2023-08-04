@@ -37,11 +37,7 @@
     display: flex;
     /* background-color: pink; */
 }
-blockquote {
-    color: #888;
-    border-left: 8px solid #ccc;
-    padding: 0px 12px;
-}
+
 .main-container {
     width: 100%;
     overflow-x: hidden;
