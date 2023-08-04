@@ -75,9 +75,9 @@ h6 {
     font-size: 19px;
 }
 
-ul{
+/* ul{
     list-style-type: disc;
-}
+} */
 
 code {
     background: var(--color-bg-code);

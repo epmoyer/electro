@@ -113,7 +113,9 @@ a:visited:hover, a:hover {
  * Core elements
  * ------------------------
  */
-
+.content-page ul{
+    list-style-type: disc;
+}
 .content-page th {
     background-color: var(--color-table-heading-bg);
     color: var(--color-table-heading);
