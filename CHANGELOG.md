@@ -8,6 +8,27 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
+## 2.0.0 2023-08-03
+
+🔴  Work in progress  
+
+### Changed
+- Default to new (dark blue) UI.
+- Default to new "bar style" headings.
+- Square corners on `code`.
+- Bigger margins on pre and notices.
+- Legacy style obtainable via mixins:
+    - `doc_legacy`
+        - Get pre-2.0.0 document style (old headings)
+    - `ui_legacy`
+        - Get pre-2.0.0 UI (lighter blue)
+    - `pygments_standard`
+        - Get pre-2.0.0 `pre` syntax highlighting (colors on gray)
+### Added
+- `mixins` system
+### TODO
+- 🟡  Fenced style notices/div (`:::notice info`)
+
 ## 1.4.4 2023-06-30
 ### Changed
 - Update `requirements.txt` for all missing packages. This project now works in a fresh Python 3.9 venv using `python -m pip install -r requirements.txt`.
