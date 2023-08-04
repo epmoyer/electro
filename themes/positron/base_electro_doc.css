@@ -104,6 +104,7 @@ a:visited:hover, a:hover {
 }
 .notices .label{
     margin-bottom: 25px;
+    margin-left: -25px;
 }
 
 .notices.info {
