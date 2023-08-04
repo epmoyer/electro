@@ -428,8 +428,8 @@ blockquote {
 }
 
 /* --------------------------
-   scrollbar
-   -------------------------- */
+ * scrollbar
+ * -------------------------- */
 ::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 8px;
@@ -453,8 +453,8 @@ pre::-webkit-scrollbar-thumb {
 }
 
 /* --------------------------
-   menu-tree specific
-   -------------------------- */
+ * menu-tree specific
+ * -------------------------- */
 
 .menu-tree {
     font-family: var(--font-sidebar);
@@ -558,8 +558,8 @@ pre::-webkit-scrollbar-thumb {
 }
 
 /* --------------------------
-   menu-tree manipulations
-   -------------------------- */
+ * menu-tree manipulations
+ * -------------------------- */
 .menu-item-container {
     display: flex;
     flex-direction: row;
@@ -615,17 +615,4 @@ pre::-webkit-scrollbar-thumb {
     /* background-color: purple; */
 }
 
-/* --------------------------
-   Change-bars
-   -------------------------- */
-.change-bar{
-    width: 6px;
-    height: 80px;
-    position: absolute;
-    top: 20px;
-    left: 6px;
-    background-color: var(--color-change-bar);
-}
-.anchor-change-bar{
-    visibility: hidden;
-}
+

@@ -127,6 +127,28 @@ a:visited:hover, a:hover {
 .content-page p + p{
     margin: 15px 0 0 0;
 }
+.content-page code {
+    border-radius: 0;
+}
+.content-page pre {
+    padding: 13px 19px;
+}
+
+/* --------------------------
+ * Change-bars
+ * -------------------------- 
+ */
+.content-page .change-bar{
+    width: 6px;
+    height: 80px;
+    position: absolute;
+    top: 20px;
+    left: 6px;
+    background-color: var(--color-change-bar);
+}
+.content-page .anchor-change-bar{
+    visibility: hidden;
+}
 
 /* ------------------------
  * Misc
@@ -168,9 +190,3 @@ a:visited:hover, a:hover {
     background: #5050502c;
 }
 
-code {
-    border-radius: 0;
-}
-pre {
-    padding: 13px 19px;
-}
