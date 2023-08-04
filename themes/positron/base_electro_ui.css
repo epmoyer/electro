@@ -6,9 +6,7 @@
  body {
     margin: 0px;
     font-family: "IBM Plex Sans", sans-serif;
-    
-    --color-content: #444;
-    --color-strong: #333;
+   
     --color-navigating: rgb(38, 114, 255);
     --color-bg-nav-heading: #1B557C;
     --color-nav-heading-border: gray;
@@ -25,7 +23,7 @@
     --color-text-pre: #f8f8f2;
 
     --font-content-header: "IBM Plex Sans", sans-serif;
-    --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+    
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
         monospace;
@@ -123,15 +121,7 @@ a:hover {
     text-decoration: none;
     color: inherit;
 }
-strong {
-    font-weight: 600;
-    color: var(--color-strong);
-}
-hr {
-    height: 1px;
-    background-color: #ccc;
-    border: none;
-}
+
 
 .root-container {
     height: 100vh;
@@ -198,8 +188,6 @@ blockquote {
     /* overflow-y: auto; */
     /* margin-right: 30px; */
     padding: 10px 0px 10px var(--width-content-margin);
-    color: var(--color-content);
-    font-family: var(--font-content-text);
     /* This causes x-overflowing pre elements to behave when using #{heading} in url
     to navigate to a subheading */
     min-width: 0;

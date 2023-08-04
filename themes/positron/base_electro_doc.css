@@ -13,6 +13,7 @@
 }
 
 body {
+    --color-content: #444;
     --color-strong: #333;
 
     --color-bg-heading-main: #1B557C;
@@ -27,8 +28,14 @@ body {
     --color-table-heading: #414141;
 
     --color-bg-code: #e4e4e7;
+
+    --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
 }
 
+.content-page {
+    color: var(--color-content);
+    font-family: var(--font-content-text);
+}
 .content-page > * {
     margin-left: var(--content-indent);
     margin-right: var(--content-indent);
