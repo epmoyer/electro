@@ -17,15 +17,13 @@
     --color-table-header-bg: steelblue;
     --color-table-header: white;
     --color-h1-underline: #ccc;
-    /* --color-change-bar: #fa15c5; */
-    /* --color-change-bar: #07c687; */
     --color-change-bar: #97baaa;
 
     --color-bg-code: #ebebeb;
     --color-text-code: #4a4a4a;
     
-    --color-bg-pre: #ebebeb;
-    --color-text-pre: #4a4a4a;
+    --color-bg-pre: #1D1D1A;
+    --color-text-pre: #f8f8f2;
 
     --font-content-header: "IBM Plex Sans", sans-serif;
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
