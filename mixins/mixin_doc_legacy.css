@@ -2,3 +2,32 @@
  * mixin_doc_legacy.css
  * ====================================
  */
+
+body {
+    --color-heading-text: #444;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 27px;
+}
+h3 {
+    font-size: 22px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 20px;
+}
+h6 {
+    font-size: 19px;
+}

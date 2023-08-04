@@ -29,6 +29,9 @@ body {
 
     --content-indent: 40px;
 
+    --color-h1-underline: #ccc;
+    --font-content-heading: "IBM Plex Sans", sans-serif;
+
     --color-table-heading-bg: #c9dbeb;
     --color-table-heading: #414141;
 
@@ -70,13 +73,20 @@ a:visited:hover, a:hover {
 .content-page h4,
 .content-page h5,
 .content-page h6 {
-    font-family: var(--font-content-header);
+    color: var(--color-heading-text);
+    font-family: var(--font-content-heading);
     font-weight: 600;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 5px 0 0 0;
     /* letter-spacing: 1px; */
 }
 
+/* document title heading */
+.content-page h1 {
+    font-size: 27px;
+    border-bottom: var(--color-h1-underline) solid 1px;
+}
+
+/* bar-style headings */
 .content-page h2,
 .content-page h3,
 .content-page h4,
@@ -84,7 +94,6 @@ a:visited:hover, a:hover {
 .content-page h6 {
     padding: 4px 0 4px 8px;
     margin: 10px 0 10px 0;
-    color: var(--color-heading-text);
 
     background-color: #fff;
     font-size: 18px;
