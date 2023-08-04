@@ -28,10 +28,10 @@ body {
 }
 
 
-.sidebar-header {
+/* .sidebar-header {
     background-color: var(--color-bg-heading-main);
     border-bottom: 1px solid gray;
-}
+} */
 
 .content-page > * {
     margin-left: var(--content-indent);

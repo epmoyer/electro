@@ -10,8 +10,9 @@
     --color-content: #444;
     --color-strong: #333;
     --color-navigating: rgb(38, 114, 255);
-    --color-header: #2980b9;
-    --color-header-text: #fff;
+    --color-bg-nav-heading: #1B557C;
+    --color-nav-heading-border: gray;
+    --color-nav-heading-text: #fff;
     --color-heading-text: #444;
     --color-watermark: #ff000034;
     --color-table-header-bg: steelblue;
@@ -177,10 +178,10 @@ blockquote {
     /* padding: 5px 30px 5px 20px; */
     padding: 0px;
 }
-.nav-header {
+.nav-heading {
     display: none;
-    background-color: var(--color-header);
-    color: var(--color-header-text);
+    background-color: var(--color-bg-nav-heading);
+    color: var(--color-nav-heading-text);
     /* height: 40px; */
     line-height: var(--height-header);
     text-align: center;
@@ -188,7 +189,7 @@ blockquote {
     padding: 0px 10px;
     font-family: var(--font-sidebar);
 }
-.nav-header i{
+.nav-heading i{
     font-size: 25px;
     float: left;
     cursor: pointer;
@@ -244,13 +245,13 @@ blockquote {
     height: 100vh;
     /* padding: 10px; */
     background-color: #343131;
-    color: var(--color-header-text);
+    color: var(--color-nav-heading-text);
 
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-.sidebar-header {
+.sidebar-heading {
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -260,9 +261,10 @@ blockquote {
     font-family: var(--font-sidebar);
 
     color: white;
-    background-color: var(--color-header);
+    background-color: var(--color-bg-nav-heading);
+    border-bottom: 1px solid var(--color-nav-heading-border);
 }
-.sidebar-header i {
+.sidebar-heading i {
     margin-right: 5px;
 }
 .sidebar-title {
@@ -322,7 +324,7 @@ blockquote {
     font-size: 12px;
 }
 @media screen and (max-width: 768px) {
-    .nav-header {
+    .nav-heading {
         display:block;
     }
     .sidebar-container{
