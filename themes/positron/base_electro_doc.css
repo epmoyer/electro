@@ -22,6 +22,8 @@ body {
     --color-heading-border: #d7ebf7;
     --color-heading-text: #444;
 
+    --color-change-bar: #97baaa;
+
     --color-bg-code: #ebebeb;
     --color-text-code: #4a4a4a;
 
@@ -184,7 +186,7 @@ a:visited:hover, a:hover {
  * Change-bars
  * -------------------------- 
  */
-.content-page .change-bar{
+.change-bar{
     width: 6px;
     height: 80px;
     position: absolute;
@@ -192,7 +194,7 @@ a:visited:hover, a:hover {
     left: 6px;
     background-color: var(--color-change-bar);
 }
-.content-page .anchor-change-bar{
+.anchor-change-bar{
     visibility: hidden;
 }
 

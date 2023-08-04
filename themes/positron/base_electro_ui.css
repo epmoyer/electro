@@ -14,10 +14,7 @@
     --color-heading-text: #444;
     --color-watermark: #ff000034;
     --color-h1-underline: #ccc;
-    --color-change-bar: #97baaa;
-
-    --color-bg-pre: #1D1D1A;
-    --color-text-pre: #f8f8f2;
+    
 
     --font-content-header: "IBM Plex Sans", sans-serif;
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
@@ -67,31 +64,6 @@ h5 {
 }
 h6 {
     font-size: 19px;
-}
-
-
-/* code {
-    background: var(--color-bg-code);
-    color: var(--color-text-code);
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    padding: 2px 5px;
-    font-family: var(--font-code);
-    font-size: 75%;
-    border: none;
-    border-radius: 4px;
-} */
-pre {
-    background-color: var(--color-bg-pre);
-    color: var(--color-text-pre);
-    padding: 6px;
-    overflow-x: auto;
-}
-pre code {
-    background: var(--color-bg-pre);
-    color: var(--color-text-pre);
-    border-radius: none;
-    padding: 0px;
 }
 
 .no-anchor-style,
