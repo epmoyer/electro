@@ -248,16 +248,6 @@
             "id": 3,
             "cards": [
                 {
-                    "name": "Remove left pad from notice headers.",
-                    "id": 173,
-                    "id_labels": [
-                        5
-                    ],
-                    "description": "",
-                    "due": null,
-                    "due_complete": false
-                },
-                {
                     "name": "---",
                     "id": 172,
                     "id_labels": [],
@@ -308,6 +298,25 @@
             "name": "Done",
             "id": 4,
             "cards": [
+                {
+                    "name": "Remove left pad from notice headers.",
+                    "id": 173,
+                    "id_labels": [
+                        5
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "---",
+                    "id": 174,
+                    "id_labels": [],
+                    "description": null,
+                    "due": null,
+                    "due_complete": false,
+                    "repeat": null
+                },
                 {
                     "name": "CONFIG FILE: site_directory -> output_directory",
                     "id": 159,
