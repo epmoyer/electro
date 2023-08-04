@@ -21,8 +21,8 @@ body {
 
     --content-indent: 40px;
 
-    --color-table-header-bg: #c9dbeb;
-    --color-table-header: #414141;
+    --color-table-heading-bg: #c9dbeb;
+    --color-table-heading: #414141;
 
     --color-bg-code: #e4e4e7;
 }
@@ -39,6 +39,11 @@ a:visited:hover, a:hover {
     color: #7070ff;
     text-decoration: underline;
 }
+
+/* ------------------------
+ * Headings
+ * ------------------------
+ */
 .content-page h1,
 .content-page h2,
 .content-page h3,
@@ -92,6 +97,54 @@ a:visited:hover, a:hover {
 .content-page h6 {
     background-image: url('data:image/svg+xml,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" stroke="%23b4cfe0" stroke-width="6" stroke-linecap="butt" stroke-dasharray="3,3" stroke-dashoffset="0" ><line x1="0" y1="0" x2="100%" y2="0" /><line x1="0" y1="0" x2="0" y2="100%" /><line x1="0" y1="100%" x2="100%" y2="100%" /><line x1="100%" y1="0" x2="100%" y2="100%" /></svg>')
 }
+
+/* ------------------------
+ * Core elements
+ * ------------------------
+ */
+
+.content-page th {
+    background-color: var(--color-table-heading-bg);
+    color: var(--color-table-heading);
+}
+.content-page th strong {
+    color: var(--color-table-heading);
+}
+.content-page table {
+    margin: 5px 0 0 0;
+}
+.content-page table, th, td {
+    border-collapse: collapse;
+    border: 1px solid #444;
+    padding: 2px 6px;
+}
+.content-page table {
+    margin: 5px 0 0 0;
+}
+.content-page p {
+    margin: 8px 0 0 0;
+}
+.content-page p + p{
+    margin: 15px 0 0 0;
+}
+
+/* ------------------------
+ * Misc
+ * ------------------------
+ */
+.img-wrapper {
+    /* All img tags are additionally wrapped by .img-wrapper so that we can:
+       - Apply an absolute (in pixels) max-width to the wrapper, constraining the max
+         size of all images to some max pixel size.
+       - Apply a relative (100%)) max-width to the img, constraining the img to ALWAYS shrink
+         as necessary to fit in the current window width.
+    */
+    max-width: 700px;
+}
+/* ------------------------
+ * Notices
+ * ------------------------
+ */
 
 .notices{
     padding: 10px 40px 20px 40px;

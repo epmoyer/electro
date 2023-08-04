@@ -15,8 +15,6 @@
     --color-nav-heading-text: #fff;
     --color-heading-text: #444;
     --color-watermark: #ff000034;
-    --color-table-header-bg: steelblue;
-    --color-table-header: white;
     --color-h1-underline: #ccc;
     --color-change-bar: #97baaa;
 
@@ -47,15 +45,7 @@ img {
     max-width: 100%;
     height: auto;
 }
-.img-wrapper {
-    /* All img tags are additionally wrapped by .img-wrapper so that we can:
-       - Apply an absolute (in pixels) max-width to the wrapper, constraining the max
-         size of all images to some max pixel size.
-       - Apply a relative (100%)) max-width to the img, constraining the img to ALWAYS shrink
-         as necessary to fit in the current window width.
-    */
-    max-width: 700px;
-}
+
 h1,
 h2,
 h3,
@@ -91,21 +81,6 @@ ul{
     list-style-type: disc;
 }
 
-th {
-    background-color: var(--color-table-header-bg);
-    color: var(--color-table-header);
-}
-th strong {
-    color: var(--color-table-header);
-}
-table, th, td {
-    border-collapse: collapse;
-    border: 1px solid #444;
-    padding: 2px 6px;
-}
-table {
-    margin: 5px 0 0 0;
-}
 code {
     background: var(--color-bg-code);
     color: var(--color-text-code);
