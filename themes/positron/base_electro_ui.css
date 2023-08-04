@@ -13,10 +13,10 @@
     --color-nav-heading-text: #fff;
     --color-heading-text: #444;
     --color-watermark: #ff000034;
-    --color-h1-underline: #ccc;
     
-
+    --color-h1-underline: #ccc;
     --font-content-header: "IBM Plex Sans", sans-serif;
+
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
 
     --width-sidebar: 280px;
@@ -24,7 +24,7 @@
     --width-content-margin-perception: 20px;
     --width-content-margin: calc(var(--width-content-margin-perception) - var(--width-gutter));
 
-    --height-header: 40px;
+    --height-nav-heading: 40px;
 }
 
 h1,
@@ -92,7 +92,7 @@ blockquote {
     background-color: var(--color-bg-nav-heading);
     color: var(--color-nav-heading-text);
     /* height: 40px; */
-    line-height: var(--height-header);
+    line-height: var(--height-nav-heading);
     text-align: center;
     vertical-align: middle;
     padding: 0px 10px;
@@ -103,7 +103,7 @@ blockquote {
     float: left;
     cursor: pointer;
     padding-top: inherit;
-    line-height: var(--height-header);
+    line-height: var(--height-nav-heading);
     /* display: inline-block; */
 }
 .content-area {
