@@ -5,9 +5,9 @@
 
 
  /* Suppress the red error border in fenced code so that authors
- * do not need to worry about whether the syntax highlighter might flag
- * something it cannot parse as an error.
- */
+  * do not need to worry about whether the syntax highlighter might flag
+  * something it cannot parse as an error.
+  */
 .highlight .err {
     border: none;
 }
@@ -26,12 +26,6 @@ body {
 
     --color-bg-code: #e4e4e7;
 }
-
-
-/* .sidebar-header {
-    background-color: var(--color-bg-heading-main);
-    border-bottom: 1px solid gray;
-} */
 
 .content-page > * {
     margin-left: var(--content-indent);
