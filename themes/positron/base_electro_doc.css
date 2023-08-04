@@ -13,6 +13,8 @@
 }
 
 body {
+    --color-strong: #333;
+
     --color-bg-heading-main: #1B557C;
     --color-bg-heading-secondary: #B3C6D3;
     --color-bg-heading-tertiary: #e4eff6;
@@ -122,16 +124,25 @@ a:visited:hover, a:hover {
     margin: 5px 0 0 0;
 }
 .content-page p {
-    margin: 8px 0 0 0;
+    margin-top: 8px;
 }
 .content-page p + p{
-    margin: 15px 0 0 0;
+    margin-top: 15px;
 }
 .content-page code {
     border-radius: 0;
 }
 .content-page pre {
     padding: 13px 19px;
+}
+.content-page strong {
+    font-weight: 600;
+    color: var(--color-strong);
+}
+.content-page hr {
+    height: 1px;
+    background-color: #ccc;
+    border: none;
 }
 
 /* --------------------------
