@@ -1,3 +1,4 @@
+black==23.3.0
 result >= 0.8.0
 pytz == 2022.1
 pymdown-extensions == 10.0.1

@@ -130,6 +130,7 @@ def build_project(path_build) -> Result[str, str]:
 
     return Ok()
 
+
 def publish_single_file(path_output_directory) -> Result[str, str]:
     pack_site(path_output_directory)
 
@@ -142,7 +143,9 @@ def publish_single_file(path_output_directory) -> Result[str, str]:
     # ----------------------------------
     path_destination = CONFIG['path_project_directory'] / Path(output_file)
     if path_destination.suffix != '.html':
-        return Err(f'output_single_file suffix must be ".html".  output_single_file:"{path_destination}"')
+        return Err(
+            f'output_single_file suffix must be ".html".  output_single_file:"{path_destination}"'
+        )
     path_source = path_output_directory / Path('index.html')
     logger.info(f'Copying "{path_source}" to "{path_destination}"...')
     try:
@@ -250,7 +253,10 @@ class SiteBuilder:
         if CONFIG['enable_newline_to_break']:
             # Newlines in markdown will be interpreted as line breaks.
             extensions.append('nl2br')
-        document_html = markdown.markdown(document_markdown, extensions=extensions,)
+        document_html = markdown.markdown(
+            document_markdown,
+            extensions=extensions,
+        )
 
         # --------------------
         # Pre-parser
@@ -332,7 +338,7 @@ class SiteBuilder:
         to force lists to be recognized.
 
         The generally used VSCode markdown preview extension ("Markdown Preview Github Styling")
-        treats all "- " and "* " prefixed lines as lists, so matching that behavior here 
+        treats all "- " and "* " prefixed lines as lists, so matching that behavior here
         ensures that people composing in VSCode will get the same output they see in
         VSCode's previewer.
 
@@ -349,7 +355,12 @@ class SiteBuilder:
         out_lines = []
         for line in markdown.splitlines():
             stripped = line.strip()
-            is_list = stripped.startswith('- ') or stripped.startswith('* ') or stripped.startswith('```') or stripped.startswith('~~~')
+            is_list = (
+                stripped.startswith('- ')
+                or stripped.startswith('* ')
+                or stripped.startswith('```')
+                or stripped.startswith('~~~')
+            )
             if is_list and not previous_was_list and not previous_was_blank:
                 # Insert a blank line to force this list to be recognized.
                 out_lines.append('')
@@ -417,7 +428,7 @@ class SiteBuilder:
         self.substitutions[html_temporary] = substitution
         markdown = markdown.replace(r':change_bar_end', html_temporary)
         return markdown
-    
+
     def _wrangle_inter_document_links(self, markdown):
         logger.debug('🟠 ----------------------')
         logger.debug('_wrangle_inter_document_links()')
@@ -457,7 +468,7 @@ class SiteBuilder:
                 new_md_link = md_link.replace(f'{page_id}.md#{heading_id}', f'{new_reference}')
                 logger.debug(f'    NEW MD LINK: {new_md_link}')
                 line = line.replace(md_link, new_md_link)
-            
+
             if line != line_original:
                 logger.debug(f'    NEW LINE: {line}')
             out_lines.append(line)
@@ -539,12 +550,10 @@ class SiteBuilder:
         watermark_text = project_config.get("watermark", "")
         if watermark_text is None:
             watermark_text = ""
-        document_html = document_html.replace(
-            r'{{% watermark %}}', watermark_text
-        )
+        document_html = document_html.replace(r'{{% watermark %}}', watermark_text)
         document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
         document_html = document_html.replace(r'{{% year %}}', str(date.today().year))
-        
+
         timezone_name = project_config.get('timezone')
         result = iso_timestamp_now(timezone_name)
         if isinstance(result, Err):
@@ -574,15 +583,26 @@ class SiteBuilder:
         # -------------------
         # Copy CSS
         # -------------------
-        path_css_source = path_theme_directory / Path('style.css')
-        path_css_destination = path_output_directory / Path('style.css')
-        shutil.copy(path_css_source, path_css_destination)
-        path_css_source = path_theme_directory / Path('fonts.css')
-        path_css_destination = path_output_directory / Path('fonts.css')
-        shutil.copy(path_css_source, path_css_destination)
-        path_css_source = path_theme_directory / Path('fontawesome.css')
-        path_css_destination = path_output_directory / Path('fontawesome.css')
-        shutil.copy(path_css_source, path_css_destination)
+        for filename in (
+            'base_electro_doc.css',
+            'base_electro_ui.css',
+            'base_pygments_monokai.css',
+            'fonts.css',
+            'fontawesome.css',
+        ):
+            path_css_source = path_theme_directory / Path(filename)
+            path_css_destination = path_output_directory / Path(filename)
+            shutil.copy(path_css_source, path_css_destination)
+
+        # path_css_source = path_theme_directory / Path('style.css')
+        # path_css_destination = path_output_directory / Path('style.css')
+        # shutil.copy(path_css_source, path_css_destination)
+        # path_css_source = path_theme_directory / Path('fonts.css')
+        # path_css_destination = path_output_directory / Path('fonts.css')
+        # shutil.copy(path_css_source, path_css_destination)
+        # path_css_source = path_theme_directory / Path('fontawesome.css')
+        # path_css_destination = path_output_directory / Path('fontawesome.css')
+        # shutil.copy(path_css_source, path_css_destination)
 
         # -------------------
         # Copy CSS overlay
@@ -775,8 +795,8 @@ class MenuBuilder:
 
     def cull_items_above(self, level):
         """Remove all menu items ABOVE level (i.e. at an indent LESS than level).
-        
-        NOTE: level is the "item" level, and does not include the section. 
+
+        NOTE: level is the "item" level, and does not include the section.
         """
         logger.info(f"cull_items_above(): {level}")
         for section in self.sections:
@@ -795,8 +815,8 @@ class MenuBuilder:
 
     def cull_items_below(self, level):
         """Remove all menu items BELOW level (i.e. at an indent GREATER than level).
-        
-        NOTE: level is the "item" level, and does not include the section. 
+
+        NOTE: level is the "item" level, and does not include the section.
         """
         logger.info(f"cull_items_below(): {level}")
         for section in self.sections:
@@ -883,7 +903,11 @@ def to_json_bool(python_bool):
 
 
 def format_menu_heading(
-    text, include_caret_space=False, caret_visible=False, link_url=None, is_level_two=False,
+    text,
+    include_caret_space=False,
+    caret_visible=False,
+    link_url=None,
+    is_level_two=False,
 ):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
@@ -1014,7 +1038,9 @@ def add_heading_numbers(markdown, at_level=1):
 
         id_without_heading_number = heading_text_to_id(heading_text)
         id_with_heading_number = heading_text_to_id(f'{heading_number_text} {heading_text}')
-        heading_id_to_heading_id_with_heading_number[id_without_heading_number] = id_with_heading_number
+        heading_id_to_heading_id_with_heading_number[
+            id_without_heading_number
+        ] = id_with_heading_number
 
         line = f'{pieces[0]} {heading_number_text}&nbsp;&nbsp;&nbsp;&nbsp;' f'{heading_text}'
         renumbered_lines.append(line)

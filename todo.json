@@ -29,7 +29,7 @@
             "color": "red"
         },
         {
-            "name": "",
+            "name": "2.0.x",
             "id": 5,
             "color": "purple"
         },
@@ -247,6 +247,24 @@
             "name": "Doing",
             "id": 3,
             "cards": [
+                {
+                    "name": "Remove left pad from notice headers.",
+                    "id": 173,
+                    "id_labels": [
+                        5
+                    ],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
+                {
+                    "name": "---",
+                    "id": 172,
+                    "id_labels": [],
+                    "description": "",
+                    "due": null,
+                    "due_complete": false
+                },
                 {
                     "name": "Change bar positions jump incorrectly when screen is so narrow that new nabber appears.",
                     "id": 170,

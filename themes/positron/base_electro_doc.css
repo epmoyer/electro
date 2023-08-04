@@ -2,3 +2,127 @@
  * base_electro_doc.css
  * ====================================
  */
+
+
+ /* Suppress the red error border in fenced code so that authors
+ * do not need to worry about whether the syntax highlighter might flag
+ * something it cannot parse as an error.
+ */
+.highlight .err {
+    border: none;
+}
+
+body {
+    --color-bg-heading-main: #1B557C;
+    --color-bg-heading-secondary: #B3C6D3;
+    --color-bg-heading-tertiary: #e4eff6;
+    --color-heading-border: #d7ebf7;
+    --color-heading-text: #444;
+
+    --content-indent: 40px;
+
+    --color-table-header-bg: #c9dbeb;
+    --color-table-header: #414141;
+
+    --color-bg-code: #e4e4e7;
+}
+
+
+.sidebar-header {
+    background-color: var(--color-bg-heading-main);
+    border-bottom: 1px solid gray;
+}
+
+.content-page > * {
+    margin-left: var(--content-indent);
+    margin-right: var(--content-indent);
+}
+
+a, a:visited {
+    color: #0000ff;
+}
+a:visited:hover, a:hover {
+    color: #7070ff;
+    text-decoration: underline;
+}
+.content-page h1,
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
+    font-family: var(--font-content-header);
+    font-weight: 600;
+    margin-left: 0;
+    margin-right: 0;
+    /* letter-spacing: 1px; */
+}
+
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
+    padding: 4px 0 4px 8px;
+    margin: 10px 0 10px 0;
+    color: var(--color-heading-text);
+
+    background-color: #fff;
+    font-size: 18px;
+    line-height: 18px;
+    /* text-transform: uppercase; */
+}
+
+.content-page h2 {
+    background-color: var(--color-bg-heading-main);
+    color: #fff;
+}
+
+.content-page h3 {
+    background-color: var(--color-bg-heading-secondary);
+}
+
+.content-page h4 {
+    -webkit-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    -moz-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    background-color: var(--color-bg-heading-tertiary);
+}
+
+.content-page h5 {
+    -webkit-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    -moz-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+}
+
+.content-page h6 {
+    background-image: url('data:image/svg+xml,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" stroke="%23b4cfe0" stroke-width="6" stroke-linecap="butt" stroke-dasharray="3,3" stroke-dashoffset="0" ><line x1="0" y1="0" x2="100%" y2="0" /><line x1="0" y1="0" x2="0" y2="100%" /><line x1="0" y1="100%" x2="100%" y2="100%" /><line x1="100%" y1="0" x2="100%" y2="100%" /></svg>')
+}
+
+.notices{
+    padding: 10px 40px 20px 40px;
+}
+.notices .label{
+    margin-bottom: 25px;
+}
+
+.notices.info {
+    background-color: #dbf1ff;
+    border-color: #377aa7; 
+}
+
+.notices.tip {
+    background-color: #e2fbeb;
+    border-color: #5cbf86; 
+}
+
+.notices :not(pre) > code {
+    background: #5050502c;
+}
+
+code {
+    border-radius: 0;
+}
+pre {
+    padding: 13px 19px;
+}
