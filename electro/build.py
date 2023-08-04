@@ -300,7 +300,10 @@ class SiteBuilder:
             return result
         print(f'{result.ok_value=}')
         if result.ok_value:
-            document_html += '<div class="no-indent"><hr />\n' f'<div class="footer">{result.ok_value}</div></div>'
+            document_html += (
+                '<div class="no-indent"><hr />\n'
+                f'<div class="footer">{result.ok_value}</div></div>'
+            )
 
         # ---------------------
         # Search
@@ -537,7 +540,13 @@ class SiteBuilder:
         result = get_deprecated(project_config, 'master_title', 'site_name')
         if isinstance(result, Err):
             return result
-        document_html = document_html.replace(r'{{% master_title %}}', result.ok_value)
+        master_title = result.ok_value
+        document_html = document_html.replace(r'{{% master_title %}}', master_title)
+        # master_title may contain a line break.  We strip it from the nav bar (shown for
+        # narrow displays) to preserve space.
+        document_html = document_html.replace(
+            r'{{% master_title_nav %}}', master_title.replace('<br>', ' ')
+        )
         document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
         document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
         # NOTE: We do a weird thing here. Note that the text we are replacing INCLUDES the single
