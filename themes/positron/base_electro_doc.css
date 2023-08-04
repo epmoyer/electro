@@ -230,6 +230,13 @@ a:visited:hover, a:hover {
     */
     max-width: 700px;
 }
+.content-page .footer {
+    color: #bbb;
+    font-size: 12px;
+}
+.content-page .no-indent {
+    margin-left: 0px;
+}
 /* ------------------------
  * Notices
  * ------------------------

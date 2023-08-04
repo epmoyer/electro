@@ -186,10 +186,6 @@
     /* margin: 0px 30px; */
     width: 90%;
 }
-.footer {
-    color: #bbb;
-    font-size: 12px;
-}
 @media screen and (max-width: 768px) {
     .nav-heading {
         display:block;

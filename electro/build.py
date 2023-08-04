@@ -300,7 +300,7 @@ class SiteBuilder:
             return result
         print(f'{result.value=}')
         if result.value:
-            document_html += '<hr />\n' f'<div class="footer">{result.value}</div>'
+            document_html += '<div class="no-indent"><hr />\n' f'<div class="footer">{result.value}</div></div>'
 
         # ---------------------
         # Search
