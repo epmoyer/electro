@@ -145,15 +145,12 @@ a:visited:hover, a:hover {
     color: var(--color-table-heading);
 }
 .content-page table {
-    margin: 5px 0 0 0;
+    margin-top: 5px;
 }
-.content-page table, th, td {
+.content-page th, td {
     border-collapse: collapse;
     border: 1px solid #444;
     padding: 2px 6px;
-}
-.content-page table {
-    margin: 5px 0 0 0;
 }
 .content-page p {
     margin-top: 8px;

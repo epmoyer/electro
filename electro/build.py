@@ -18,7 +18,7 @@ from loguru import logger
 from electro.app_config import CONFIG, OUTPUT_FORMATS
 from electro.console import CONSOLE
 from electro.warnings import WARNINGS
-from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
+from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD, PATH_MIXINS
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
 from electro.simplepack import simplepack
 from electro.inline_images import make_html_images_inline
@@ -614,6 +614,11 @@ class SiteBuilder:
         shutil.copy(path_css_source, path_css_destination)
         # Append customizations to end of CSS overlay
         append_css_customizations(path_css_destination)
+        # Append mixins
+        for mixin_name in project_config.get('mixins', []):
+            result = append_css_mixin(path_css_destination, mixin_name)
+            if isinstance(result, Err):
+                return result
 
         # -------------------
         # Copy Images
@@ -1104,7 +1109,7 @@ class HeadingManager:
         return ".".join(digits)
 
 
-def append_css_customizations(path_css_overlay):
+def append_css_customizations(path_css_overlay: Path):
     new_lines = []
     project_config = CONFIG['project_config']
 
@@ -1116,10 +1121,22 @@ def append_css_customizations(path_css_overlay):
             '}',
         ]
     if new_lines:
-        new_lines = [''] + new_lines + ['']
+        new_lines = ['', '/* Customizations */'] + new_lines + ['']
         text = '\n'.join(new_lines)
         with open(path_css_overlay, 'a') as file:
             file.write(text)
+
+
+def append_css_mixin(path_css_file: Path, mixin_name: str) -> Result[str, str]:
+    logger.debug(f'Appending mixin {mixin_name}...')
+    path_css_mixin = PATH_MIXINS / Path(f'mixin_{mixin_name}.css')
+    if not path_css_file.is_file():
+        return Err(f'Mixin "{mixin_name}" file "{path_css_mixin}" not found.')
+    with open(path_css_mixin) as file:
+        text = '\n' + file.read()
+    with open(path_css_file, 'a') as file:
+        file.write(text)
+    return Ok(None)
 
 
 def get_deprecated(

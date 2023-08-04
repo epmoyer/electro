@@ -5,29 +5,44 @@
 
 body {
     --color-heading-text: #444;
+    --color-bg-nav-heading: #437EB4;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.content-page h1,
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
     font-weight: 700;
+    color: var(--color-heading-text);
+    background-color: #fff;
+    background-image: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+}
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
+    line-height: 100%;
 }
 
-h2 {
+.content-page h2 {
     font-size: 27px;
 }
-h3 {
+.content-page h3 {
     font-size: 22px;
 }
-h4 {
+.content-page h4 {
     font-size: 21px;
 }
-h5 {
+.content-page h5 {
     font-size: 20px;
 }
-h6 {
+.content-page h6 {
     font-size: 19px;
 }
