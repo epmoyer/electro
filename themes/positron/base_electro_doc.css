@@ -43,6 +43,8 @@ body {
 
 a, a:visited {
     color: #0000ff;
+    text-decoration: none;
+    cursor: pointer;
 }
 a:visited:hover, a:hover {
     color: #7070ff;

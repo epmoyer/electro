@@ -102,18 +102,7 @@ pre code {
     border-radius: none;
     padding: 0px;
 }
-a {
-    color: #2980b9;
-    text-decoration: none;
-    cursor: pointer;
-}
-a:visited {
-    color: #2980b9;
-}
-a:hover {
-    color: #29adb9;
-    text-decoration: underline;
-}
+
 .no-anchor-style,
 .no-anchor-style:visited,
 .no-anchor-style:hover,
