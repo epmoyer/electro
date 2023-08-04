@@ -27,7 +27,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ### Added
 - `mixins` system
 ### TODO
-- 🟡  Fenced style notices/div (`:::notice info`)
+- 🟡  Fenced style notices/div (`:::notice info`, and `:::no-indent`)
 
 ## 1.4.4 2023-06-30
 ### Changed
