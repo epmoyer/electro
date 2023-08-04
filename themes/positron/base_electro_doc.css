@@ -195,7 +195,11 @@ a:visited:hover, a:hover {
     max-width: 100%;
     height: auto;
 }
-
+.content-page blockquote {
+    color: #888;
+    border-left: 8px solid #ccc;
+    padding: 0px 12px;
+}
 /* --------------------------
  * Change-bars
  * -------------------------- 
