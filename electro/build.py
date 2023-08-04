@@ -94,7 +94,7 @@ def build_project(path_build) -> Result[str, str]:
     result = get_deprecated(project_config, 'output_directory', 'site_directory')
     if isinstance(result, Err):
         return result
-    path_output_directory = path_project_directory / Path(result.value)
+    path_output_directory = path_project_directory / Path(result.ok_value)
     if not path_output_directory.is_dir():
         return Err(f'Site directory {path_output_directory} does not exist.')
     CONFIG['path_project_directory'] = path_project_directory
@@ -238,7 +238,7 @@ class SiteBuilder:
         result = self.pre_parse_markdown(document_markdown)
         if isinstance(result, Err):
             return result
-        document_markdown = result.value
+        document_markdown = result.ok_value
 
         # --------------------
         # Render Markdown
@@ -298,9 +298,9 @@ class SiteBuilder:
         result = get_deprecated(CONFIG['project_config'], 'footer', 'copyright', required=False)
         if isinstance(result, Err):
             return result
-        print(f'{result.value=}')
-        if result.value:
-            document_html += '<div class="no-indent"><hr />\n' f'<div class="footer">{result.value}</div></div>'
+        print(f'{result.ok_value=}')
+        if result.ok_value:
+            document_html += '<div class="no-indent"><hr />\n' f'<div class="footer">{result.ok_value}</div></div>'
 
         # ---------------------
         # Search
@@ -323,7 +323,7 @@ class SiteBuilder:
         result = self._parse_notices(markdown)
         if isinstance(result, Err):
             return result
-        markdown = result.value
+        markdown = result.ok_value
         markdown = self._parse_experimental(markdown)
         if CONFIG['output_format'] == 'single_file':
             markdown = self._wrangle_inter_document_links(markdown)
@@ -400,7 +400,7 @@ class SiteBuilder:
             result = build_snippet_notice_start(notice_start_type)
             if isinstance(result, Err):
                 return result
-            substitution = result.value
+            substitution = result.ok_value
             self.substitutions[html_temporary] = substitution
             markdown = markdown.replace(
                 r'{{% notice ' + notice_start_type + r' %}}', html_temporary
@@ -537,7 +537,7 @@ class SiteBuilder:
         result = get_deprecated(project_config, 'master_title', 'site_name')
         if isinstance(result, Err):
             return result
-        document_html = document_html.replace(r'{{% master_title %}}', result.value)
+        document_html = document_html.replace(r'{{% master_title %}}', result.ok_value)
         document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
         document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
         # NOTE: We do a weird thing here. Note that the text we are replacing INCLUDES the single
@@ -558,7 +558,7 @@ class SiteBuilder:
         result = iso_timestamp_now(timezone_name)
         if isinstance(result, Err):
             return result
-        document_html = document_html.replace(r'{{% timestamp %}}', result.value)
+        document_html = document_html.replace(r'{{% timestamp %}}', result.ok_value)
 
         with open(path_document_out, 'w') as file:
             file.write(document_html)
