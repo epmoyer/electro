@@ -22,14 +22,21 @@ body {
     --color-heading-border: #d7ebf7;
     --color-heading-text: #444;
 
+    --color-bg-code: #ebebeb;
+    --color-text-code: #4a4a4a;
+
     --content-indent: 40px;
 
     --color-table-heading-bg: #c9dbeb;
     --color-table-heading: #414141;
 
     --color-bg-code: #e4e4e7;
+    --color-bg-pre: #1D1D1A;
+    --color-text-pre: #f8f8f2;
 
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+    --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
+        monospace;
 }
 
 .content-page {
@@ -141,10 +148,27 @@ a:visited:hover, a:hover {
     margin-top: 15px;
 }
 .content-page code {
+    background: var(--color-bg-code);
+    color: var(--color-text-code);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 2px 5px;
+    font-family: var(--font-code);
+    font-size: 75%;
+    border: none;
     border-radius: 0;
 }
 .content-page pre {
+    background-color: var(--color-bg-pre);
+    color: var(--color-text-pre);
     padding: 13px 19px;
+    overflow-x: auto;
+}
+.content-page pre code {
+    background: var(--color-bg-pre);
+    color: var(--color-text-pre);
+    border-radius: none;
+    padding: 0px; 
 }
 .content-page strong {
     font-weight: 600;

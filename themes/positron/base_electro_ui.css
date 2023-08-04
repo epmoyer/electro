@@ -16,17 +16,11 @@
     --color-h1-underline: #ccc;
     --color-change-bar: #97baaa;
 
-    --color-bg-code: #ebebeb;
-    --color-text-code: #4a4a4a;
-    
     --color-bg-pre: #1D1D1A;
     --color-text-pre: #f8f8f2;
 
     --font-content-header: "IBM Plex Sans", sans-serif;
-    
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
-    --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
-        monospace;
 
     --width-sidebar: 280px;
     --width-gutter: 14px;
@@ -75,11 +69,8 @@ h6 {
     font-size: 19px;
 }
 
-/* ul{
-    list-style-type: disc;
-} */
 
-code {
+/* code {
     background: var(--color-bg-code);
     color: var(--color-text-code);
     white-space: pre-wrap;
@@ -89,7 +80,7 @@ code {
     font-size: 75%;
     border: none;
     border-radius: 4px;
-}
+} */
 pre {
     background-color: var(--color-bg-pre);
     color: var(--color-text-pre);
