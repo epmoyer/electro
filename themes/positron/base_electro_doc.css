@@ -243,7 +243,9 @@ a:visited:hover, a:hover {
  */
 
 .notices {
-    margin: 30px 10px 30px 0px;
+    /* We do not set margin-left/right because it is managed as indent */
+    margin-top: 30px;
+    margin-bottom: 30px;
     padding: 10px 40px 20px 40px;
     border-top-style: solid;
     border-top-width: 30px;
