@@ -96,7 +96,7 @@ a:visited:hover, a:hover {
 .content-page h5,
 .content-page h6 {
     padding: 4px 0 4px 8px;
-    margin: 10px 0 10px 0;
+    margin: 20px 0 10px 0;
 
     background-color: #fff;
     font-size: 18px;
@@ -145,7 +145,7 @@ a:visited:hover, a:hover {
     color: var(--color-table-heading);
 }
 .content-page table {
-    margin-top: 5px;
+    margin-top: 15px;
     border-collapse: collapse;
 }
 .content-page th, td {
