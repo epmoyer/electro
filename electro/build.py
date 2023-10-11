@@ -706,8 +706,9 @@ class SiteBuilder:
             # -------------------
             for document_name, document_info in self.site_documents.items():
                 path_site_document = path_output_directory / Path(f'{document_name}.html')
+                document_html = '<div class="content-page">' + document_info['html'] + '</div>'
                 result = self._render_document(
-                    template_html, path_site_document, document_info['html'], document_name
+                    template_html, path_site_document, document_html, document_name
                 )
                 if isinstance(result, Err):
                     return result
