@@ -318,11 +318,13 @@ pre::-webkit-scrollbar-thumb {
     font-weight: 400;
     font-size: 11pt;
     font-weight: 400;
+    text-decoration: none;
 }
 
 .menu-tree a,
 .menu-tree a:visited,
 .menu-tree a:hover,
+.menu-tree a:visited:hover,
 .menu-tree a:active {
     color: inherit;
     text-decoration: none;

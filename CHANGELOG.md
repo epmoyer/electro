@@ -26,6 +26,8 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
         - Get pre-2.0.0 `pre` syntax highlighting (colors on gray)
 ### Added
 - `mixins` system
+### Fixed
+- `menu-tree` hover color.
 ### TODO
 - 🟡  Fenced style notices/div (`:::notice info`, and `:::no-indent`)
 
