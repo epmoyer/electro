@@ -12,6 +12,9 @@
     --color-nav-heading-border: gray;
     --color-nav-heading-text: #fff;
     --color-watermark: #ff000034;
+    /* --color-section-heading-divider: #71C7F1; */
+    /* --color-section-heading-divider: #8db7de; */
+    --color-section-heading-divider: #afcfe4;
 
     --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
 
@@ -159,11 +162,36 @@
     overflow-x: hidden;
     overflow-y: auto;
 }
+.sidebar-main hr {
+    border: 0;
+    background: #707070;
+    height: 1px;
+}
 .section-heading {
     text-transform: uppercase;
     font-weight: bold;
     font-size: smaller;
     color: white;
+    margin: 8px 0px 2px 0px;
+    user-select: none;
+
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.section-heading-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* text-transform: uppercase; */
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--color-section-heading-divider);
     margin: 8px 0px 2px 0px;
     user-select: none;
 

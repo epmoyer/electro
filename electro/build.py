@@ -6,6 +6,7 @@ import shutil
 import re
 from datetime import datetime, date
 import pytz
+from typing import Optional
 
 # Library
 from prettyprinter import pformat
@@ -193,11 +194,15 @@ class SiteBuilder:
 
     def add_navigation_descriptor(self, navigation_descriptor) -> Result[str, str]:
         section_name = navigation_descriptor.get('section')
-        self.menu_builder.add_section(section_name)
-        self.menu_html += '<ul class="menu-tree">\n'
         documents_dict = navigation_descriptor.get('documents')
+        is_divider = documents_dict is None
+        self.menu_builder.add_section(section_name, is_divider=is_divider)
+        self.menu_html += '<ul class="menu-tree">\n'
         if documents_dict is None:
-            return Err(f'No "documents" key in navigation descriptor {navigation_descriptor}.')
+            # TODO: This is an experiment to see if we can implement item-less sections as
+            # top level "supertopic" heading dividers.
+            return Ok(None)
+            # return Err(f'No "documents" key found in navigation descriptor {navigation_descriptor}.')
         for menu_name, md_document_name in documents_dict.items():
             document_name = md_document_name_to_document_name(md_document_name)
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
@@ -739,11 +744,12 @@ class MenuItem:
 
 
 class MenuSection:
-    def __init__(self, display_text):
+    def __init__(self, display_text, is_divider: bool = False):
         self.display_text = display_text
         # self.document_name = document_name
         self.last_child_at_level = [None] * MAX_MENU_DEPTH
         self.children = []
+        self.is_divider = is_divider
 
     def add(self, level, display_text, heading_id, link_url, document_name):
         """Add a menu item.
@@ -771,9 +777,10 @@ class MenuBuilder:
     def __init__(self):
         self.sections = []
         self.current_document_name = None
+        self.is_first_divider = True
 
-    def add_section(self, display_text):
-        section = MenuSection(display_text)
+    def add_section(self, display_text: Optional[str], is_divider: bool = False):
+        section = MenuSection(display_text, is_divider=is_divider)
         self.sections.append(section)
 
     def add_item(self, level, display_text, heading_id=None, link_url=None, document_name=None):
@@ -854,10 +861,20 @@ class MenuBuilder:
             html += self._render_html_section(section)
         return html
 
-    def _render_html_section(self, section):
+    def _render_html_section(self, section: MenuSection):
         lines = []
+
+        # A divider header divides major sections. Insert a horizontal line (<hr>)
+        # before each divider header AFTER the first one.
+        if section.is_divider:
+            if self.is_first_divider:
+                self.is_first_divider = False
+            else:
+                lines.append("<hr>")
+    
+        heading_class = "section-heading-divider" if section.is_divider else "section-heading"
         if section.display_text:
-            lines.append(f'<div class="section-heading">{section.display_text}</div>')
+            lines.append(f'<div class="{heading_class}">{section.display_text}</div>')
         lines.append('<ul class="menu-tree">')
         lines += self._render_html_lines_children(0, section.children)
         lines.append('</ul>')
