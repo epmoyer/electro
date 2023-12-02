@@ -26,6 +26,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
         - Get pre-2.0.0 `pre` syntax highlighting (colors on gray)
 ### Added
 - `mixins` system
+- "Section Divider" headings.  Create them by defining a named section (in the `navigation` object of an `electro.json` config file) **without** declaring any associated documents.
 ### Fixed
 - `menu-tree` hover color.
 ### TODO
