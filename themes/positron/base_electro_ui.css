@@ -383,7 +383,7 @@ pre::-webkit-scrollbar-thumb {
     /* margin: 0px 5px 0px 0px; */
     width: 17px;
     height: 17px;
-    padding-top: 1px;
+    padding-top: 2px;
     /* padding-top: 2px; */
     display: inline-block;
     /* background-color: orange; */
