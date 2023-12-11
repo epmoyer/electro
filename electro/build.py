@@ -303,7 +303,6 @@ class SiteBuilder:
         result = get_deprecated(CONFIG['project_config'], 'footer', 'copyright', required=False)
         if isinstance(result, Err):
             return result
-        print(f'{result.ok_value=}')
         if result.ok_value:
             document_html += (
                 '<div class="no-indent"><hr />\n'
@@ -1188,7 +1187,6 @@ def iso_timestamp_now(tz_name=None) -> Result[str, str]:
     if tz_name is not supplied, then the timestamp will default to the machine's
     local time zone.
     """
-    print(f'{tz_name=}')
     try:
         tz = pytz.timezone(tz_name) if tz_name else None
     except pytz.exceptions.UnknownTimeZoneError as e:
