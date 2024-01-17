@@ -254,6 +254,7 @@ class SiteBuilder:
             # 'electro.mdx_urlize:UrlizeExtension',
             'codehilite',
             'attr_list',
+            'markdown_checklist.extension',
         ]
         if CONFIG['enable_newline_to_break']:
             # Newlines in markdown will be interpreted as line breaks.

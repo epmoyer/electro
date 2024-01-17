@@ -4,6 +4,7 @@ click == 8.1.3
 flake8 == 4.0.1
 loguru == 0.5.3
 lxml == 4.9.2
+markdown-checklist == 0.4.4
 prettyprinter == 0.18.0
 pydocstyle == 6.1.1
 pymdown-extensions == 10.0.1
