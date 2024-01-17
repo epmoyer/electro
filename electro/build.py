@@ -254,7 +254,6 @@ class SiteBuilder:
             # 'electro.mdx_urlize:UrlizeExtension',
             'codehilite',
             'attr_list',
-            'markdown_checklist.extension',
         ]
         if CONFIG['enable_newline_to_break']:
             # Newlines in markdown will be interpreted as line breaks.
@@ -333,6 +332,7 @@ class SiteBuilder:
             return result
         markdown = result.ok_value
         markdown = self._parse_experimental(markdown)
+        markdown = self._parse_checklists(markdown)
         if CONFIG['output_format'] == 'single_file':
             markdown = self._wrangle_inter_document_links(markdown)
         return Ok(markdown)
@@ -436,6 +436,19 @@ class SiteBuilder:
         self.substitutions[html_temporary] = substitution
         markdown = markdown.replace(r':change_bar_end', html_temporary)
         return markdown
+
+    def _parse_checklists(self, markdown):
+        out_lines = []
+        for line in markdown.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("- [ ]"):
+                line = line.replace("[ ]", "🔲", 1)
+            elif stripped.startswith("- [x]"):
+                line = line.replace("[x]", "✅", 1)
+            elif stripped.startswith("- [X]"):
+                line = line.replace("[X]", "✅", 1)
+            out_lines.append(line)
+        return '\n'.join(out_lines)
 
     def _wrangle_inter_document_links(self, markdown):
         logger.debug('🟠 ----------------------')
