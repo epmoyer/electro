@@ -94,7 +94,7 @@ def build_project(path_build) -> Result[str, str]:
     result = get_deprecated(project_config, 'output_directory', 'site_directory')
     if isinstance(result, Err):
         return result
-    path_output_directory = path_project_directory / Path(result.value)
+    path_output_directory = path_project_directory / Path(result.ok_value)
     if not path_output_directory.is_dir():
         return Err(f'Site directory {path_output_directory} does not exist.')
     CONFIG['path_project_directory'] = path_project_directory
@@ -128,14 +128,14 @@ def build_project(path_build) -> Result[str, str]:
         if isinstance(result, Err):
             return result
 
-    return Ok()
+    return Ok(None)
 
 def publish_single_file(path_output_directory) -> Result[str, str]:
     pack_site(path_output_directory)
 
     output_file = CONFIG['project_config'].get('output_single_file', None)
     if output_file is None:
-        return Ok()
+        return Ok(None)
 
     # ----------------------------------
     # Copy (single-file) output file
@@ -150,7 +150,7 @@ def publish_single_file(path_output_directory) -> Result[str, str]:
     except Exception as e:
         return Err(f'Failed copying "{path_source}" to "{path_destination}".  Exception:{e}.')
 
-    return Ok()
+    return Ok(None)
 
 
 def pack_site(path_output_directory):
@@ -204,7 +204,7 @@ class SiteBuilder:
             link_url = f"{document_name}.html" if CONFIG['output_format'] == 'static_site' else None
             self.menu_builder.add_item(0, menu_name, link_url=link_url, document_name=document_name)
             self._build_subheading_menus(document_name)
-        return Ok()
+        return Ok(None)
 
     def _build_subheading_menus(self, document_name):
         document_html = self.site_documents[document_name]['html']
@@ -235,7 +235,7 @@ class SiteBuilder:
         result = self.pre_parse_markdown(document_markdown)
         if isinstance(result, Err):
             return result
-        document_markdown = result.value
+        document_markdown = result.ok_value
 
         # --------------------
         # Render Markdown
@@ -292,9 +292,9 @@ class SiteBuilder:
         result = get_deprecated(CONFIG['project_config'], 'footer', 'copyright', required=False)
         if isinstance(result, Err):
             return result
-        print(f'{result.value=}')
-        if result.value:
-            document_html += '<hr />\n' f'<div class="footer">{result.value}</div>'
+        print(f'{result.ok_value=}')
+        if result.ok_value:
+            document_html += '<hr />\n' f'<div class="footer">{result.ok_value}</div>'
 
         # ---------------------
         # Search
@@ -303,7 +303,7 @@ class SiteBuilder:
             self.add_document_to_search(document_name, document_html)
 
         self.site_documents[document_name] = {'path_markdown': path_markdown, 'html': document_html}
-        return Ok()
+        return Ok(None)
 
     def pre_parse_markdown(self, markdown) -> Result[str, str]:
         project_config = CONFIG['project_config']
@@ -317,7 +317,7 @@ class SiteBuilder:
         result = self._parse_notices(markdown)
         if isinstance(result, Err):
             return result
-        markdown = result.value
+        markdown = result.ok_value
         markdown = self._parse_experimental(markdown)
         if CONFIG['output_format'] == 'single_file':
             markdown = self._wrangle_inter_document_links(markdown)
@@ -389,7 +389,7 @@ class SiteBuilder:
             result = build_snippet_notice_start(notice_start_type)
             if isinstance(result, Err):
                 return result
-            substitution = result.value
+            substitution = result.ok_value
             self.substitutions[html_temporary] = substitution
             markdown = markdown.replace(
                 r'{{% notice ' + notice_start_type + r' %}}', html_temporary
@@ -526,7 +526,7 @@ class SiteBuilder:
         result = get_deprecated(project_config, 'master_title', 'site_name')
         if isinstance(result, Err):
             return result
-        document_html = document_html.replace(r'{{% master_title %}}', result.value)
+        document_html = document_html.replace(r'{{% master_title %}}', result.ok_value)
         document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
         document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
         # NOTE: We do a weird thing here. Note that the text we are replacing INCLUDES the single
@@ -549,11 +549,11 @@ class SiteBuilder:
         result = iso_timestamp_now(timezone_name)
         if isinstance(result, Err):
             return result
-        document_html = document_html.replace(r'{{% timestamp %}}', result.value)
+        document_html = document_html.replace(r'{{% timestamp %}}', result.ok_value)
 
         with open(path_document_out, 'w') as file:
             file.write(document_html)
-        return Ok()
+        return Ok(None)
 
     def render_site(self) -> Result[str, str]:
         project_config = CONFIG['project_config']
@@ -688,7 +688,7 @@ class SiteBuilder:
         search_js = "App.searchData = " + json.dumps(self.search_index, indent=4)
         with open(path_search_index, 'w') as file:
             file.write(search_js)
-        return Ok()
+        return Ok(None)
 
 
 MAX_MENU_DEPTH = 3

@@ -13,7 +13,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 - Update `requirements.txt` for all missing packages. This project now works in a fresh Python 3.9 venv using `python -m pip install -r requirements.txt`.
 - Adopt version `0.16.0` of `results`.  That means:
     - `Ok()` must now be passed an explicit argument.
-    - `.ok_value()` and `.err_value()` must be used instead of the (now obsoleted) `.value()`.
+    - `.ok_value` and `.err_value` must be used instead of the (now obsoleted) `.value`.
 ### Added
 - Add theme `positron_monokai_wide_image`
 
