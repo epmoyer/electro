@@ -8,13 +8,15 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 (None)
-## 1.4.4 2023-06-30
+## 1.5.0 2024-01-27
 ### Changed
 - Update `requirements.txt` for all missing packages. This project now works in a fresh Python 3.9 venv using `python -m pip install -r requirements.txt`.
-
-## 1.5.0 2023-07-14
+- Adopt version `0.16.0` of `results`.  That means:
+    - `Ok()` must now be passed an explicit argument.
+    - `.ok_value()` and `.err_value()` must be used instead of the (now obsoleted) `.value()`.
 ### Added
 - Add theme `positron_monokai_wide_image`
+
 ## 1.4.3 2023-06-29
 ### Changed
 - Add support for "superfences"
@@ -22,6 +24,7 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
         - `.highlight` class changed to `.search-highlight` because the `pymdownx.superfences` markdown plugin injects a `.highlight` class to identify syntax-highlighted `code` blocks (rather than the former `fenced_code` markdown plugin, which injected the `.codehilite` class).
         - Change CSS injections for pygments syntax highlighting from `.codehilite` to `.highlight` (to match the `.highlight` class injected by the `pymdownx.superfences` markdown plugin).
     - Update pygments colors for Generic.Heading (`.gh`) and Generic.Subheading (`.gu`) in `positron_monokai` style.
+
 ## 1.4.2 2023-06-17
 ### Fixed
 - Use relative path for fonts (`fonts/{file}` instead of `\fonts/{file}`)
