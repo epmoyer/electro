@@ -13,6 +13,7 @@ from test.log_manager import log_initialize
 log_initialize()
 logger.info('test_build.py')
 
+from test.util_files import make_workspace_dir, copy_items
 from test.paths import (
     PATH_DATA_RAW_TEST_CASES,
     PATH_DATA_PROCESSED_TEST_CASES,
@@ -32,15 +33,21 @@ def log_test_separator():
 @pytest.mark.parametrize(
     "test_case_name",
     [
-        (
-            'singlefile',
-        ),
-        (
-            'singlefile_legacy',
-        ),
+        'singlefile',
+        'singlefile_legacy',
     ],
 )
 # fmt:on
 def test_build(test_case_name):
     logger.separator('TEST')
     logger.info(f'{test_case_name=}')
+
+    path_source_data = PATH_DATA_RAW_TEST_CASES / test_case_name
+    path_workspace_dir = PATH_DATA_PROCESSED_TEST_CASES / test_case_name
+    path_workspace_incoming_dir, path_workspace_results_dir = make_workspace_dir(path_workspace_dir)
+
+    copy_items(
+        path_source_data,
+        ['docs/'],
+        path_workspace_incoming_dir,
+    )
