@@ -1,7 +1,7 @@
 {
     "master_title": "Single-File Example",
     "footer": "Copyright &copy; 2024 Whomever",
-    "output_directory": "../results",
+    "output_directory": "../build",
     "navigation": [
         {
             "section": "FDD",

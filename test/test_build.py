@@ -1,7 +1,7 @@
 # Standard Library
 import shutil
 import pytest
-# import json
+import json
 
 # Library
 from loguru import logger
@@ -46,7 +46,7 @@ def test_build(test_case_name):
 
     path_source_data = PATH_DATA_RAW_TEST_CASES / test_case_name
     path_workspace_dir = PATH_DATA_PROCESSED_TEST_CASES / test_case_name
-    path_workspace_incoming_dir, path_workspace_results_dir = make_workspace_dir(path_workspace_dir)
+    path_workspace_incoming_dir, path_workspace_build_dir, path_workspace_results_dir = make_workspace_dir(path_workspace_dir)
 
     copy_items(
         path_source_data,
@@ -54,10 +54,18 @@ def test_build(test_case_name):
         path_workspace_incoming_dir,
     )
 
-    # with open(path_source_data / 'electro.json', 'r') as file:
-    #     electro_config = json.load(file)
-    # electro_config['output_directory'] =
+    with open(path_source_data / 'electro.json', 'r') as file:
+        electro_config = json.load(file)
+    is_single_file = electro_config['output_format'] == 'single_file'
 
     result = build_project(path_workspace_incoming_dir)
+    # sourcery skip: no-conditionals-in-tests
     if isinstance(result, Err):
         raise RuntimeError(f'Electro Build Error: {result.err_value}')
+
+    # sourcery skip: no-conditionals-in-tests
+    if is_single_file:
+        # Copy the output file to the results dir, renamed with the test test case name.
+        path_output_file = path_workspace_build_dir / 'index.html'
+        path_result_file = path_workspace_results_dir / f'{test_case_name}.html'
+        shutil.copy(path_output_file, path_result_file)

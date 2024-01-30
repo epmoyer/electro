@@ -35,7 +35,7 @@ def copy_items(source_path: Path, source_items: List[str], destination_path: Pat
             # Use shutil.copy2 for files, to preserve metadata
             shutil.copy2(source_item_path, destination_item_path)
 
-def make_workspace_dir(path_workspace_dir: Path) -> Tuple[Path, Path]:
+def make_workspace_dir(path_workspace_dir: Path) -> Tuple[Path, Path, Path]:
     # --------------------------
     # Create workspace
     # --------------------------
@@ -47,12 +47,15 @@ def make_workspace_dir(path_workspace_dir: Path) -> Tuple[Path, Path]:
     # Create standard workspace subdirectories
     # --------------------------
     path_workspace_incoming_dir = path_workspace_dir / Path('incoming')
+    path_workspace_build_dir = path_workspace_dir / Path('build')
     path_workspace_results_dir = path_workspace_dir / Path('results')
 
     path_workspace_incoming_dir.mkdir()
+    path_workspace_build_dir.mkdir()
     path_workspace_results_dir.mkdir()
 
     return (
         path_workspace_incoming_dir,
+        path_workspace_build_dir,
         path_workspace_results_dir,
     )
