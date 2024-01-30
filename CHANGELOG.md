@@ -6,8 +6,35 @@ The format is based on [Keep a
 Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres
 to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+### TODO
+- 🟡  Fenced style notices/div (`:::notice info`, and `:::no-indent`)
+
 ## Unreleased
 (None)
+
+## 2.0.0 2024-01-29
+### Changed
+- Default to new (dark blue) UI.
+- Default to new "bar style" headings.
+- Square corners on `code`.
+- Bigger margins on pre and notices.
+- Legacy style obtainable via mixins:
+    - `doc_legacy`
+        - Get pre-2.0.0 document style (old headings)
+    - `ui_legacy`
+        - Get pre-2.0.0 UI (lighter blue)
+    - `pygments_standard`
+        - Get pre-2.0.0 `pre` syntax highlighting (colors on gray)
+- Convert checklist "box" items to unicode symbols:
+    - `[x]` -> ✅
+    - `[ ]` -> 🔲
+
+### Added
+- `mixins` system
+- "Section Divider" headings.  Create them by defining a named section (in the `navigation` object of an `electro.json` config file) **without** declaring any associated documents.
+### Fixed
+- `menu-tree` hover color.
+
 ## 1.5.0 2024-01-27
 ### Changed
 - Update `requirements.txt` for all missing packages. This project now works in a fresh Python 3.9 venv using `python -m pip install -r requirements.txt`.

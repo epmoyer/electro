@@ -1,0 +1,23 @@
+{
+    "master_title": "Single-File Example",
+    "footer": "Copyright &copy; 2024 Whomever",
+    "output_directory": "../build",
+    "navigation": [
+        {
+            "section": "FDD",
+            "documents": {
+                "1 Markdown Features": "1-md_features.md",
+                "2 Second Section": "2-second.md",
+                "3 Third Section": "3-third.md"
+            }
+        }
+    ],
+    "theme": "positron",
+    "mixins": [
+        "doc_legacy",
+        "ui_legacy",
+        "pygments_standard"
+    ],
+    "output_format": "single_file",
+    "watermark": "DRAFT"
+}

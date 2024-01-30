@@ -23,7 +23,6 @@ def make_html_icons_inline(path_file_in, path_file_out):
 def convert_icon(path_base, line):
     href = re.findall(r'href=["\'](.*?)["\']', line)
     href_expression = re.findall(r'href=["\'].*?["\']', line)
-    print(f' {href=} {href_expression=}')
     if len(href) != 1 or len(href_expression) != 1:
         print(
             f'🔴 Expected to find 1 and only 1 href entry on line: "{line}". '

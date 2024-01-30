@@ -1,0 +1,283 @@
+/* ====================================
+ * base_electro_doc.css
+ * ====================================
+ */
+
+
+ /* Suppress the red error border in fenced code so that authors
+  * do not need to worry about whether the syntax highlighter might flag
+  * something it cannot parse as an error.
+  */
+.highlight .err {
+    border: none;
+}
+
+body {
+    --color-content: #444;
+    --color-strong: #333;
+
+    --color-bg-heading-main: #1B557C;
+    --color-bg-heading-secondary: #B3C6D3;
+    --color-bg-heading-tertiary: #e4eff6;
+    --color-heading-border: #d7ebf7;
+    --color-heading-text: #444;
+
+    --color-blockquote-bar: #B3C6D3;
+    --color-blockquote-text: #888;
+
+    --color-change-bar: #e900ff;
+
+    --color-bg-code: #ebebeb;
+    --color-text-code: #4a4a4a;
+
+    --content-indent: 40px;
+
+    --color-h1-underline: #ccc;
+    --font-content-heading: "IBM Plex Sans", sans-serif;
+
+    --color-table-heading-bg: #c9dbeb;
+    --color-table-heading: #414141;
+
+    --color-bg-code: #e4e4e7;
+    --color-bg-pre: #1D1D1A;
+    --color-text-pre: #f8f8f2;
+
+    --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+    --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
+        monospace;
+}
+
+.content-page {
+    color: var(--color-content);
+    font-family: var(--font-content-text);
+}
+.content-page > * {
+    margin-left: var(--content-indent);
+    margin-right: var(--content-indent);
+}
+
+a, a:visited {
+    color: #0000ff;
+    text-decoration: none;
+    cursor: pointer;
+}
+a:visited:hover, a:hover {
+    color: #7070ff;
+    text-decoration: underline;
+}
+
+/* ------------------------
+ * Headings
+ * ------------------------
+ */
+.content-page h1,
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
+    color: var(--color-heading-text);
+    font-family: var(--font-content-heading);
+    font-weight: 600;
+    margin: 5px 0 0 0;
+    /* letter-spacing: 1px; */
+}
+
+/* document title heading */
+.content-page h1 {
+    font-size: 27px;
+    border-bottom: var(--color-h1-underline) solid 1px;
+}
+
+/* bar-style headings */
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
+    padding: 4px 0 4px 8px;
+    margin: 20px 0 10px 0;
+
+    background-color: #fff;
+    font-size: 18px;
+    line-height: 18px;
+    /* text-transform: uppercase; */
+}
+
+.content-page h2 {
+    background-color: var(--color-bg-heading-main);
+    color: #fff;
+}
+
+.content-page h3 {
+    background-color: var(--color-bg-heading-secondary);
+}
+
+.content-page h4 {
+    -webkit-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    -moz-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    background-color: var(--color-bg-heading-tertiary);
+}
+
+.content-page h5 {
+    -webkit-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    -moz-box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+    box-shadow:inset 0px 0px 0px 3px var(--color-heading-border);
+}
+
+.content-page h6 {
+    background-image: url('data:image/svg+xml,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" stroke="%23b4cfe0" stroke-width="6" stroke-linecap="butt" stroke-dasharray="3,3" stroke-dashoffset="0" ><line x1="0" y1="0" x2="100%" y2="0" /><line x1="0" y1="0" x2="0" y2="100%" /><line x1="0" y1="100%" x2="100%" y2="100%" /><line x1="100%" y1="0" x2="100%" y2="100%" /></svg>')
+}
+
+/* ------------------------
+ * Core elements
+ * ------------------------
+ */
+.content-page ul{
+    list-style-type: disc;
+}
+.content-page th {
+    background-color: var(--color-table-heading-bg);
+    color: var(--color-table-heading);
+}
+.content-page th strong {
+    color: var(--color-table-heading);
+}
+.content-page table {
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+.content-page th, td {
+    border-collapse: collapse;
+    border: 1px solid #444;
+    padding: 2px 6px;
+}
+.content-page p {
+    margin-top: 8px;
+    line-height: 24px;
+}
+.content-page p + p{
+    margin-top: 15px;
+}
+.content-page code {
+    background: var(--color-bg-code);
+    color: var(--color-text-code);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 2px 5px;
+    font-family: var(--font-code);
+    font-size: 75%;
+    border: none;
+    border-radius: 0;
+}
+.content-page pre {
+    background-color: var(--color-bg-pre);
+    color: var(--color-text-pre);
+    padding: 13px 19px;
+    overflow-x: auto;
+}
+.content-page pre code {
+    background: var(--color-bg-pre);
+    color: var(--color-text-pre);
+    border-radius: none;
+    padding: 0px; 
+}
+.content-page strong {
+    font-weight: 600;
+    color: var(--color-strong);
+}
+.content-page hr {
+    height: 1px;
+    background-color: #ccc;
+    border: none;
+}
+.content-page img {
+    max-width: 100%;
+    height: auto;
+}
+.content-page blockquote {
+    color: var(--color-blockquote-text);
+    border-left: 8px solid var(--color-blockquote-bar);
+    padding: 0px 12px;
+}
+/* --------------------------
+ * Change-bars
+ * -------------------------- 
+ */
+.change-bar{
+    width: 6px;
+    height: 80px;
+    position: absolute;
+    top: 20px;
+    left: 6px;
+    background-color: var(--color-change-bar);
+}
+.anchor-change-bar{
+    visibility: hidden;
+}
+
+/* ------------------------
+ * Misc
+ * ------------------------
+ */
+.img-wrapper {
+    /* All img tags are additionally wrapped by .img-wrapper so that we can:
+       - Apply an absolute (in pixels) max-width to the wrapper, constraining the max
+         size of all images to some max pixel size.
+       - Apply a relative (100%)) max-width to the img, constraining the img to ALWAYS shrink
+         as necessary to fit in the current window width.
+    */
+    max-width: 700px;
+}
+.content-page .footer {
+    color: #bbb;
+    font-size: 12px;
+}
+.content-page .no-indent {
+    margin-left: 0px;
+}
+/* ------------------------
+ * Notices
+ * ------------------------
+ */
+
+.notices {
+    /* We do not set margin-left/right because it is managed as indent */
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 10px 40px 20px 40px;
+    border-top-style: solid;
+    border-top-width: 30px;
+}
+.notices.info {
+    background-color: #dbf1ff;
+    border-color: #377aa7; 
+}
+
+.notices.note {
+    background-color: #FCEED8;
+    border-color: #E6AC58; 
+}
+.notices.tip {
+    background-color: #e2fbeb;
+    border-color: #5cbf86; 
+}
+.notices.warning {
+    background-color: #FBE6E5;
+    border-color: #D86A65; 
+}
+.notices .label{
+    color:#FFF;
+    font-weight: 500;
+    margin-bottom: 25px;
+    margin-top: -35px;
+    margin-left: -25px;
+}
+.notices .label i {
+    margin-right: 10px;
+}
+.notices :not(pre) > code {
+    background: #5050502c;
+}
+

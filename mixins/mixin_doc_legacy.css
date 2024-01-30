@@ -1,0 +1,48 @@
+/* ====================================
+ * mixin_doc_legacy.css
+ * ====================================
+ */
+
+body {
+    --color-heading-text: #444;
+    --color-bg-nav-heading: #437EB4;
+}
+
+.content-page h1,
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
+    font-weight: 700;
+    color: var(--color-heading-text);
+    background-color: #fff;
+    background-image: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+}
+.content-page h2,
+.content-page h3,
+.content-page h4,
+.content-page h5,
+.content-page h6 {
+    line-height: 100%;
+}
+
+.content-page h2 {
+    font-size: 27px;
+}
+.content-page h3 {
+    font-size: 22px;
+}
+.content-page h4 {
+    font-size: 21px;
+}
+.content-page h5 {
+    font-size: 20px;
+}
+.content-page h6 {
+    font-size: 19px;
+}

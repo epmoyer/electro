@@ -6,6 +6,7 @@ import shutil
 import re
 from datetime import datetime, date
 import pytz
+from typing import Optional
 
 # Library
 from prettyprinter import pformat
@@ -18,7 +19,7 @@ from loguru import logger
 from electro.app_config import CONFIG, OUTPUT_FORMATS
 from electro.console import CONSOLE
 from electro.warnings import WARNINGS
-from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD
+from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD, PATH_MIXINS
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
 from electro.simplepack import simplepack
 from electro.inline_images import make_html_images_inline
@@ -130,6 +131,7 @@ def build_project(path_build) -> Result[str, str]:
 
     return Ok(None)
 
+
 def publish_single_file(path_output_directory) -> Result[str, str]:
     pack_site(path_output_directory)
 
@@ -142,7 +144,9 @@ def publish_single_file(path_output_directory) -> Result[str, str]:
     # ----------------------------------
     path_destination = CONFIG['path_project_directory'] / Path(output_file)
     if path_destination.suffix != '.html':
-        return Err(f'output_single_file suffix must be ".html".  output_single_file:"{path_destination}"')
+        return Err(
+            f'output_single_file suffix must be ".html".  output_single_file:"{path_destination}"'
+        )
     path_source = path_output_directory / Path('index.html')
     logger.info(f'Copying "{path_source}" to "{path_destination}"...')
     try:
@@ -190,11 +194,15 @@ class SiteBuilder:
 
     def add_navigation_descriptor(self, navigation_descriptor) -> Result[str, str]:
         section_name = navigation_descriptor.get('section')
-        self.menu_builder.add_section(section_name)
-        self.menu_html += '<ul class="menu-tree">\n'
         documents_dict = navigation_descriptor.get('documents')
+        is_divider = documents_dict is None
+        self.menu_builder.add_section(section_name, is_divider=is_divider)
+        self.menu_html += '<ul class="menu-tree">\n'
         if documents_dict is None:
-            return Err(f'No "documents" key in navigation descriptor {navigation_descriptor}.')
+            # TODO: This is an experiment to see if we can implement item-less sections as
+            # top level "supertopic" heading dividers.
+            return Ok(None)
+            # return Err(f'No "documents" key found in navigation descriptor {navigation_descriptor}.')
         for menu_name, md_document_name in documents_dict.items():
             document_name = md_document_name_to_document_name(md_document_name)
             path_markdown = CONFIG['path_project_directory'] / Path('docs') / Path(md_document_name)
@@ -250,7 +258,10 @@ class SiteBuilder:
         if CONFIG['enable_newline_to_break']:
             # Newlines in markdown will be interpreted as line breaks.
             extensions.append('nl2br')
-        document_html = markdown.markdown(document_markdown, extensions=extensions,)
+        document_html = markdown.markdown(
+            document_markdown,
+            extensions=extensions,
+        )
 
         # --------------------
         # Pre-parser
@@ -292,9 +303,13 @@ class SiteBuilder:
         result = get_deprecated(CONFIG['project_config'], 'footer', 'copyright', required=False)
         if isinstance(result, Err):
             return result
+
         print(f'{result.ok_value=}')
         if result.ok_value:
-            document_html += '<hr />\n' f'<div class="footer">{result.ok_value}</div>'
+            document_html += (
+                '<div class="no-indent"><hr />\n'
+                f'<div class="footer">{result.ok_value}</div></div>'
+            )
 
         # ---------------------
         # Search
@@ -319,6 +334,7 @@ class SiteBuilder:
             return result
         markdown = result.ok_value
         markdown = self._parse_experimental(markdown)
+        markdown = self._parse_checklists(markdown)
         if CONFIG['output_format'] == 'single_file':
             markdown = self._wrangle_inter_document_links(markdown)
         return Ok(markdown)
@@ -332,7 +348,7 @@ class SiteBuilder:
         to force lists to be recognized.
 
         The generally used VSCode markdown preview extension ("Markdown Preview Github Styling")
-        treats all "- " and "* " prefixed lines as lists, so matching that behavior here 
+        treats all "- " and "* " prefixed lines as lists, so matching that behavior here
         ensures that people composing in VSCode will get the same output they see in
         VSCode's previewer.
 
@@ -349,7 +365,12 @@ class SiteBuilder:
         out_lines = []
         for line in markdown.splitlines():
             stripped = line.strip()
-            is_list = stripped.startswith('- ') or stripped.startswith('* ') or stripped.startswith('```') or stripped.startswith('~~~')
+            is_list = (
+                stripped.startswith('- ')
+                or stripped.startswith('* ')
+                or stripped.startswith('```')
+                or stripped.startswith('~~~')
+            )
             if is_list and not previous_was_list and not previous_was_blank:
                 # Insert a blank line to force this list to be recognized.
                 out_lines.append('')
@@ -417,7 +438,20 @@ class SiteBuilder:
         self.substitutions[html_temporary] = substitution
         markdown = markdown.replace(r':change_bar_end', html_temporary)
         return markdown
-    
+
+    def _parse_checklists(self, markdown):
+        out_lines = []
+        for line in markdown.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("- [ ]"):
+                line = line.replace("[ ]", "🔲", 1)
+            elif stripped.startswith("- [x]"):
+                line = line.replace("[x]", "✅", 1)
+            elif stripped.startswith("- [X]"):
+                line = line.replace("[X]", "✅", 1)
+            out_lines.append(line)
+        return '\n'.join(out_lines)
+
     def _wrangle_inter_document_links(self, markdown):
         logger.debug('🟠 ----------------------')
         logger.debug('_wrangle_inter_document_links()')
@@ -457,7 +491,7 @@ class SiteBuilder:
                 new_md_link = md_link.replace(f'{page_id}.md#{heading_id}', f'{new_reference}')
                 logger.debug(f'    NEW MD LINK: {new_md_link}')
                 line = line.replace(md_link, new_md_link)
-            
+
             if line != line_original:
                 logger.debug(f'    NEW LINE: {line}')
             out_lines.append(line)
@@ -526,7 +560,13 @@ class SiteBuilder:
         result = get_deprecated(project_config, 'master_title', 'site_name')
         if isinstance(result, Err):
             return result
-        document_html = document_html.replace(r'{{% master_title %}}', result.ok_value)
+        master_title = result.ok_value
+        document_html = document_html.replace(r'{{% master_title %}}', master_title)
+        # master_title may contain a line break.  We strip it from the nav bar (shown for
+        # narrow displays) to preserve space.
+        document_html = document_html.replace(
+            r'{{% master_title_nav %}}', master_title.replace('<br>', ' ')
+        )
         document_html = document_html.replace(r'{{% sidebar_menu %}}', self.menu_html)
         document_html = document_html.replace(r'{{% current_document_name %}}', document_name)
         # NOTE: We do a weird thing here. Note that the text we are replacing INCLUDES the single
@@ -539,12 +579,10 @@ class SiteBuilder:
         watermark_text = project_config.get("watermark", "")
         if watermark_text is None:
             watermark_text = ""
-        document_html = document_html.replace(
-            r'{{% watermark %}}', watermark_text
-        )
+        document_html = document_html.replace(r'{{% watermark %}}', watermark_text)
         document_html = document_html.replace(r'{{% electro_version %}}', CONFIG['version'])
         document_html = document_html.replace(r'{{% year %}}', str(date.today().year))
-        
+
         timezone_name = project_config.get('timezone')
         result = iso_timestamp_now(timezone_name)
         if isinstance(result, Err):
@@ -574,15 +612,26 @@ class SiteBuilder:
         # -------------------
         # Copy CSS
         # -------------------
-        path_css_source = path_theme_directory / Path('style.css')
-        path_css_destination = path_output_directory / Path('style.css')
-        shutil.copy(path_css_source, path_css_destination)
-        path_css_source = path_theme_directory / Path('fonts.css')
-        path_css_destination = path_output_directory / Path('fonts.css')
-        shutil.copy(path_css_source, path_css_destination)
-        path_css_source = path_theme_directory / Path('fontawesome.css')
-        path_css_destination = path_output_directory / Path('fontawesome.css')
-        shutil.copy(path_css_source, path_css_destination)
+        for filename in (
+            'base_electro_doc.css',
+            'base_electro_ui.css',
+            'base_pygments_monokai.css',
+            'fonts.css',
+            'fontawesome.css',
+        ):
+            path_css_source = path_theme_directory / Path(filename)
+            path_css_destination = path_output_directory / Path(filename)
+            shutil.copy(path_css_source, path_css_destination)
+
+        # path_css_source = path_theme_directory / Path('style.css')
+        # path_css_destination = path_output_directory / Path('style.css')
+        # shutil.copy(path_css_source, path_css_destination)
+        # path_css_source = path_theme_directory / Path('fonts.css')
+        # path_css_destination = path_output_directory / Path('fonts.css')
+        # shutil.copy(path_css_source, path_css_destination)
+        # path_css_source = path_theme_directory / Path('fontawesome.css')
+        # path_css_destination = path_output_directory / Path('fontawesome.css')
+        # shutil.copy(path_css_source, path_css_destination)
 
         # -------------------
         # Copy CSS overlay
@@ -594,6 +643,11 @@ class SiteBuilder:
         shutil.copy(path_css_source, path_css_destination)
         # Append customizations to end of CSS overlay
         append_css_customizations(path_css_destination)
+        # Append mixins
+        for mixin_name in project_config.get('mixins', []):
+            result = append_css_mixin(path_css_destination, mixin_name)
+            if isinstance(result, Err):
+                return result
 
         # -------------------
         # Copy Images
@@ -672,8 +726,9 @@ class SiteBuilder:
             # -------------------
             for document_name, document_info in self.site_documents.items():
                 path_site_document = path_output_directory / Path(f'{document_name}.html')
+                document_html = '<div class="content-page">' + document_info['html'] + '</div>'
                 result = self._render_document(
-                    template_html, path_site_document, document_info['html'], document_name
+                    template_html, path_site_document, document_html, document_name
                 )
                 if isinstance(result, Err):
                     return result
@@ -704,11 +759,12 @@ class MenuItem:
 
 
 class MenuSection:
-    def __init__(self, display_text):
+    def __init__(self, display_text, is_divider: bool = False):
         self.display_text = display_text
         # self.document_name = document_name
         self.last_child_at_level = [None] * MAX_MENU_DEPTH
         self.children = []
+        self.is_divider = is_divider
 
     def add(self, level, display_text, heading_id, link_url, document_name):
         """Add a menu item.
@@ -736,9 +792,10 @@ class MenuBuilder:
     def __init__(self):
         self.sections = []
         self.current_document_name = None
+        self.is_first_divider = True
 
-    def add_section(self, display_text):
-        section = MenuSection(display_text)
+    def add_section(self, display_text: Optional[str], is_divider: bool = False):
+        section = MenuSection(display_text, is_divider=is_divider)
         self.sections.append(section)
 
     def add_item(self, level, display_text, heading_id=None, link_url=None, document_name=None):
@@ -775,8 +832,8 @@ class MenuBuilder:
 
     def cull_items_above(self, level):
         """Remove all menu items ABOVE level (i.e. at an indent LESS than level).
-        
-        NOTE: level is the "item" level, and does not include the section. 
+
+        NOTE: level is the "item" level, and does not include the section.
         """
         logger.info(f"cull_items_above(): {level}")
         for section in self.sections:
@@ -795,8 +852,8 @@ class MenuBuilder:
 
     def cull_items_below(self, level):
         """Remove all menu items BELOW level (i.e. at an indent GREATER than level).
-        
-        NOTE: level is the "item" level, and does not include the section. 
+
+        NOTE: level is the "item" level, and does not include the section.
         """
         logger.info(f"cull_items_below(): {level}")
         for section in self.sections:
@@ -819,10 +876,20 @@ class MenuBuilder:
             html += self._render_html_section(section)
         return html
 
-    def _render_html_section(self, section):
+    def _render_html_section(self, section: MenuSection):
         lines = []
+
+        # A divider header divides major sections. Insert a horizontal line (<hr>)
+        # before each divider header AFTER the first one.
+        if section.is_divider:
+            if self.is_first_divider:
+                self.is_first_divider = False
+            else:
+                lines.append("<hr>")
+    
+        heading_class = "section-heading-divider" if section.is_divider else "section-heading"
         if section.display_text:
-            lines.append(f'<div class="section-heading">{section.display_text}</div>')
+            lines.append(f'<div class="{heading_class}">{section.display_text}</div>')
         lines.append('<ul class="menu-tree">')
         lines += self._render_html_lines_children(0, section.children)
         lines.append('</ul>')
@@ -883,7 +950,11 @@ def to_json_bool(python_bool):
 
 
 def format_menu_heading(
-    text, include_caret_space=False, caret_visible=False, link_url=None, is_level_two=False,
+    text,
+    include_caret_space=False,
+    caret_visible=False,
+    link_url=None,
+    is_level_two=False,
 ):
     """Given a menu heading, split it into two divs if it has a numeric prefix.
 
@@ -1014,7 +1085,9 @@ def add_heading_numbers(markdown, at_level=1):
 
         id_without_heading_number = heading_text_to_id(heading_text)
         id_with_heading_number = heading_text_to_id(f'{heading_number_text} {heading_text}')
-        heading_id_to_heading_id_with_heading_number[id_without_heading_number] = id_with_heading_number
+        heading_id_to_heading_id_with_heading_number[
+            id_without_heading_number
+        ] = id_with_heading_number
 
         line = f'{pieces[0]} {heading_number_text}&nbsp;&nbsp;&nbsp;&nbsp;' f'{heading_text}'
         renumbered_lines.append(line)
@@ -1078,7 +1151,7 @@ class HeadingManager:
         return ".".join(digits)
 
 
-def append_css_customizations(path_css_overlay):
+def append_css_customizations(path_css_overlay: Path):
     new_lines = []
     project_config = CONFIG['project_config']
 
@@ -1090,10 +1163,22 @@ def append_css_customizations(path_css_overlay):
             '}',
         ]
     if new_lines:
-        new_lines = [''] + new_lines + ['']
+        new_lines = ['', '/* Customizations */'] + new_lines + ['']
         text = '\n'.join(new_lines)
         with open(path_css_overlay, 'a') as file:
             file.write(text)
+
+
+def append_css_mixin(path_css_file: Path, mixin_name: str) -> Result[str, str]:
+    logger.debug(f'Appending mixin {mixin_name}...')
+    path_css_mixin = PATH_MIXINS / Path(f'mixin_{mixin_name}.css')
+    if not path_css_file.is_file():
+        return Err(f'Mixin "{mixin_name}" file "{path_css_mixin}" not found.')
+    with open(path_css_mixin) as file:
+        text = '\n' + file.read()
+    with open(path_css_file, 'a') as file:
+        file.write(text)
+    return Ok(None)
 
 
 def get_deprecated(
@@ -1118,7 +1203,6 @@ def iso_timestamp_now(tz_name=None) -> Result[str, str]:
     if tz_name is not supplied, then the timestamp will default to the machine's
     local time zone.
     """
-    print(f'{tz_name=}')
     try:
         tz = pytz.timezone(tz_name) if tz_name else None
     except pytz.exceptions.UnknownTimeZoneError as e:
