@@ -1,0 +1,18 @@
+{
+    "master_title": "ElecroBear Example",
+    "footer": "Copyright &copy; 2022 Whomever",
+    "output_directory": "../site_legacy",
+    "navigation": [
+        {
+            "section": "FDD",
+            "documents": {
+                "1 Markdown Features": "1-md_features.md",
+                "2 Second Section": "2-second.md",
+                "3 Third Section": "3-third.md"
+            }
+        }
+    ],
+    "theme": "positron",
+    "pack": true,
+    "watermark": "DRAFT"
+}
