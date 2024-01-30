@@ -1,13 +1,15 @@
+# Standard Library
 import shutil
-from pathlib import Path
 import pytest
+# import json
 
-# Libraries
+# Library
+from loguru import logger
 from result import Err
 
 # Local
-from loguru import logger
 from test.log_manager import log_initialize
+from electro.build import build_project
 
 # Start default logger (imports below will use it)
 log_initialize()
@@ -48,6 +50,14 @@ def test_build(test_case_name):
 
     copy_items(
         path_source_data,
-        ['docs/'],
+        ['electro.json', 'docs/'],
         path_workspace_incoming_dir,
     )
+
+    # with open(path_source_data / 'electro.json', 'r') as file:
+    #     electro_config = json.load(file)
+    # electro_config['output_directory'] =
+
+    result = build_project(path_workspace_incoming_dir)
+    if isinstance(result, Err):
+        raise RuntimeError(f'Electro Build Error: {result.err_value}')

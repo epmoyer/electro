@@ -1,7 +1,7 @@
 {
     "master_title": "ElecroBear Example",
     "footer": "Copyright &copy; 2024 Whomever",
-    "output_directory": "../site_legacy",
+    "output_directory": "../results",
     "navigation": [
         {
             "section": "FDD",
