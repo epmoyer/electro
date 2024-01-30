@@ -35,8 +35,8 @@ def log_test_separator():
 @pytest.mark.parametrize(
     "test_case_name",
     [
-        'singlefile',
-        'singlefile_legacy',
+        'single_file',
+        'single_file_legacy',
     ],
 )
 # fmt:on
@@ -59,6 +59,7 @@ def test_build(test_case_name):
     is_single_file = electro_config['output_format'] == 'single_file'
 
     result = build_project(path_workspace_incoming_dir)
+
     # sourcery skip: no-conditionals-in-tests
     if isinstance(result, Err):
         raise RuntimeError(f'Electro Build Error: {result.err_value}')
