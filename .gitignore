@@ -15,3 +15,4 @@ projects/
 *.pyc
 
 # Outputs
+/test/data/processed/test_cases/
