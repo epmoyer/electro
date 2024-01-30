@@ -1,6 +1,6 @@
 {
     "master_title": "ElecroBear Example",
-    "footer": "Copyright &copy; 2022 Whomever",
+    "footer": "Copyright &copy; 2024 Whomever",
     "output_directory": "../site_legacy",
     "navigation": [
         {
@@ -13,6 +13,11 @@
         }
     ],
     "theme": "positron",
-    "pack": true,
+    "mixins": [
+        "doc_legacy",
+        "ui_legacy",
+        "pygments_standard"
+    ],
+    "output_format": "single_file",
     "watermark": "DRAFT"
 }
