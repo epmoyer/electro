@@ -37,6 +37,7 @@ def log_test_separator():
     [
         'single_file',
         'single_file_legacy',
+        'static',
     ],
 )
 # fmt:on

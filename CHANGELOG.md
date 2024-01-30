@@ -6,12 +6,13 @@ The format is based on [Keep a
 Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres
 to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+### TODO
+- 🟡  Fenced style notices/div (`:::notice info`, and `:::no-indent`)
+
 ## Unreleased
 (None)
-## 2.0.0 2023-08-03
 
-🔴  Work in progress  
-
+## 2.0.0 2024-01-29
 ### Changed
 - Default to new (dark blue) UI.
 - Default to new "bar style" headings.
@@ -33,8 +34,6 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 - "Section Divider" headings.  Create them by defining a named section (in the `navigation` object of an `electro.json` config file) **without** declaring any associated documents.
 ### Fixed
 - `menu-tree` hover color.
-### TODO
-- 🟡  Fenced style notices/div (`:::notice info`, and `:::no-indent`)
 
 ## 1.4.4 2023-06-30
 ### Changed
