@@ -18,7 +18,7 @@ from loguru import logger
 # Local
 from electro.app_config import CONFIG, OUTPUT_FORMATS
 from electro.console import CONSOLE
-from electro.warnings import WARNINGS
+from electro.electro_warnings import WARNINGS
 from electro.paths import PATH_THEMES, PATH_JS, PATH_SEARCH_RESULTS_MD, PATH_MIXINS
 from electro.html_snippets import build_snippet_notice_start, SNIPPET_NOTICE_END
 from electro.simplepack import simplepack

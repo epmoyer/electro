@@ -1,9 +1,6 @@
 # Library
 from result import Result, Ok, Err
 
-# Local
-from electro.warnings import WARNINGS
-
 SNIPPET_NOTICE_START_TEMPLATE = (
     '<div class="notices [[notice_type]]">'
     '<div class="label"><i class="fa [[icon]]"></i>[[title]]</div>'

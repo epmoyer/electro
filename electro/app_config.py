@@ -3,7 +3,7 @@
 OUTPUT_FORMATS = ['static_site', 'single_file']
 
 CONFIG = {
-    'version': '2.0.0',
+    'version': '2.0.1',
     'app_name': 'electro',
     'enable_debug_logging': True,
     'project_filename': 'electro.json',

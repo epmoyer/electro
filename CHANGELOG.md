@@ -12,6 +12,10 @@ to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ## Unreleased
 (None)
 
+## 2.0.1 2024-04-04
+## Changed
+- Rename `warnings.py` to `electro_warnings.py` to avoid circular import conflict with `urllib/parse.py` which also imports a `warnings` module.
+
 ## 2.0.0 2024-01-29
 ### Changed
 - Default to new (dark blue) UI.

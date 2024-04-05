@@ -13,10 +13,11 @@ from electro.paths import PATH_LOGS
 from electro.app_config import CONFIG
 from electro.console import CONSOLE, wrap_tag
 from electro.build import build_project
-from electro.warnings import WARNINGS
+from electro.electro_warnings import WARNINGS
 
 # Rich console
 print = CONSOLE.print
+
 
 @click.group()
 @click.option('-d', '--debug', 'enable_debug_logging', is_flag=True, help='Enable debug logging')
@@ -44,17 +45,18 @@ def cli(enable_debug_logging):
 def build(path_project_text):
     """Build the project.
 
-    The user can pass either the project directory OR a path to the project file (i.e. the 
+    The user can pass either the project directory OR a path to the project file (i.e. the
     project configuration JSON file).  If a directory is passed, then we will assume the
     configuration JSON file is in that directory and has the default name.
     """
     path_project = Path(path_project_text)
-   
+
     result = build_project(path_project)
     if isinstance(result, Err):
         logger.error(result.err_value)
         print(f'Error: {wrap_tag("error", result.err_value)}')
     WARNINGS.render()
+
 
 if __name__ == '__main__':
     cli(prog_name=CONFIG['app_name'])
