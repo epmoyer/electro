@@ -89,6 +89,14 @@ func buildProject(pathCommandLineArg string) error {
 	}
 	fmt.Printf("Project dir: %q\n", pathProjectDir)
 	fmt.Printf("Project file: %q\n", pathProjectFile)
+
+	// Load configProject config
+	configProject, err := loadConfigElectroProject(pathProjectFile)
+	if err != nil {
+		return fmt.Errorf("error loading project config: %w", err)
+	}
+
+	qlog.Infof("Project config: %#v", configProject)
 	return nil
 }
 
