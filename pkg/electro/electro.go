@@ -84,6 +84,21 @@ func BuildProject(pathCommandLineArg string) error {
 	// -----------------------
 	isStaticSite := strings.ToLower(configProject.OutputFormat) == "static_site"
 	builder := newBuilder(pathOutputDir, pathProjectDir, pathThemeDirectory, isStaticSite)
+	for _, nd := range configProject.Navigation {
+		err := builder.AddNavigationDescriptor(nd)
+		if err != nil {
+			return fmt.Errorf("error adding navigation descriptor: %w", err)
+		}
+	}
+	err = builder.RenderSite()
+	if err != nil {
+		return fmt.Errorf("error rendering site: %w", err)
+	}
+
+	// -----------------------
+	// If requested, publish document as a single stand-alone file
+	// -----------------------
+	// FIXME: implement
 
 	return nil
 }

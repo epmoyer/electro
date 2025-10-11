@@ -12,13 +12,18 @@ import (
 
 const maxMenuDepth = 6
 
+type siteDocumentT struct {
+	PathMarkdown string
+	Html         string
+}
+
 type builderT struct {
 	PathOutputDir  string
 	PathProjectDir string
 	PathThemeDir   string
 	MenuHtml       string
 	IsStaticSite   bool
-	SiteDocuments  map[string]string
+	SiteDocuments  map[string]siteDocumentT
 	Substitutions  map[string]string
 	MenuBuilder    *menuBuilderT
 	// FIXME: add SearchIndex
@@ -86,18 +91,22 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
 	}
 	var bufHtmlBytes bytes.Buffer
-	err := goldmark.Convert(mdData, &bufHtmlBytes)
+	err = goldmark.Convert(mdData, &bufHtmlBytes)
 	if err != nil {
 		return fmt.Errorf("error converting markdown to HTML for document %q: %w", documentName, err)
 	}
 
+	// FIXME: implement
 	// Fix inter-document links
 	// Wrap images
 	// Add id tags to headings
 	// Add footer text
 	// Update search
 
-	b.SiteDocuments[documentName] = bufHtmlBytes.String()
+	b.SiteDocuments[documentName] = siteDocumentT{
+		PathMarkdown: pathMarkdown,
+		Html:         bufHtmlBytes.String(),
+	}
 
 	return nil
 }
