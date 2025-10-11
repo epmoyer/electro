@@ -4,7 +4,7 @@
 // projects without having to edit the import paths.
 module app
 
-go 1.22
+go 1.24
 
 require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
