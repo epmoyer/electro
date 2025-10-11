@@ -46,5 +46,15 @@ func main() {
 	// Start
 	// ------------------------
 	fmt.Println("🔴  Implementation TBD")
+	err = doBuild(flagProject)
+	if err != nil {
+		qlog.ErrorPrint("Build error: " + err.Error())
+		return
+	}
+	qlog.InfoPrint("Done")
 
+}
+
+func doBuild(projectPath string) error {
+	return nil
 }
