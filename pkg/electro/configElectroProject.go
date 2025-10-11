@@ -1,9 +1,11 @@
-package main
+package electro
 
 import (
 	"encoding/json"
 	"os"
 )
+
+const projectFilename = "electro.json"
 
 type configElectroProjectT struct {
 	MasterTitle          string                            `json:"master_title"`

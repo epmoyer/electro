@@ -9,5 +9,3 @@ var pathDirData = "data"
 // dir does not exist, because the data dir is an embedded filesystem so we don't write to it.
 // It is however possible to log in production by setting the -logdir command line flag.
 var pathDirLogs = filepath.Join(pathDirData, "logs")
-
-var pathDirThemes = filepath.Join(pathDirData, "themes")
