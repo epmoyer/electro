@@ -55,12 +55,15 @@ func newBuilder(pathOutputDir string, pathProjectDir string, pathThemeDir string
 		PathOutputDir:  pathOutputDir,
 		PathProjectDir: pathProjectDir,
 		PathThemeDir:   pathThemeDir,
+		SiteDocuments:  make(map[string]siteDocumentT),
+		Substitutions:  make(map[string]string),
 		MenuBuilder:    &menuBuilderT{},
 		IsStaticSite:   isStaticSite,
 	}
 }
 
 func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
+	qlog.Infof("Adding navigation section: %q", nd.Section)
 	isDivider := nd.Documents == nil || len(nd.Documents) == 0
 	b.MenuBuilder.AddSection(nd.Section, isDivider)
 	b.MenuHtml += "<ul class=\"menu-tree\">\n"
@@ -111,12 +114,14 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	return nil
 }
 
+func (b *builderT) RenderSite() error {
+	// FIXME: implement
+	return nil
+}
+
 func (mb *menuBuilderT) AddSection(displayText string, isDivider bool) {
-	section := menuSectionT{
-		DisplayText: displayText,
-		IsDivider:   isDivider,
-	}
-	mb.Sections = append(mb.Sections, section)
+	section := newMenuSection(displayText, isDivider)
+	mb.Sections = append(mb.Sections, *section)
 }
 
 func (mb *menuBuilderT) AddItem(
@@ -131,6 +136,14 @@ func (mb *menuBuilderT) AddItem(
 	}
 	section := &mb.Sections[len(mb.Sections)-1]
 	section.Add(level, displayText, headingId, linkUrl, documentName)
+}
+
+func newMenuSection(displayText string, isDivider bool) *menuSectionT {
+	return &menuSectionT{
+		DisplayText:      displayText,
+		IsDivider:        isDivider,
+		LastChildAtLevel: make([]menuItemT, maxMenuDepth),
+	}
 }
 
 func (ms *menuSectionT) Add(
