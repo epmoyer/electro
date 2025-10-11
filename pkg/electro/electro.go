@@ -81,11 +81,7 @@ func BuildProject(pathCommandLineArg string) error {
 	// -----------------------
 	// Build project
 	// -----------------------
-	builder := builderT{
-		PathOutputDir:  pathOutputDir,
-		PathProjectDir: pathProjectDir,
-		PathThemeDir:   pathThemeDirectory,
-	}
+	builder := newBuilder(pathOutputDir, pathProjectDir, pathThemeDirectory)
 
 	return nil
 }
