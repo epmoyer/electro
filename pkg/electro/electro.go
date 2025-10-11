@@ -78,6 +78,15 @@ func BuildProject(pathCommandLineArg string) error {
 	}
 	qlog.InfoPrintf("Using theme: %q", configProject.Theme)
 
+	// -----------------------
+	// Build project
+	// -----------------------
+	builder := builderT{
+		PathOutputDir:  pathOutputDir,
+		PathProjectDir: pathProjectDir,
+		PathThemeDir:   pathThemeDirectory,
+	}
+
 	return nil
 }
 
