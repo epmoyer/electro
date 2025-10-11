@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 var flagVersion bool
@@ -87,8 +88,8 @@ func buildProject(pathCommandLineArg string) error {
 		pathProjectDir = path.Dir(pathCommandLineArg)
 		pathProjectFile = pathCommandLineArg
 	}
-	fmt.Printf("Project dir: %q\n", pathProjectDir)
-	fmt.Printf("Project file: %q\n", pathProjectFile)
+	qlog.InfoPrintf("Project dir: %q", pathProjectDir)
+	qlog.InfoPrintf("Project file: %q", pathProjectFile)
 
 	// Load configProject config
 	configProject, err := loadConfigElectroProject(pathProjectFile)
@@ -97,6 +98,16 @@ func buildProject(pathCommandLineArg string) error {
 	}
 
 	qlog.Infof("Project config: %#v", configProject)
+
+	// -----------------------
+	// Determine theme dir
+	// -----------------------
+	pathThemeDirectory := filepath.Join(pathDirThemes, configProject.Theme)
+	if !pathIsDir(pathThemeDirectory) {
+		return fmt.Errorf("theme directory does not exist: %q", pathThemeDirectory)
+	}
+	qlog.InfoPrintf("Using theme: %q", configProject.Theme)
+
 	return nil
 }
 
