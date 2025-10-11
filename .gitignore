@@ -4,6 +4,7 @@
 # Build outputs
 
 /data/logs
+/src/data/logs
 
 # Windows/Dropbox? Icon Files
 Icon?
