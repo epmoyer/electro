@@ -27,6 +27,10 @@ func loadConfigElectroProject(pathProjectFile string) (*configElectroProjectT, e
 	if err != nil {
 		return nil, err
 	}
+	if project.OutputFormat == "" {
+		project.OutputFormat = "static_site"
+	}
+
 	return &project, nil
 }
 
