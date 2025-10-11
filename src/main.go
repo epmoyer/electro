@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"path"
 )
 
 var flagVersion bool
@@ -46,7 +48,7 @@ func main() {
 	// Start
 	// ------------------------
 	fmt.Println("🔴  Implementation TBD")
-	err = doBuild(flagProject)
+	err = buildProject(flagProject)
 	if err != nil {
 		qlog.ErrorPrint("Build error: " + err.Error())
 		return
@@ -55,6 +57,40 @@ func main() {
 
 }
 
-func doBuild(projectPath string) error {
+func buildProject(projectPath string) error {
+	var pathProjectDir string
+
+	// Fail if path does not exist
+	if !pathExists(projectPath) {
+		return fmt.Errorf("path does not exist: %q", projectPath)
+	}
+	if pathIsDir(projectPath) {
+		// ------------------------
+		// Directory was passed
+		// ------------------------
+		pathProjectDir = projectPath
+	} else {
+		// ------------------------
+		// File was passed
+		// ------------------------
+		if path.Ext(projectPath) != ".json" {
+			return fmt.Errorf("project file must be a .json file: %q", projectPath)
+		}
+		pathProjectDir = path.Dir(projectPath)
+	}
+	fmt.Printf("Project dir: %q\n", pathProjectDir)
 	return nil
+}
+
+func pathExists(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
+}
+
+func pathIsDir(path string) bool {
+	info, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return info.IsDir()
 }
