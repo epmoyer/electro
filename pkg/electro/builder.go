@@ -1,8 +1,13 @@
 package electro
 
 import (
+	"bytes"
+	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/yuin/goldmark"
 )
 
 const maxMenuDepth = 6
@@ -68,6 +73,32 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 		b.MenuBuilder.AddItem(0, menuName, "", linkUrl, documentName)
 	}
 	b.MenuHtml += "</ul>\n"
+	return nil
+}
+
+func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error {
+	if !pathIsFile(pathMarkdown) {
+		return fmt.Errorf("markdown document does not exist: %q", pathMarkdown)
+	}
+	// Read markdown file
+	mdData, err := os.ReadFile(pathMarkdown)
+	if err != nil {
+		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
+	}
+	var bufHtmlBytes bytes.Buffer
+	err := goldmark.Convert(mdData, &bufHtmlBytes)
+	if err != nil {
+		return fmt.Errorf("error converting markdown to HTML for document %q: %w", documentName, err)
+	}
+
+	// Fix inter-document links
+	// Wrap images
+	// Add id tags to headings
+	// Add footer text
+	// Update search
+
+	b.SiteDocuments[documentName] = bufHtmlBytes.String()
+
 	return nil
 }
 
