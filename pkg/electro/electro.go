@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 var qlog *quicklog.LoggerT = nil // Assigned at runtime
@@ -81,7 +82,8 @@ func BuildProject(pathCommandLineArg string) error {
 	// -----------------------
 	// Build project
 	// -----------------------
-	builder := newBuilder(pathOutputDir, pathProjectDir, pathThemeDirectory)
+	isStaticSite := strings.ToLower(configProject.OutputFormat) == "static_site"
+	builder := newBuilder(pathOutputDir, pathProjectDir, pathThemeDirectory, isStaticSite)
 
 	return nil
 }
