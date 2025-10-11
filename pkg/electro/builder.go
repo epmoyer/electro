@@ -113,11 +113,12 @@ func (ms *menuSectionT) Add(
 		if level < len(ms.LastChildAtLevel) {
 			parent := &ms.LastChildAtLevel[level-1]
 			parent.Children = append(parent.Children, newItem)
-			if level == len(ms.LastChildAtLevel)-1 {
-				ms.LastChildAtLevel[level] = newItem
-			} else {
-				ms.LastChildAtLevel = ms.LastChildAtLevel[:level]
-				ms.LastChildAtLevel = append(ms.LastChildAtLevel, newItem)
+			// Clear "last child" of all levels deeper than this one.
+			// NOTE: This is not strictly necessary, but it will
+			//       defensively keep us from creating a weird tree if the
+			//       input is badly formed.
+			for i := level; i < len(ms.LastChildAtLevel); i++ {
+				ms.LastChildAtLevel[i] = menuItemT{}
 			}
 		} else {
 			// Invalid level, ignore
