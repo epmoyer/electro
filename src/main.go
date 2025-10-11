@@ -100,6 +100,18 @@ func buildProject(pathCommandLineArg string) error {
 	qlog.Infof("Project config: %#v", configProject)
 
 	// -----------------------
+	// Determine output directory
+	// -----------------------
+	if configProject.OutputDirectory == "" {
+		return fmt.Errorf("output directory not specified in project config")
+	}
+	pathOutputDir := filepath.Join(pathProjectDir, configProject.OutputDirectory)
+	if !pathIsDir(pathOutputDir) {
+		return fmt.Errorf("output directory does not exist: %q", pathOutputDir)
+	}
+	qlog.InfoPrintf("Using output directory: %q", pathOutputDir)
+
+	// -----------------------
 	// Determine theme dir
 	// -----------------------
 	pathThemeDirectory := filepath.Join(pathDirThemes, configProject.Theme)
