@@ -57,28 +57,38 @@ func main() {
 
 }
 
-func buildProject(projectPath string) error {
+func buildProject(pathCommandLineArg string) error {
 	var pathProjectDir string
+	var pathProjectFile string
 
 	// Fail if path does not exist
-	if !pathExists(projectPath) {
-		return fmt.Errorf("path does not exist: %q", projectPath)
+	if !pathExists(pathCommandLineArg) {
+		return fmt.Errorf("path does not exist: %q", pathCommandLineArg)
 	}
-	if pathIsDir(projectPath) {
+	if pathIsDir(pathCommandLineArg) {
 		// ------------------------
 		// Directory was passed
 		// ------------------------
-		pathProjectDir = projectPath
+		pathProjectDir = pathCommandLineArg
+		pathProjectFile = path.Join(pathProjectDir, config.ProjectFilename)
+		if !pathExists(pathProjectFile) {
+			return fmt.Errorf("project file does not exist: %q", pathProjectFile)
+		}
+		if pathIsDir(pathProjectFile) {
+			return fmt.Errorf("project file is a directory, must be a .json file: %q", pathProjectFile)
+		}
 	} else {
 		// ------------------------
 		// File was passed
 		// ------------------------
-		if path.Ext(projectPath) != ".json" {
-			return fmt.Errorf("project file must be a .json file: %q", projectPath)
+		if path.Ext(pathCommandLineArg) != ".json" {
+			return fmt.Errorf("project file must be a .json file: %q", pathCommandLineArg)
 		}
-		pathProjectDir = path.Dir(projectPath)
+		pathProjectDir = path.Dir(pathCommandLineArg)
+		pathProjectFile = pathCommandLineArg
 	}
 	fmt.Printf("Project dir: %q\n", pathProjectDir)
+	fmt.Printf("Project file: %q\n", pathProjectFile)
 	return nil
 }
 
