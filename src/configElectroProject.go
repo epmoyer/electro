@@ -6,13 +6,14 @@ import (
 )
 
 type configElectroProjectT struct {
-	MasterTitle     string                            `json:"master_title"`
-	Footer          string                            `json:"footer"`
-	OutputDirectory string                            `json:"output_directory"`
-	Navigation      []configElectroProjectNavigationT `json:"navigation"`
-	Theme           string                            `json:"theme"`
-	OutputFormat    string                            `json:"output_format"`
-	Watermark       string                            `json:"watermark"`
+	MasterTitle          string                            `json:"master_title"`
+	Footer               string                            `json:"footer"`
+	OutputDirectory      string                            `json:"output_directory"`
+	Navigation           []configElectroProjectNavigationT `json:"navigation"`
+	Theme                string                            `json:"theme"`
+	OutputFormat         string                            `json:"output_format"`
+	Watermark            string                            `json:"watermark"`
+	EnableNewlineToBreak bool                              `json:"enable_newline_to_break"`
 }
 
 type configElectroProjectNavigationT struct {
