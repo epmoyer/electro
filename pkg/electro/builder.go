@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const maxMenuDepth = 6
+
 type builderT struct {
 	PathOutputDir  string
 	PathProjectDir string
@@ -33,7 +35,7 @@ type menuItemT struct {
 
 type menuSectionT struct {
 	DisplayText      string
-	LastChildAtLeven []menuItemT
+	LastChildAtLevel []menuItemT
 	Children         []menuItemT
 	IsDivider        bool
 }
@@ -63,7 +65,7 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 		if b.IsStaticSite {
 			linkUrl = documentName + ".html"
 		}
-		b.MenuBuilder.AddItem(0, menuName, linkUrl, documentName)
+		b.MenuBuilder.AddItem(0, menuName, "", linkUrl, documentName)
 	}
 	b.MenuHtml += "</ul>\n"
 	return nil
@@ -75,6 +77,52 @@ func (mb *menuBuilderT) AddSection(displayText string, isDivider bool) {
 		IsDivider:   isDivider,
 	}
 	mb.Sections = append(mb.Sections, section)
+}
+
+func (mb *menuBuilderT) AddItem(
+	level int,
+	displayText string,
+	headingId string,
+	linkUrl string,
+	documentName string,
+) {
+	if documentName != "" {
+		mb.CurrentDocumentName = documentName
+	}
+	section := &mb.Sections[len(mb.Sections)-1]
+	section.Add(level, displayText, headingId, linkUrl, documentName)
+}
+
+func (ms *menuSectionT) Add(
+	level int,
+	displayText string,
+	headingId string,
+	linkUrl string,
+	documentName string,
+) {
+	newItem := menuItemT{
+		DisplayText:  displayText,
+		HeadingId:    headingId,
+		LinkUrl:      linkUrl,
+		DocumentName: documentName,
+	}
+	if level == 0 {
+		ms.Children = append(ms.Children, newItem)
+		ms.LastChildAtLevel[0] = newItem
+	} else {
+		if level < len(ms.LastChildAtLevel) {
+			parent := &ms.LastChildAtLevel[level-1]
+			parent.Children = append(parent.Children, newItem)
+			if level == len(ms.LastChildAtLevel)-1 {
+				ms.LastChildAtLevel[level] = newItem
+			} else {
+				ms.LastChildAtLevel = ms.LastChildAtLevel[:level]
+				ms.LastChildAtLevel = append(ms.LastChildAtLevel, newItem)
+			}
+		} else {
+			// Invalid level, ignore
+		}
+	}
 }
 
 func mdDocumentNameToDocumentName(mdDocumentName string) string {
