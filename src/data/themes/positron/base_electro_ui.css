@@ -1,0 +1,502 @@
+/* ====================================
+ * base_electro_ui.css
+ * ====================================
+ */
+
+ body {
+    margin: 0px;
+    font-family: "IBM Plex Sans", sans-serif;
+   
+    --color-navigating: rgb(38, 114, 255);
+    --color-bg-nav-heading: #1B557C;
+    --color-nav-heading-border: gray;
+    --color-nav-heading-text: #fff;
+    --color-watermark: #ff000034;
+    --color-section-heading-divider: #ffffff;
+
+    --font-sidebar: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+
+    --width-sidebar: 280px;
+    --width-gutter: 14px;
+    --width-content-margin-perception: 20px;
+    --width-content-margin: calc(var(--width-content-margin-perception) - var(--width-gutter));
+
+    --height-nav-heading: 40px;
+}
+
+.no-anchor-style,
+.no-anchor-style:visited,
+.no-anchor-style:hover,
+.no-anchor-style:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.root-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    /* background-color: pink; */
+}
+
+.main-container {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    
+    /* -webkit-overflow-scrolling: touch; */
+    /* padding: 5px 30px 5px 20px; */
+    padding: 0px;
+}
+.nav-heading {
+    display: none;
+    background-color: var(--color-bg-nav-heading);
+    color: var(--color-nav-heading-text);
+    /* height: 40px; */
+    line-height: var(--height-nav-heading);
+    text-align: center;
+    vertical-align: middle;
+    padding: 0px 10px;
+    font-family: var(--font-sidebar);
+}
+.nav-heading i{
+    font-size: 25px;
+    float: left;
+    cursor: pointer;
+    padding-top: inherit;
+    line-height: var(--height-nav-heading);
+    /* display: inline-block; */
+}
+.content-area {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    align-content: flex-start;
+}
+.content-left-gutter{
+    /* Gutter for changebars */
+    position: relative;
+    width: var(--width-gutter);
+    /* background-color: orange; */
+}
+.content-right-margin{
+    /* Because scrolling happens in the enclosing .main-container,  right padding in the 
+       .content-container is ignored. To create a right pad sufficient to keep text visible,
+       we instead use this .content-right-margin div to force a small gap. */
+    width: 10px;
+    /* background-color: orange; */
+}
+.content-container {
+    width: 100%;
+    /* position: relative; */
+    /* overflow-x: hidden; */
+    /* overflow-y: auto; */
+    /* margin-right: 30px; */
+    padding: 10px 0px 10px var(--width-content-margin);
+    /* This causes x-overflowing pre elements to behave when using #{heading} in url
+    to navigate to a subheading */
+    min-width: 0;
+    /* background-color: palegreen; */
+}
+.content-container ul {
+    line-height: 24px;
+    padding-left: 25px;
+}
+.content-container li img {
+    /* Force bulleted images to have their bullet at the top, rather than the bottom */
+    vertical-align: top;
+}
+.sidebar-container {
+    flex: 0 0 auto;
+    /* width: 260px; */
+    width: var(--width-sidebar);
+    height: 100vh;
+    /* padding: 10px; */
+    background-color: #343131;
+    color: var(--color-nav-heading-text);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sidebar-heading {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    font-family: var(--font-sidebar);
+
+    color: white;
+    background-color: var(--color-bg-nav-heading);
+    border-bottom: 1px solid var(--color-nav-heading-border);
+}
+.sidebar-heading i {
+    margin-right: 5px;
+}
+.sidebar-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+
+    margin-bottom: 8px;
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.sidebar-main {
+    padding: 10px;
+    background-color: #343131;
+    font-family: var(--font-sidebar);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.sidebar-main hr {
+    margin-top: 25px;
+    border: 0;
+    background: #707070;
+    height: 1px;
+}
+.section-heading {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: smaller;
+    color: white;
+    margin: 8px 0px 2px 0px;
+    user-select: none;
+
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.section-heading-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* text-transform: uppercase; */
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--color-section-heading-divider);
+    margin: 8px 0px 2px 0px;
+    user-select: none;
+
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#search-text {
+    /* margin: 10px; */
+    border-radius: 12px;
+    border: 0px;
+    font-size: 12px;
+    /* height: 20px; */
+    padding: 5px 9px;
+    /* margin: 0px 30px; */
+    width: 90%;
+}
+@media screen and (max-width: 768px) {
+    .nav-heading {
+        display:block;
+    }
+    .sidebar-container{
+        /* left: -300px; */
+        display: none;
+    }
+    .watermark-left{
+        display: none;
+    }
+   
+
+    /* ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 0px;
+        height: 0px;
+        bottom: 0px;
+    } */
+}
+
+@supports (-webkit-touch-callout: none) {
+    /* This selector detects iOS devices only */ 
+    .main-container {
+        /* iOS handles the overflow scrolling badly in this situation, so disable it*/
+        overflow-x: visible;
+        overflow-y: visible;
+    }
+}
+.sidebar-container.force-show {
+    display: block;
+}
+.search-highlight{
+    background-color: #F0EE50;
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: black;
+}
+
+.watermark-container{
+    /* Fills the app window and floats above everything else.
+     * Contains .watermark-left (placeholder) and .watermark-right.
+     */
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: row;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 100vh;
+    width: 100vw;
+    z-index: 2;
+    pointer-events: none;
+}
+.watermark-left{
+    /* Placeholder to take up same width as .sidebar */
+
+    /* as flex-child*/
+    flex-shrink: 0;
+    flex-grow: 0;
+
+    width: var(--width-sidebar);
+
+    /* background-color: #00ff0030; */
+}
+.watermark-right{
+    /* Floats over the document .content-container.
+     * Watermark text is centered inside this div.
+     */
+
+    /* as flex-parent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* as flex-child*/
+    flex-shrink: 1;
+    flex-grow: 1;
+
+    /* background-color: #00ffff30; */
+}
+.watermark-text{
+    color: var(--color-watermark);
+    font-size: 150px;
+    font-weight: 900;
+    transform: rotate(-45deg);
+    pointer-events: none;
+}
+#home-button-single-file{
+    cursor: pointer;
+}
+
+
+/* --------------------------
+ * scrollbar
+ * -------------------------- */
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+    height: 12px;
+    bottom: -10px;
+}
+.sidebar-container::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(124, 124, 124);
+}
+.main-container::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(190, 190, 190);
+}
+pre::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(190, 190, 190);
+}
+::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+/* --------------------------
+ * menu-tree specific
+ * -------------------------- */
+
+.menu-tree {
+    font-family: var(--font-sidebar);
+    /* font-family: 'IBM Plex Sans', sans-serif; */
+    color: rgb(212, 212, 212);
+    font-weight: 400;
+    font-size: 11pt;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.menu-tree a,
+.menu-tree a:visited,
+.menu-tree a:hover,
+.menu-tree a:visited:hover,
+.menu-tree a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Remove default bullets */
+.menu-tree,
+.menu-tree ul {
+    list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+.menu-tree {
+    margin: 0;
+    padding: 0;
+}
+
+/* Hide the nested list */
+.menu-tree .nested {
+    display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.menu-tree .active {
+    display: block;
+}
+
+.menu-tree .caret {
+    /* margin: 0px 5px 0px 0px; */
+    width: 17px;
+    height: 17px;
+    padding-top: 2px;
+    /* padding-top: 2px; */
+    display: inline-block;
+    /* background-color: orange; */
+    text-align: center;
+    transform: rotate(0deg);
+    transition-duration: 0.2s;
+    color: rgb(139, 139, 139);
+}
+
+.menu-tree .no-child {
+    /* margin-left: 20px; */
+    padding-left: 20px;
+}
+
+.menu-tree .caret-down {
+    transform: rotate(90deg);
+    transition-duration: 0.2s;
+}
+
+.menu-tree ul {
+    /* List item indent distance */
+    padding-left: 20px;
+}
+.menu-tree .selected {
+    background-color: #666;
+}
+.menu-tree .navigating {
+    /* shown when we are navigating to a new location (document), but haven't finished loading it yet */
+    background-color: var(--color-navigating);
+}
+.menu-tree li {
+    margin: 6px 0px;
+}
+.menu-tree li span {
+    display: block; /*this makes the span as wide as the li*/
+    cursor: pointer;
+    border-radius: 7px;
+    padding: 1px 0px 2px 4px;
+
+    /* No select */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.menu-tree li span:hover {
+    background-color: #484848;
+}
+.menu-tree li .selected:hover {
+    background-color: #888;
+}
+.menu-tree li .navigating:hover {
+    background-color: var(--color-navigating);
+}
+
+/* --------------------------
+ * menu-tree manipulations
+ * -------------------------- */
+.menu-item-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.menu-item-container .caret {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 17px;
+    min-width: 17px;
+}
+.menu-item-container .core{
+    /* As flex child */
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    /* As flex parent */
+    display: flex;
+    flex-direction: row;
+    min-width: 0;
+    /* justify-content: flex-start; */
+}
+
+.menu-item-container .core .number-item {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 20px;
+}
+.menu-item-container .core .number-item.level-two {
+    width: 40px;
+}
+.menu-item-container  .core .text-item {
+    /* As flex child */
+    flex-grow: 1;
+    flex-shrink: 1;
+    text-align: left;
+
+    justify-content: flex-start;
+    /* background-color: lime; */
+    margin-left: 4px;
+}
+.menu-tree .caret-placeholder {
+    /* As flex child */
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    width: 17px;
+    height: 12px;
+    display: inline-block;
+    /* background-color: purple; */
+}
+
+
