@@ -7,3 +7,6 @@
 
 # Windows/Dropbox? Icon Files
 Icon?
+
+# Outputs
+/test/data/processed/test_cases/
