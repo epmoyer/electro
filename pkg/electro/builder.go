@@ -18,14 +18,17 @@ type siteDocumentT struct {
 }
 
 type builderT struct {
+	// Config
 	PathOutputDir  string
 	PathProjectDir string
 	PathThemeDir   string
-	MenuHtml       string
 	IsStaticSite   bool
-	SiteDocuments  map[string]siteDocumentT
-	Substitutions  map[string]string
-	MenuBuilder    *menuBuilderT
+
+	// Runtime
+	MenuHtml      string
+	SiteDocuments map[string]siteDocumentT
+	Substitutions map[string]string
+	MenuBuilder   *menuBuilderT
 	// FIXME: add SearchIndex
 }
 
@@ -52,13 +55,15 @@ type menuSectionT struct {
 
 func newBuilder(pathOutputDir string, pathProjectDir string, pathThemeDir string, isStaticSite bool) *builderT {
 	return &builderT{
+		// Config
 		PathOutputDir:  pathOutputDir,
 		PathProjectDir: pathProjectDir,
 		PathThemeDir:   pathThemeDir,
-		SiteDocuments:  make(map[string]siteDocumentT),
-		Substitutions:  make(map[string]string),
-		MenuBuilder:    &menuBuilderT{},
 		IsStaticSite:   isStaticSite,
+		// Runtime
+		SiteDocuments: make(map[string]siteDocumentT),
+		Substitutions: make(map[string]string),
+		MenuBuilder:   &menuBuilderT{},
 	}
 }
 

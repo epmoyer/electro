@@ -8,14 +8,15 @@ import (
 const projectFilename = "electro.json"
 
 type configElectroProjectT struct {
-	MasterTitle          string                  `json:"master_title"`
-	Footer               string                  `json:"footer"`
-	OutputDirectory      string                  `json:"output_directory"`
-	Navigation           []navigationDescriptorT `json:"navigation"`
-	Theme                string                  `json:"theme"`
-	OutputFormat         string                  `json:"output_format"`
-	Watermark            string                  `json:"watermark"`
-	EnableNewlineToBreak bool                    `json:"enable_newline_to_break"`
+	MasterTitle                       string                  `json:"master_title"`
+	Footer                            string                  `json:"footer"`
+	OutputDirectory                   string                  `json:"output_directory"`
+	Navigation                        []navigationDescriptorT `json:"navigation"`
+	Theme                             string                  `json:"theme"`
+	OutputFormat                      string                  `json:"output_format"`
+	Watermark                         string                  `json:"watermark"`
+	EnableNewlineToBreak              bool                    `json:"enable_newline_to_break"`
+	Level1HeadingsAreDocumentntTitles bool                    `json:"level_1_headings_are_document_titles"`
 }
 
 type navigationDescriptorT struct {
