@@ -99,7 +99,7 @@ func newBuilder(pathOutputDir string,
 
 func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	qlog.Infof("Adding navigation section: %q", nd.Section)
-	isDivider := nd.Documents == nil || len(nd.Documents) == 0
+	isDivider := len(nd.Documents) == 0
 	b.MenuBuilder.AddSection(nd.Section, isDivider)
 	b.MenuHtml += "<ul class=\"menu-tree\">\n"
 	for menuName, mdDocumentName := range nd.Documents {
@@ -294,13 +294,147 @@ func (mb *menuBuilderT) RenderHtmlNode(node menuNodeT) string {
 	}
 	html += "<ul class=\"menu-tree\">\n"
 	html += mb.renderHtmlForNodeChildren(0, node.Children)
+	html += "</ul>\n"
 	return html
 }
 
 func (mb *menuBuilderT) renderHtmlForNodeChildren(level int, children []menuNodeT) string {
 	var html string
 
+	for _, child := range children {
+		// Submenu items
+		var submenuHtml string
+		var caretVisible bool
+		if level == 0 && len(child.Children) > 0 {
+			submenuHtml = "<ul class=\"nested\">\n" +
+				mb.renderHtmlForNodeChildren(level+1, child.Children) +
+				"</ul>\n"
+			caretVisible = true
+		} else {
+			submenuHtml = ""
+			caretVisible = false
+		}
+
+		// Build classes
+		var classes []string
+		if level == 0 {
+			classes = []string{"level-0"}
+		} else {
+			classes = []string{"no-child"}
+		}
+		classList := strings.Join(classes, " ")
+		classStatement := fmt.Sprintf("class=\"%s\"", classList)
+
+		// Build heading ID statement
+		headingIdStatement := ""
+		if child.HeadingId != "" {
+			headingIdStatement = fmt.Sprintf("data-target-heading-id=%s", child.HeadingId)
+		}
+
+		// Build the menu item HTML
+		html += "<li>\n"
+		html += fmt.Sprintf("<span %s id=\"menuitem_doc_%s\" data-document-name=\"%s\" %s>\n",
+			classStatement,
+			child.DocumentName,
+			child.DocumentName,
+			headingIdStatement)
+
+		html += mb.formatMenuHeading(
+			child.DisplayText,
+			level == 0,    // includeCaretSpace
+			caretVisible,  // caretVisible
+			child.LinkUrl, // linkUrl
+			level > 0,     // isLevelTwo
+		)
+
+		html += "</span>\n"
+		html += submenuHtml
+		html += "</li>\n"
+	}
+
 	return html
+}
+
+func (mb *menuBuilderT) formatMenuHeading(
+	text string,
+	includeCaretSpace bool,
+	caretVisible bool,
+	linkUrl string,
+	isLevelTwo bool,
+) string {
+	// Given a menu heading, split it into two divs if it has a numeric prefix.
+	// For headings that start with a section number (e.g. "1.5 Study Results") we
+	// will split the heading into two pieces and wrap them each in a div.
+
+	var caretItemContent string
+	var numberItemContent string
+	textItemContent := text
+	var coreContent string
+
+	if includeCaretSpace {
+		if caretVisible {
+			caretItemContent = "<div class=\"caret-item caret-down\"></div>"
+		} else {
+			caretItemContent = "<div class=\"caret-item\"></div>"
+		}
+	}
+
+	// Replace non-breaking space with regular space
+	text = strings.ReplaceAll(text, "\u00a0", " ")
+
+	if strings.Contains(text, " ") {
+		numberedParts := mb.splitIfNumbered(text)
+		if numberedParts != nil {
+			numberItemContent = fmt.Sprintf("<div class=\"number-item\">%s</div>", numberedParts[0])
+			textItemContent = numberedParts[1]
+		}
+	}
+
+	if numberItemContent != "" {
+		// We have a numbered heading
+	}
+	textItemContent = fmt.Sprintf("<div class=\"text-item\">%s</div>", textItemContent)
+	coreContent = fmt.Sprintf("<div class=\"core\">%s%s</div>", numberItemContent, textItemContent)
+
+	if linkUrl != "" {
+		coreContent = fmt.Sprintf("<a href=\"%s\">%s</a>", linkUrl, coreContent)
+	}
+
+	html := fmt.Sprintf("<div class=\"menu-item-container\">%s%s</div>", caretItemContent, coreContent)
+
+	qlog.Debugf("formatMenuHeading: result: %q", html)
+	return html
+}
+
+func (mb *menuBuilderT) splitIfNumbered(text string) []string {
+	// Given a menu heading, split it into two strings if it has a numeric prefix.
+	// For headings that start with a section number (e.g. "1.5 Study Results") we
+	// will split the heading into two pieces and return a slice.
+	// Otherwise return nil
+
+	pieces := strings.Fields(text)
+	if len(pieces) == 0 {
+		return nil
+	}
+
+	headingNumber := pieces[0]
+
+	// Check if it matches a numeric pattern like "1.2.3"
+	isNumbered := true
+	for _, char := range headingNumber {
+		if char != '.' && (char < '0' || char > '9') {
+			isNumbered = false
+			break
+		}
+	}
+
+	var result []string
+	if isNumbered && len(pieces) > 1 {
+		result = []string{headingNumber, strings.Join(pieces[1:], " ")}
+	}
+
+	qlog.Debugf("splitIfNumbered(): headingNumber=%s text=%s => %v", headingNumber, text, result)
+	return result
 }
 
 func newMenuSection(displayText string, isDivider bool) *menuNodeT {
