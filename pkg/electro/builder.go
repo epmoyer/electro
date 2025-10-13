@@ -41,24 +41,40 @@ type builderT struct {
 }
 
 type menuBuilderT struct {
-	Sections            []menuSectionT
+	Sections            []menuNodeT
 	CurrentDocumentName string
 	IsFirstDivider      bool
 }
 
-type menuItemT struct {
-	DisplayText  string
+// type menuItemT struct {
+// 	DisplayText  string
+// 	LinkUrl      string
+// 	DocumentName string
+// 	HeadingId    string
+// 	Children     []menuItemT
+// }
+
+// type menuSectionT struct {
+// 	DisplayText      string
+// 	LastChildAtLevel []menuItemT
+// 	Children         []menuItemT
+// 	IsDivider        bool
+// }
+
+type menuNodeT struct {
+	// Common to all node types
+	NodeType    MenuNodeTypeT
+	DisplayText string
+	Children    []menuNodeT
+
+	// NodeType:NodeMenuSection
+	LastChildAtLevel []menuNodeT
+	IsDivider        bool
+
+	// NodeType:NodeMenuItem
 	LinkUrl      string
 	DocumentName string
 	HeadingId    string
-	Children     []menuItemT
-}
-
-type menuSectionT struct {
-	DisplayText      string
-	LastChildAtLevel []menuItemT
-	Children         []menuItemT
-	IsDivider        bool
 }
 
 func newBuilder(pathOutputDir string,
@@ -172,19 +188,24 @@ func (mb *menuBuilderT) CullItemsAbove(level int) {
 		//       are recursing a tree where level 0 is the section node, so we add
 		//       1 to the passed in level.
 		mb.Sections[i].Children = mb.cullItemsAboveRecursive(
-			level+1, 0, &menuItemT{Children: mb.Sections[i].Children})
+			level+1,
+			0,
+			&menuNodeT{
+				NodeType: NodeMenuItem,
+				Children: mb.Sections[i].Children,
+			})
 	}
 }
 
 func (mb *menuBuilderT) cullItemsAboveRecursive(
 	cullLevel,
 	currentLevel int,
-	node *menuItemT,
-) []menuItemT {
+	node *menuNodeT,
+) []menuNodeT {
 	if cullLevel == currentLevel+1 {
 		return node.Children
 	}
-	var retainedItems []menuItemT
+	var retainedItems []menuNodeT
 	for i := range node.Children {
 		retainedItems = append(
 			retainedItems,
@@ -201,15 +222,15 @@ func (mb *menuBuilderT) CullItemsBelow(level int) {
 		// NOTE: level is the "item" level depth, and does not include the section, but we
 		//       are recursing a tree where level 0 is the section node, so we add
 		//       1 to the passed in level.
-		tempNode := menuItemT{Children: mb.Sections[i].Children}
+		tempNode := menuNodeT{NodeType: NodeMenuItem, Children: mb.Sections[i].Children}
 		mb.cullItemsBelowRecursive(level+1, 0, &tempNode)
 		mb.Sections[i].Children = tempNode.Children
 	}
 }
 
-func (mb *menuBuilderT) cullItemsBelowRecursive(cullLevel, currentLevel int, node *menuItemT) {
+func (mb *menuBuilderT) cullItemsBelowRecursive(cullLevel, currentLevel int, node *menuNodeT) {
 	if cullLevel == currentLevel {
-		node.Children = []menuItemT{}
+		node.Children = []menuNodeT{}
 		return
 	}
 
@@ -224,9 +245,10 @@ func (mb *menuBuilderT) Dump(display bool) {
 	}
 }
 
-func (mb *menuBuilderT) DumpRecursive(node menuItemT, display bool, level int) {
+func (mb *menuBuilderT) DumpRecursive(node menuNodeT, display bool, level int) {
 	indent := strings.Repeat("    ", level)
-	text := indent + "🟡 " + node.DisplayText + " :: " + node.DocumentName + ", " + node.LinkUrl + ", " + node.HeadingId
+	text := indent + "🟡 " + node.DisplayText + " :: " + node.DocumentName + ", " +
+		node.LinkUrl + ", " + node.HeadingId
 	qlog.Debug(text)
 	if display {
 		fmt.Println(text)
@@ -236,22 +258,23 @@ func (mb *menuBuilderT) DumpRecursive(node menuItemT, display bool, level int) {
 	}
 }
 
-func newMenuSection(displayText string, isDivider bool) *menuSectionT {
-	return &menuSectionT{
+func newMenuSection(displayText string, isDivider bool) *menuNodeT {
+	return &menuNodeT{
 		DisplayText:      displayText,
 		IsDivider:        isDivider,
-		LastChildAtLevel: make([]menuItemT, maxMenuDepth),
+		LastChildAtLevel: make([]menuNodeT, maxMenuDepth),
 	}
 }
 
-func (ms *menuSectionT) Add(
+func (ms *menuNodeT) Add(
 	level int,
 	displayText string,
 	headingId string,
 	linkUrl string,
 	documentName string,
 ) {
-	newItem := menuItemT{
+	newItem := menuNodeT{
+		NodeType:     NodeMenuItem,
 		DisplayText:  displayText,
 		HeadingId:    headingId,
 		LinkUrl:      linkUrl,
@@ -269,7 +292,7 @@ func (ms *menuSectionT) Add(
 			//       defensively keep us from creating a weird tree if the
 			//       input is badly formed.
 			for i := level; i < len(ms.LastChildAtLevel); i++ {
-				ms.LastChildAtLevel[i] = menuItemT{}
+				ms.LastChildAtLevel[i] = menuNodeT{}
 			}
 		} else {
 			// Invalid level, ignore
