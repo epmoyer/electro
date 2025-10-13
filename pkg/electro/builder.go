@@ -159,6 +159,8 @@ func (b *builderT) RenderSite() error {
 	// FIXME: Should we pass this flag as a command line arg, or show conditional on something else?
 	b.MenuBuilder.Dump(true)
 	b.MenuHtml = b.MenuBuilder.RenderHtml()
+
+	// Finish implementation from this point forward.
 	return nil
 }
 
