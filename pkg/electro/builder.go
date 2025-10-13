@@ -31,6 +31,8 @@ type builderT struct {
 	PathThemeDir                    string
 	IsStaticSite                    bool
 	Level1HeadingsAreDocumentTitles bool
+	MasterTitle                     string
+	Watermark                       string
 
 	// Runtime
 	MenuHtml      string
@@ -82,6 +84,8 @@ func newBuilder(pathOutputDir string,
 	pathThemeDir string,
 	isStaticSite bool,
 	level1HeadingsAreDocumentTitles bool,
+	masterTitle string,
+	watermark string,
 ) *builderT {
 	return &builderT{
 		// Config
@@ -90,6 +94,8 @@ func newBuilder(pathOutputDir string,
 		PathThemeDir:                    pathThemeDir,
 		IsStaticSite:                    isStaticSite,
 		Level1HeadingsAreDocumentTitles: level1HeadingsAreDocumentTitles,
+		MasterTitle:                     masterTitle,
+		Watermark:                       watermark,
 		// Runtime
 		SiteDocuments: make(map[string]siteDocumentT),
 		Substitutions: make(map[string]string),
@@ -150,7 +156,6 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 }
 
 func (b *builderT) RenderSite() error {
-	// FIXME: implement
 	if b.Level1HeadingsAreDocumentTitles {
 		b.MenuBuilder.CullItemsAbove(1)
 	} else {
@@ -160,7 +165,164 @@ func (b *builderT) RenderSite() error {
 	b.MenuBuilder.Dump(true)
 	b.MenuHtml = b.MenuBuilder.RenderHtml()
 
-	// Finish implementation from this point forward.
+	// -------------------
+	// Copy CSS files
+	// -------------------
+	cssFiles := []string{
+		"base_electro_doc.css",
+		"base_electro_ui.css",
+		"base_pygments_monokai.css",
+		"fonts.css",
+		"fontawesome.css",
+	}
+
+	for _, filename := range cssFiles {
+		srcPath := filepath.Join(b.PathThemeDir, filename)
+		dstPath := filepath.Join(b.PathOutputDir, filename)
+		err := copyFile(srcPath, dstPath)
+		if err != nil {
+			return fmt.Errorf("error copying CSS file %s: %w", filename, err)
+		}
+	}
+
+	// -------------------
+	// Copy CSS overlay
+	// -------------------
+	overlaySrcPath := filepath.Join(b.PathProjectDir, "docs", "overlay.css")
+	overlayDstPath := filepath.Join(b.PathOutputDir, "overlay.css")
+	if !pathIsFile(overlaySrcPath) {
+		// Create empty overlay.css if it doesn't exist
+		err := os.WriteFile(overlayDstPath, []byte(""), 0644)
+		if err != nil {
+			return fmt.Errorf("error creating empty overlay.css: %w", err)
+		}
+	} else {
+		err := copyFile(overlaySrcPath, overlayDstPath)
+		if err != nil {
+			return fmt.Errorf("error copying overlay.css: %w", err)
+		}
+	}
+
+	// TODO: Append customizations and mixins to overlay.css
+
+	// -------------------
+	// Copy Images
+	// -------------------
+	imgSrcDir := filepath.Join(b.PathProjectDir, "docs", "img")
+	imgDstDir := filepath.Join(b.PathOutputDir, "img")
+	err := copyDirectoryContents(imgSrcDir, imgDstDir)
+	if err != nil {
+		qlog.Debugf("Note: Could not copy images directory: %v", err)
+	}
+
+	// -------------------
+	// Copy Fonts
+	// -------------------
+	fontsSrcDir := filepath.Join(b.PathThemeDir, "fonts")
+	fontsDstDir := filepath.Join(b.PathOutputDir, "fonts")
+	err = copyDirectoryContents(fontsSrcDir, fontsDstDir)
+	if err != nil {
+		return fmt.Errorf("error copying fonts: %w", err)
+	}
+
+	// -------------------
+	// Copy Attachments
+	// -------------------
+	attachSrcDir := filepath.Join(b.PathProjectDir, "docs", "attachments")
+	attachDstDir := filepath.Join(b.PathOutputDir, "attachments")
+	err = copyDirectoryContents(attachSrcDir, attachDstDir)
+	if err != nil {
+		qlog.Debugf("Note: Could not copy attachments directory: %v", err)
+	}
+
+	// -------------------
+	// Copy Favicon
+	// -------------------
+	faviconSrcPath := filepath.Join(b.PathThemeDir, "favicon.ico")
+	faviconDstPath := filepath.Join(b.PathOutputDir, "img", "favicon.ico")
+	err = copyFile(faviconSrcPath, faviconDstPath)
+	if err != nil {
+		qlog.Debugf("Note: Could not copy favicon: %v", err)
+	}
+
+	// -------------------
+	// Copy JavaScript
+	// -------------------
+	jsSrcDir := filepath.Join(b.PathThemeDir, "js")
+	jsDstDir := filepath.Join(b.PathOutputDir, "js")
+	err = copyDirectoryContents(jsSrcDir, jsDstDir)
+	if err != nil {
+		return fmt.Errorf("error copying JavaScript files: %w", err)
+	}
+
+	// -------------------
+	// Build search results doc (placeholder)
+	// -------------------
+	// TODO: Implement search results document building
+
+	// -------------------
+	// Build site pages
+	// -------------------
+	templatePath := filepath.Join(b.PathThemeDir, "template.html")
+	templateData, err := os.ReadFile(templatePath)
+	if err != nil {
+		return fmt.Errorf("error reading template file: %w", err)
+	}
+	templateHtml := string(templateData)
+
+	// TODO: Implement single file vs multi-file logic
+	// For now, implement basic multi-file output
+	for documentName, siteDocument := range b.SiteDocuments {
+		outputPath := filepath.Join(b.PathOutputDir, documentName+".html")
+		err = b.renderDocument(templateHtml, outputPath, siteDocument.Html, documentName)
+		if err != nil {
+			return fmt.Errorf("error rendering document %s: %w", documentName, err)
+		}
+	}
+
+	// Build index.html (first document or main page)
+	if len(b.SiteDocuments) > 0 {
+		// Use first document as index
+		var firstDoc siteDocumentT
+		var firstName string
+		for name, doc := range b.SiteDocuments {
+			firstDoc = doc
+			firstName = name
+			break
+		}
+		indexPath := filepath.Join(b.PathOutputDir, "index.html")
+		err = b.renderDocument(templateHtml, indexPath, firstDoc.Html, firstName)
+		if err != nil {
+			return fmt.Errorf("error rendering index.html: %w", err)
+		}
+	}
+
+	// -------------------
+	// Save search index
+	// -------------------
+	searchDir := filepath.Join(b.PathOutputDir, "search")
+	err = os.MkdirAll(searchDir, 0755)
+	if err != nil {
+		return fmt.Errorf("error creating search directory: %w", err)
+	}
+
+	searchIndexPath := filepath.Join(searchDir, "search_index.js")
+	// TODO: Implement proper search index building
+	searchJs := `App.searchData = {
+    "config": {
+        "lang": ["en"],
+        "min_search_length": 3,
+        "prebuild_index": false,
+        "separator": "[\\s\\-]+"
+    },
+    "docs": []
+};`
+
+	err = os.WriteFile(searchIndexPath, []byte(searchJs), 0644)
+	if err != nil {
+		return fmt.Errorf("error writing search index: %w", err)
+	}
+
 	return nil
 }
 
@@ -489,4 +651,95 @@ func (ms *menuNodeT) Add(
 
 func mdDocumentNameToDocumentName(mdDocumentName string) string {
 	return strings.TrimSuffix(filepath.Base(mdDocumentName), filepath.Ext(mdDocumentName))
+}
+
+func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documentName string) error {
+	qlog.Infof("Building %s...", outputPath)
+
+	masterTitle := b.MasterTitle
+	watermark := b.Watermark
+
+	documentHtml := strings.ReplaceAll(templateHtml, "{{% content %}}", contentHtml)
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% master_title %}}", masterTitle)
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% master_title_nav %}}", strings.ReplaceAll(masterTitle, "<br>", " "))
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% sidebar_menu %}}", b.MenuHtml)
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% current_document_name %}}", documentName)
+	documentHtml = strings.ReplaceAll(documentHtml, "'{{% single_file %}}'", "false") // TODO: implement proper logic
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% watermark %}}", watermark)
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% electro_version %}}", "1.0.0")          // TODO: get from config
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% year %}}", "2025")                      // TODO: get current year
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% timestamp %}}", "2025-10-12T00:00:00Z") // TODO: implement proper timestamp
+
+	// Ensure output directory exists
+	err := os.MkdirAll(filepath.Dir(outputPath), 0755)
+	if err != nil {
+		return fmt.Errorf("error creating output directory: %w", err)
+	}
+
+	err = os.WriteFile(outputPath, []byte(documentHtml), 0644)
+	if err != nil {
+		return fmt.Errorf("error writing output file: %w", err)
+	}
+
+	return nil
+}
+
+func copyFile(src, dst string) error {
+	sourceFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+
+	// Ensure destination directory exists
+	err = os.MkdirAll(filepath.Dir(dst), 0755)
+	if err != nil {
+		return err
+	}
+
+	destFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	_, err = destFile.ReadFrom(sourceFile)
+	return err
+}
+
+func copyDirectoryContents(srcDir, dstDir string) error {
+	// Check if source directory exists
+	if !pathIsDir(srcDir) {
+		return fmt.Errorf("source directory does not exist: %s", srcDir)
+	}
+
+	// Create destination directory
+	err := os.MkdirAll(dstDir, 0755)
+	if err != nil {
+		return err
+	}
+
+	entries, err := os.ReadDir(srcDir)
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range entries {
+		srcPath := filepath.Join(srcDir, entry.Name())
+		dstPath := filepath.Join(dstDir, entry.Name())
+
+		if entry.IsDir() {
+			err = copyDirectoryContents(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		} else {
+			err = copyFile(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
