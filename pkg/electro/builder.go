@@ -191,10 +191,8 @@ func (mb *menuBuilderT) CullItemsAbove(level int) {
 		mb.Sections[i].Children = mb.cullItemsAboveRecursive(
 			level+1,
 			0,
-			&menuNodeT{
-				NodeType: NodeTypeMenuItem,
-				Children: mb.Sections[i].Children,
-			})
+			newMenuItem("", mb.Sections[i].Children, "", "", ""),
+		)
 	}
 }
 
@@ -276,10 +274,11 @@ func newMenuSection(displayText string, isDivider bool) *menuNodeT {
 	}
 }
 
-func newMenuItem(displayText string, headingId string, linkUrl string, documentName string) *menuNodeT {
+func newMenuItem(displayText string, children []menuNodeT, headingId string, linkUrl string, documentName string) *menuNodeT {
 	return &menuNodeT{
 		NodeType:     NodeTypeMenuItem,
 		DisplayText:  displayText,
+		Children:     children,
 		HeadingId:    headingId,
 		LinkUrl:      linkUrl,
 		DocumentName: documentName,
@@ -293,7 +292,7 @@ func (ms *menuNodeT) Add(
 	linkUrl string,
 	documentName string,
 ) {
-	newItem := newMenuItem(displayText, headingId, linkUrl, documentName)
+	newItem := newMenuItem(displayText, []menuNodeT{}, headingId, linkUrl, documentName)
 	if level == 0 {
 		ms.Children = append(ms.Children, *newItem)
 		ms.LastChildAtLevel[0] = *newItem
