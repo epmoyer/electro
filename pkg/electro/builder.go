@@ -15,8 +15,8 @@ const maxMenuDepth = 6
 type MenuNodeTypeT int
 
 const (
-	NodeMenuItem MenuNodeTypeT = iota
-	NodeMenuSection
+	NodeTypeMenuItem MenuNodeTypeT = iota
+	NodeTypeMenuSection
 )
 
 type siteDocumentT struct {
@@ -192,7 +192,7 @@ func (mb *menuBuilderT) CullItemsAbove(level int) {
 			level+1,
 			0,
 			&menuNodeT{
-				NodeType: NodeMenuItem,
+				NodeType: NodeTypeMenuItem,
 				Children: mb.Sections[i].Children,
 			})
 	}
@@ -223,7 +223,7 @@ func (mb *menuBuilderT) CullItemsBelow(level int) {
 		// NOTE: level is the "item" level depth, and does not include the section, but we
 		//       are recursing a tree where level 0 is the section node, so we add
 		//       1 to the passed in level.
-		tempNode := menuNodeT{NodeType: NodeMenuItem, Children: mb.Sections[i].Children}
+		tempNode := menuNodeT{NodeType: NodeTypeMenuItem, Children: mb.Sections[i].Children}
 		mb.cullItemsBelowRecursive(level+1, 0, &tempNode)
 		mb.Sections[i].Children = tempNode.Children
 	}
@@ -249,13 +249,13 @@ func (mb *menuBuilderT) Dump(display bool) {
 func (mb *menuBuilderT) DumpRecursive(node menuNodeT, display bool, level int) {
 	indent := strings.Repeat("    ", level)
 	var prefix string
-	if node.NodeType == NodeMenuSection {
+	if node.NodeType == NodeTypeMenuSection {
 		prefix = "@ "
 	} else {
 		prefix = "- "
 	}
 	text := indent + prefix + " " + node.DisplayText
-	if node.NodeType == NodeMenuItem {
+	if node.NodeType == NodeTypeMenuItem {
 		text += fmt.Sprintf(":: %s, %s, %s", node.DocumentName, node.LinkUrl, node.HeadingId)
 	}
 	qlog.Debug(text)
@@ -269,7 +269,7 @@ func (mb *menuBuilderT) DumpRecursive(node menuNodeT, display bool, level int) {
 
 func newMenuSection(displayText string, isDivider bool) *menuNodeT {
 	return &menuNodeT{
-		NodeType:         NodeMenuSection,
+		NodeType:         NodeTypeMenuSection,
 		DisplayText:      displayText,
 		IsDivider:        isDivider,
 		LastChildAtLevel: make([]menuNodeT, maxMenuDepth),
@@ -278,7 +278,7 @@ func newMenuSection(displayText string, isDivider bool) *menuNodeT {
 
 func newMenuItem(displayText string, headingId string, linkUrl string, documentName string) *menuNodeT {
 	return &menuNodeT{
-		NodeType:     NodeMenuItem,
+		NodeType:     NodeTypeMenuItem,
 		DisplayText:  displayText,
 		HeadingId:    headingId,
 		LinkUrl:      linkUrl,
