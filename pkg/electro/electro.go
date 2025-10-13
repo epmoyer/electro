@@ -88,6 +88,7 @@ func BuildProject(pathCommandLineArg string) error {
 		pathProjectDir,
 		pathThemeDirectory,
 		isStaticSite,
+		configProject.Level1HeadingsAreDocumentTitles,
 	)
 	for _, nd := range configProject.Navigation {
 		err := builder.AddNavigationDescriptor(nd)

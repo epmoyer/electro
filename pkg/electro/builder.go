@@ -156,7 +156,8 @@ func (b *builderT) RenderSite() error {
 	} else {
 		b.MenuBuilder.CullItemsBelow(1)
 	}
-	b.MenuBuilder.Dump()
+	// FIXME: Should we pass this flag as a command line arg, or show conditional on something else?
+	b.MenuBuilder.Dump(true)
 	return nil
 }
 
@@ -247,8 +248,16 @@ func (mb *menuBuilderT) Dump(display bool) {
 
 func (mb *menuBuilderT) DumpRecursive(node menuNodeT, display bool, level int) {
 	indent := strings.Repeat("    ", level)
-	text := indent + "🟡 " + node.DisplayText + " :: " + node.DocumentName + ", " +
-		node.LinkUrl + ", " + node.HeadingId
+	var prefix string
+	if node.NodeType == NodeMenuSection {
+		prefix = "@ "
+	} else {
+		prefix = "- "
+	}
+	text := indent + prefix + " " + node.DisplayText
+	if node.NodeType == NodeMenuItem {
+		text += fmt.Sprintf(":: %s, %s, %s", node.DocumentName, node.LinkUrl, node.HeadingId)
+	}
 	qlog.Debug(text)
 	if display {
 		fmt.Println(text)
