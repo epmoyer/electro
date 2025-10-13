@@ -128,6 +128,12 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 
 func (b *builderT) RenderSite() error {
 	// FIXME: implement
+	if b.Level1HeadingsAreDocumentTitles {
+		b.MenuBuilder.CullItemsAbove(1)
+	} else {
+		b.MenuBuilder.CullItemsBelow(1)
+	}
+	b.MenuBuilder.Dump()
 	return nil
 }
 
@@ -148,6 +154,61 @@ func (mb *menuBuilderT) AddItem(
 	}
 	section := &mb.Sections[len(mb.Sections)-1]
 	section.Add(level, displayText, headingId, linkUrl, documentName)
+}
+
+func (mb *menuBuilderT) CullItemsAbove(level int) {
+	// Remove all menu items ABOVE level (i.e. at an indent LESS than level).
+	// NOTE: level is the "item" level, and does not include the section.
+	qlog.Infof("CullItemsAbove(): %d", level)
+	for i := range mb.Sections {
+		// NOTE: level is the "item" level depth, and does not include the section, but we
+		//       are recursing a tree where level 0 is the section node, so we add
+		//       1 to the passed in level.
+		mb.Sections[i].Children = mb.cullItemsAboveRecursive(
+			level+1, 0, &menuItemT{Children: mb.Sections[i].Children})
+	}
+}
+
+func (mb *menuBuilderT) cullItemsAboveRecursive(
+	cullLevel,
+	currentLevel int,
+	node *menuItemT,
+) []menuItemT {
+	if cullLevel == currentLevel+1 {
+		return node.Children
+	}
+	var retainedItems []menuItemT
+	for i := range node.Children {
+		retainedItems = append(
+			retainedItems,
+			mb.cullItemsAboveRecursive(cullLevel, currentLevel+1, &node.Children[i])...)
+	}
+	return retainedItems
+}
+
+func (mb *menuBuilderT) CullItemsBelow(level int) {
+	// Remove all menu items BELOW level (i.e. at an indent GREATER than level).
+	// NOTE: level is the "item" level, and does not include the section.
+	qlog.Infof("CullItemsBelow(): %d", level)
+	for i := range mb.Sections {
+		// NOTE: level is the "item" level depth, and does not include the section, but we
+		//       are recursing a tree where level 0 is the section node, so we add
+		//       1 to the passed in level.
+		tempNode := menuItemT{Children: mb.Sections[i].Children}
+		mb.cullItemsBelowRecursive(level+1, 0, &tempNode)
+		mb.Sections[i].Children = tempNode.Children
+	}
+}
+
+func (mb *menuBuilderT) cullItemsBelowRecursive(cullLevel, currentLevel int, node *menuItemT) {
+	if cullLevel == currentLevel {
+		node.Children = []menuItemT{}
+		return
+	}
+
+	for i := range node.Children {
+		mb.cullItemsBelowRecursive(cullLevel, currentLevel+1, &node.Children[i])
+	}
 }
 
 func newMenuSection(displayText string, isDivider bool) *menuSectionT {
