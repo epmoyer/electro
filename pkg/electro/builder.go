@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 )
 
 const maxMenuDepth = 6
@@ -135,7 +136,14 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
 	}
 	var bufHtmlBytes bytes.Buffer
-	err = goldmark.Convert(mdData, &bufHtmlBytes)
+	mdConverter := goldmark.New(
+		goldmark.WithExtensions(
+			extension.Table,
+		),
+	)
+	// Convert markdown to HTML
+
+	err = mdConverter.Convert(mdData, &bufHtmlBytes)
 	if err != nil {
 		return fmt.Errorf("error converting markdown to HTML for document %q: %w", documentName, err)
 	}
