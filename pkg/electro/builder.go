@@ -128,6 +128,8 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	}
 	b.MenuHtml += "</ul>\n"
 
+	qlog.Debugf("Menu structure after adding section %#v:", b.MenuBuilder.Nodes)
+
 	b.MenuBuilder.Dump(true)
 	return nil
 }
@@ -387,11 +389,13 @@ func (mb *menuBuilderT) AddItem(
 	linkUrl string,
 	documentName string,
 ) {
+	qlog.Debugf("AddItem(): level=%d displayText=%q headingId=%q linkUrl=%q documentName=%q", level, displayText, headingId, linkUrl, documentName)
 	if documentName != "" {
 		mb.CurrentDocumentName = documentName
 	}
-	section := &mb.Nodes[len(mb.Nodes)-1]
-	section.Add(level, displayText, headingId, linkUrl, documentName)
+	currentNode := &mb.Nodes[len(mb.Nodes)-1]
+	qlog.Debugf("Current node before Add: %+v", currentNode)
+	currentNode.Add(level, displayText, headingId, linkUrl, documentName)
 }
 
 func (mb *menuBuilderT) CullItemsAbove(level int) {
