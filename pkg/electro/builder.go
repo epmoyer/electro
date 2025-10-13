@@ -269,9 +269,20 @@ func (mb *menuBuilderT) DumpRecursive(node menuNodeT, display bool, level int) {
 
 func newMenuSection(displayText string, isDivider bool) *menuNodeT {
 	return &menuNodeT{
+		NodeType:         NodeMenuSection,
 		DisplayText:      displayText,
 		IsDivider:        isDivider,
 		LastChildAtLevel: make([]menuNodeT, maxMenuDepth),
+	}
+}
+
+func newMenuItem(displayText string, headingId string, linkUrl string, documentName string) *menuNodeT {
+	return &menuNodeT{
+		NodeType:     NodeMenuItem,
+		DisplayText:  displayText,
+		HeadingId:    headingId,
+		LinkUrl:      linkUrl,
+		DocumentName: documentName,
 	}
 }
 
@@ -282,20 +293,14 @@ func (ms *menuNodeT) Add(
 	linkUrl string,
 	documentName string,
 ) {
-	newItem := menuNodeT{
-		NodeType:     NodeMenuItem,
-		DisplayText:  displayText,
-		HeadingId:    headingId,
-		LinkUrl:      linkUrl,
-		DocumentName: documentName,
-	}
+	newItem := newMenuItem(displayText, headingId, linkUrl, documentName)
 	if level == 0 {
-		ms.Children = append(ms.Children, newItem)
-		ms.LastChildAtLevel[0] = newItem
+		ms.Children = append(ms.Children, *newItem)
+		ms.LastChildAtLevel[0] = *newItem
 	} else {
 		if level < len(ms.LastChildAtLevel) {
 			parent := &ms.LastChildAtLevel[level-1]
-			parent.Children = append(parent.Children, newItem)
+			parent.Children = append(parent.Children, *newItem)
 			// Clear "last child" of all levels deeper than this one.
 			// NOTE: This is not strictly necessary, but it will
 			//       defensively keep us from creating a weird tree if the
