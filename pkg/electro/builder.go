@@ -12,6 +12,13 @@ import (
 
 const maxMenuDepth = 6
 
+type MenuNodeTypeT int
+
+const (
+	NodeMenuItem MenuNodeTypeT = iota
+	NodeMenuSection
+)
+
 type siteDocumentT struct {
 	PathMarkdown string
 	Html         string
@@ -208,6 +215,24 @@ func (mb *menuBuilderT) cullItemsBelowRecursive(cullLevel, currentLevel int, nod
 
 	for i := range node.Children {
 		mb.cullItemsBelowRecursive(cullLevel, currentLevel+1, &node.Children[i])
+	}
+}
+
+func (mb *menuBuilderT) Dump(display bool) {
+	for _, section := range mb.Sections {
+		mb.DumpRecursive(section, display, 0)
+	}
+}
+
+func (mb *menuBuilderT) DumpRecursive(node menuItemT, display bool, level int) {
+	indent := strings.Repeat("    ", level)
+	text := indent + "🟡 " + node.DisplayText + " :: " + node.DocumentName + ", " + node.LinkUrl + ", " + node.HeadingId
+	qlog.Debug(text)
+	if display {
+		fmt.Println(text)
+	}
+	for i := range node.Children {
+		mb.DumpRecursive(node.Children[i], display, level+1)
 	}
 }
 
