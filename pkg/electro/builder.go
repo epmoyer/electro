@@ -221,8 +221,8 @@ func (mb *menuBuilderT) CullItemsBelow(level int) {
 		// NOTE: level is the "item" level depth, and does not include the section, but we
 		//       are recursing a tree where level 0 is the section node, so we add
 		//       1 to the passed in level.
-		tempNode := menuNodeT{NodeType: NodeTypeMenuItem, Children: mb.Sections[i].Children}
-		mb.cullItemsBelowRecursive(level+1, 0, &tempNode)
+		tempNode := newMenuItem("", mb.Sections[i].Children, "", "", "")
+		mb.cullItemsBelowRecursive(level+1, 0, tempNode)
 		mb.Sections[i].Children = tempNode.Children
 	}
 }
