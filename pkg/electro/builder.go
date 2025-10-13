@@ -41,7 +41,7 @@ type builderT struct {
 }
 
 type menuBuilderT struct {
-	Sections            []menuNodeT
+	Nodes               []menuNodeT
 	CurrentDocumentName string
 	IsFirstDivider      bool
 }
@@ -158,12 +158,13 @@ func (b *builderT) RenderSite() error {
 	}
 	// FIXME: Should we pass this flag as a command line arg, or show conditional on something else?
 	b.MenuBuilder.Dump(true)
+	b.MenuHtml = b.MenuBuilder.RenderHtml()
 	return nil
 }
 
 func (mb *menuBuilderT) AddSection(displayText string, isDivider bool) {
 	section := newMenuSection(displayText, isDivider)
-	mb.Sections = append(mb.Sections, *section)
+	mb.Nodes = append(mb.Nodes, *section)
 }
 
 func (mb *menuBuilderT) AddItem(
@@ -176,7 +177,7 @@ func (mb *menuBuilderT) AddItem(
 	if documentName != "" {
 		mb.CurrentDocumentName = documentName
 	}
-	section := &mb.Sections[len(mb.Sections)-1]
+	section := &mb.Nodes[len(mb.Nodes)-1]
 	section.Add(level, displayText, headingId, linkUrl, documentName)
 }
 
@@ -184,14 +185,14 @@ func (mb *menuBuilderT) CullItemsAbove(level int) {
 	// Remove all menu items ABOVE level (i.e. at an indent LESS than level).
 	// NOTE: level is the "item" level, and does not include the section.
 	qlog.Infof("CullItemsAbove(): %d", level)
-	for i := range mb.Sections {
+	for i := range mb.Nodes {
 		// NOTE: level is the "item" level depth, and does not include the section, but we
 		//       are recursing a tree where level 0 is the section node, so we add
 		//       1 to the passed in level.
-		mb.Sections[i].Children = mb.cullItemsAboveRecursive(
+		mb.Nodes[i].Children = mb.cullItemsAboveRecursive(
 			level+1,
 			0,
-			newMenuItem("", mb.Sections[i].Children, "", "", ""),
+			newMenuItem("", mb.Nodes[i].Children, "", "", ""),
 		)
 	}
 }
@@ -217,13 +218,13 @@ func (mb *menuBuilderT) CullItemsBelow(level int) {
 	// Remove all menu items BELOW level (i.e. at an indent GREATER than level).
 	// NOTE: level is the "item" level, and does not include the section.
 	qlog.Infof("CullItemsBelow(): %d", level)
-	for i := range mb.Sections {
+	for i := range mb.Nodes {
 		// NOTE: level is the "item" level depth, and does not include the section, but we
 		//       are recursing a tree where level 0 is the section node, so we add
 		//       1 to the passed in level.
-		tempNode := newMenuItem("", mb.Sections[i].Children, "", "", "")
+		tempNode := newMenuItem("", mb.Nodes[i].Children, "", "", "")
 		mb.cullItemsBelowRecursive(level+1, 0, tempNode)
-		mb.Sections[i].Children = tempNode.Children
+		mb.Nodes[i].Children = tempNode.Children
 	}
 }
 
@@ -239,7 +240,7 @@ func (mb *menuBuilderT) cullItemsBelowRecursive(cullLevel, currentLevel int, nod
 }
 
 func (mb *menuBuilderT) Dump(display bool) {
-	for _, section := range mb.Sections {
+	for _, section := range mb.Nodes {
 		mb.DumpRecursive(section, display, 0)
 	}
 }
@@ -263,6 +264,43 @@ func (mb *menuBuilderT) DumpRecursive(node menuNodeT, display bool, level int) {
 	for i := range node.Children {
 		mb.DumpRecursive(node.Children[i], display, level+1)
 	}
+}
+
+func (mb *menuBuilderT) RenderHtml() string {
+	var html string
+	for _, node := range mb.Nodes {
+		html += mb.RenderHtmlNode(node)
+	}
+	return html
+}
+
+func (mb *menuBuilderT) RenderHtmlNode(node menuNodeT) string {
+	var html string
+	if node.IsDivider {
+		if mb.IsFirstDivider {
+			mb.IsFirstDivider = false
+		} else {
+			html += "<hr>\n"
+		}
+	}
+	var headingClass string
+	if node.IsDivider {
+		headingClass = "section-heading-divider"
+	} else {
+		headingClass = "section-heading"
+	}
+	if node.DisplayText != "" {
+		html += fmt.Sprintf("<div class=\"%s\">%s</div>\n", headingClass, node.DisplayText)
+	}
+	html += "<ul class=\"menu-tree\">\n"
+	html += mb.renderHtmlForNodeChildren(0, node.Children)
+	return html
+}
+
+func (mb *menuBuilderT) renderHtmlForNodeChildren(level int, children []menuNodeT) string {
+	var html string
+
+	return html
 }
 
 func newMenuSection(displayText string, isDivider bool) *menuNodeT {
