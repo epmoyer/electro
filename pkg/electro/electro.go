@@ -83,7 +83,12 @@ func BuildProject(pathCommandLineArg string) error {
 	// Build project
 	// -----------------------
 	isStaticSite := strings.ToLower(configProject.OutputFormat) == "static_site"
-	builder := newBuilder(pathOutputDir, pathProjectDir, pathThemeDirectory, isStaticSite)
+	builder := newBuilder(
+		pathOutputDir,
+		pathProjectDir,
+		pathThemeDirectory,
+		isStaticSite,
+	)
 	for _, nd := range configProject.Navigation {
 		err := builder.AddNavigationDescriptor(nd)
 		if err != nil {

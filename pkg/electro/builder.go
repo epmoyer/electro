@@ -19,10 +19,11 @@ type siteDocumentT struct {
 
 type builderT struct {
 	// Config
-	PathOutputDir  string
-	PathProjectDir string
-	PathThemeDir   string
-	IsStaticSite   bool
+	PathOutputDir                   string
+	PathProjectDir                  string
+	PathThemeDir                    string
+	IsStaticSite                    bool
+	Level1HeadingsAreDocumentTitles bool
 
 	// Runtime
 	MenuHtml      string
@@ -53,13 +54,19 @@ type menuSectionT struct {
 	IsDivider        bool
 }
 
-func newBuilder(pathOutputDir string, pathProjectDir string, pathThemeDir string, isStaticSite bool) *builderT {
+func newBuilder(pathOutputDir string,
+	pathProjectDir string,
+	pathThemeDir string,
+	isStaticSite bool,
+	level1HeadingsAreDocumentTitles bool,
+) *builderT {
 	return &builderT{
 		// Config
-		PathOutputDir:  pathOutputDir,
-		PathProjectDir: pathProjectDir,
-		PathThemeDir:   pathThemeDir,
-		IsStaticSite:   isStaticSite,
+		PathOutputDir:                   pathOutputDir,
+		PathProjectDir:                  pathProjectDir,
+		PathThemeDir:                    pathThemeDir,
+		IsStaticSite:                    isStaticSite,
+		Level1HeadingsAreDocumentTitles: level1HeadingsAreDocumentTitles,
 		// Runtime
 		SiteDocuments: make(map[string]siteDocumentT),
 		Substitutions: make(map[string]string),
