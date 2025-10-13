@@ -122,9 +122,15 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 			linkUrl = documentName + ".html"
 		}
 		b.MenuBuilder.AddItem(0, menuName, "", linkUrl, documentName)
+		b.BuildSubheadingMenus(documentName)
 	}
 	b.MenuHtml += "</ul>\n"
 	return nil
+}
+
+func (b *builderT) BuildSubheadingMenus(documentName string) {
+	documentHtml := b.SiteDocuments[documentName].Html
+	// Parse document like BeautifulSoup and extract headings
 }
 
 func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error {
