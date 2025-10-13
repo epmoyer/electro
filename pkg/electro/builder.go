@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
+	"golang.org/x/net/html"
 )
 
 const maxMenuDepth = 6
@@ -125,12 +127,39 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 		b.BuildSubheadingMenus(documentName)
 	}
 	b.MenuHtml += "</ul>\n"
+
+	b.MenuBuilder.Dump(true)
 	return nil
 }
 
 func (b *builderT) BuildSubheadingMenus(documentName string) {
 	documentHtml := b.SiteDocuments[documentName].Html
-	// Parse document like BeautifulSoup and extract headings
+
+	// Parse HTML to extract h2 and h3 headings
+	headings := extractHeadings(documentHtml, []string{"h2", "h3"})
+	qlog.Debugf("Extracted headings from %s: %+v", documentName, headings)
+
+	for _, heading := range headings {
+		// Determine the level: h2 = level 1, h3 = level 2
+		level := 1
+		if heading.Tag == "h3" {
+			level = 2
+		}
+
+		// Generate heading ID from text
+		headingId := headingTextToId(heading.Text)
+
+		// Create link URL for the heading
+		linkUrl := ""
+		if b.IsStaticSite {
+			linkUrl = documentName + ".html#" + headingId
+		} else {
+			linkUrl = "#" + headingId
+		}
+
+		// Add the heading to the menu
+		b.MenuBuilder.AddItem(level, heading.Text, headingId, linkUrl, documentName)
+	}
 }
 
 func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error {
@@ -762,4 +791,98 @@ func copyDirectoryContents(srcDir, dstDir string) error {
 	}
 
 	return nil
+}
+
+// headingT represents an HTML heading element
+type headingT struct {
+	Tag  string
+	Text string
+}
+
+// extractHeadings parses HTML and extracts headings of specified tags
+func extractHeadings(htmlContent string, tags []string) []headingT {
+	var headings []headingT
+
+	doc, err := html.Parse(strings.NewReader(htmlContent))
+	if err != nil {
+		qlog.Errorf("Error parsing HTML: %v", err)
+		return headings
+	}
+
+	var traverse func(*html.Node)
+	traverse = func(n *html.Node) {
+		if n.Type == html.ElementNode {
+			for _, tag := range tags {
+				if n.Data == tag {
+					text := extractTextContent(n)
+					if text != "" {
+						headings = append(headings, headingT{
+							Tag:  tag,
+							Text: text,
+						})
+					}
+					break
+				}
+			}
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			traverse(c)
+		}
+	}
+
+	traverse(doc)
+	return headings
+}
+
+// extractTextContent extracts text content from an HTML node
+func extractTextContent(n *html.Node) string {
+	var text strings.Builder
+	var traverse func(*html.Node)
+	traverse = func(node *html.Node) {
+		if node.Type == html.TextNode {
+			text.WriteString(node.Data)
+		}
+		for c := node.FirstChild; c != nil; c = c.NextSibling {
+			traverse(c)
+		}
+	}
+	traverse(n)
+	return strings.TrimSpace(text.String())
+}
+
+// headingTextToId converts heading text to a valid HTML ID
+// Based on the Python implementation in the build.py file
+func headingTextToId(text string) string {
+	originalText := text
+	var id strings.Builder
+	dashAppended := false
+
+	// Replace non-breaking space with regular space
+	text = strings.ReplaceAll(text, "&nbsp;", " ")
+	text = strings.ReplaceAll(text, "\u00a0", " ")
+
+	// Replace &amp; back to & (for consistency with markdown processing)
+	text = strings.ReplaceAll(text, "&amp;", "&")
+
+	// Replace decimal with dashes so that heading numbers like "3.12" vs "31.2" remain unique
+	text = strings.ReplaceAll(text, ".", "-")
+
+	for _, char := range strings.ToLower(text) {
+		if (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9') {
+			id.WriteRune(char)
+			dashAppended = false
+		} else if !dashAppended {
+			id.WriteRune('-')
+			dashAppended = true
+		}
+	}
+
+	// Combine multiple dashes into single dash
+	result := regexp.MustCompile(`-+`).ReplaceAllString(id.String(), "-")
+
+	// Remove leading and trailing dashes
+	result = strings.Trim(result, "-")
+
+	qlog.Debugf("headingTextToId() %q -> %q", originalText, result)
+	return result
 }
