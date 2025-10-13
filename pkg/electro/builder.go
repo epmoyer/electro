@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
 )
 
@@ -138,7 +139,10 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	var bufHtmlBytes bytes.Buffer
 	mdConverter := goldmark.New(
 		goldmark.WithExtensions(
-			extension.Table,
+			extension.GFM,
+			highlighting.NewHighlighting(
+				highlighting.WithStyle("monokai"),
+			),
 		),
 	)
 	// Convert markdown to HTML
