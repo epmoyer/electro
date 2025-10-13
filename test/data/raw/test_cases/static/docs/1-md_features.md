@@ -38,6 +38,7 @@ split from this line.
 **Bold**, _Italics Form 1_, *Italics Form 2*
 
 ## Table
+
 | Column 1 | Column 2 | Column 3 |
 | -------- | -------- | -------- |
 | Data 1   | Data 2   | Data 3   |

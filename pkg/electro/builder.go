@@ -274,7 +274,9 @@ func (b *builderT) RenderSite() error {
 	// For now, implement basic multi-file output
 	for documentName, siteDocument := range b.SiteDocuments {
 		outputPath := filepath.Join(b.PathOutputDir, documentName+".html")
-		err = b.renderDocument(templateHtml, outputPath, siteDocument.Html, documentName)
+		documentHtml := "<div class=\"content-page\">" + siteDocument.Html + "</div>"
+
+		err = b.renderDocument(templateHtml, outputPath, documentHtml, documentName)
 		if err != nil {
 			return fmt.Errorf("error rendering document %s: %w", documentName, err)
 		}
