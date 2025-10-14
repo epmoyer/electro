@@ -674,7 +674,7 @@ func newMenuItem(displayText string, children []menuNodeT, headingId string, lin
 	}
 }
 
-func (ms *menuNodeT) Add(
+func (mn *menuNodeT) Add(
 	level int,
 	displayText string,
 	headingId string,
@@ -683,18 +683,18 @@ func (ms *menuNodeT) Add(
 ) {
 	newItem := newMenuItem(displayText, []menuNodeT{}, headingId, linkUrl, documentName)
 	if level == 0 {
-		ms.Children = append(ms.Children, *newItem)
-		ms.LastChildAtLevel[0] = *newItem
+		mn.Children = append(mn.Children, *newItem)
+		mn.LastChildAtLevel[0] = *newItem
 	} else {
-		if level < len(ms.LastChildAtLevel) {
-			parent := &ms.LastChildAtLevel[level-1]
+		if level < len(mn.LastChildAtLevel) {
+			parent := &mn.LastChildAtLevel[level-1]
 			parent.Children = append(parent.Children, *newItem)
 			// Clear "last child" of all levels deeper than this one.
 			// NOTE: This is not strictly necessary, but it will
 			//       defensively keep us from creating a weird tree if the
 			//       input is badly formed.
-			for i := level; i < len(ms.LastChildAtLevel); i++ {
-				ms.LastChildAtLevel[i] = menuNodeT{}
+			for i := level; i < len(mn.LastChildAtLevel); i++ {
+				mn.LastChildAtLevel[i] = menuNodeT{}
 			}
 		} else {
 			// Invalid level, ignore
