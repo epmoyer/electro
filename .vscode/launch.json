@@ -13,9 +13,7 @@
             "args": ["--project=../test/data/processed/test_cases/static/incoming/electro.json"],
             "stopOnEntry": false,
             "showLog": true,
-            "trace": "verbose",
-            // "buildFlags": "-gcflags='all=-N -l'",
-            // "dlvFlags": ["--check-go-version=false"]
+            "trace": "verbose"
         }
     ]
 }

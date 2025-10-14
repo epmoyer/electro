@@ -47,7 +47,7 @@ type builderT struct {
 }
 
 type menuBuilderT struct {
-	Nodes               []menuNodeT
+	Nodes               []*menuNodeT
 	CurrentDocumentName string
 	IsFirstDivider      bool
 }
@@ -71,7 +71,7 @@ type menuNodeT struct {
 	// Common to all node types
 	NodeType    MenuNodeTypeT
 	DisplayText string
-	Children    []menuNodeT
+	Children    []*menuNodeT
 
 	// NodeType:NodeMenuSection
 	LastChildAtLevel []*menuNodeT
@@ -379,7 +379,7 @@ func (b *builderT) RenderSite() error {
 
 func (mb *menuBuilderT) AddSection(displayText string, isDivider bool) {
 	section := newMenuSection(displayText, isDivider)
-	mb.Nodes = append(mb.Nodes, *section)
+	mb.Nodes = append(mb.Nodes, section)
 }
 
 func (mb *menuBuilderT) AddItem(
@@ -393,7 +393,7 @@ func (mb *menuBuilderT) AddItem(
 	if documentName != "" {
 		mb.CurrentDocumentName = documentName
 	}
-	currentNode := &mb.Nodes[len(mb.Nodes)-1]
+	currentNode := mb.Nodes[len(mb.Nodes)-1]
 	qlog.Debugf("Current node before Add: %+v", currentNode)
 	currentNode.Add(level, displayText, headingId, linkUrl, documentName)
 }
@@ -418,15 +418,15 @@ func (mb *menuBuilderT) cullItemsAboveRecursive(
 	cullLevel,
 	currentLevel int,
 	node *menuNodeT,
-) []menuNodeT {
+) []*menuNodeT {
 	if cullLevel == currentLevel+1 {
 		return node.Children
 	}
-	var retainedItems []menuNodeT
+	var retainedItems []*menuNodeT
 	for i := range node.Children {
 		retainedItems = append(
 			retainedItems,
-			mb.cullItemsAboveRecursive(cullLevel, currentLevel+1, &node.Children[i])...)
+			mb.cullItemsAboveRecursive(cullLevel, currentLevel+1, node.Children[i])...)
 	}
 	return retainedItems
 }
@@ -447,12 +447,12 @@ func (mb *menuBuilderT) CullItemsBelow(level int) {
 
 func (mb *menuBuilderT) cullItemsBelowRecursive(cullLevel, currentLevel int, node *menuNodeT) {
 	if cullLevel == currentLevel {
-		node.Children = []menuNodeT{}
+		node.Children = []*menuNodeT{}
 		return
 	}
 
 	for i := range node.Children {
-		mb.cullItemsBelowRecursive(cullLevel, currentLevel+1, &node.Children[i])
+		mb.cullItemsBelowRecursive(cullLevel, currentLevel+1, node.Children[i])
 	}
 }
 
@@ -462,7 +462,7 @@ func (mb *menuBuilderT) Dump(display bool) {
 	}
 }
 
-func (mb *menuBuilderT) DumpRecursive(node menuNodeT, display bool, level int) {
+func (mb *menuBuilderT) DumpRecursive(node *menuNodeT, display bool, level int) {
 	indent := strings.Repeat("    ", level)
 	var prefix string
 	if node.NodeType == NodeTypeMenuSection {
@@ -491,7 +491,7 @@ func (mb *menuBuilderT) RenderHtml() string {
 	return html
 }
 
-func (mb *menuBuilderT) RenderHtmlNode(node menuNodeT) string {
+func (mb *menuBuilderT) RenderHtmlNode(node *menuNodeT) string {
 	var html string
 	if node.IsDivider {
 		if mb.IsFirstDivider {
@@ -515,7 +515,7 @@ func (mb *menuBuilderT) RenderHtmlNode(node menuNodeT) string {
 	return html
 }
 
-func (mb *menuBuilderT) renderHtmlForNodeChildren(level int, children []menuNodeT) string {
+func (mb *menuBuilderT) renderHtmlForNodeChildren(level int, children []*menuNodeT) string {
 	var html string
 
 	for _, child := range children {
@@ -663,7 +663,7 @@ func newMenuSection(displayText string, isDivider bool) *menuNodeT {
 	}
 }
 
-func newMenuItem(displayText string, children []menuNodeT, headingId string, linkUrl string, documentName string) *menuNodeT {
+func newMenuItem(displayText string, children []*menuNodeT, headingId string, linkUrl string, documentName string) *menuNodeT {
 	return &menuNodeT{
 		NodeType:     NodeTypeMenuItem,
 		DisplayText:  displayText,
@@ -681,14 +681,14 @@ func (mn *menuNodeT) Add(
 	linkUrl string,
 	documentName string,
 ) {
-	newItem := newMenuItem(displayText, []menuNodeT{}, headingId, linkUrl, documentName)
+	newItem := newMenuItem(displayText, []*menuNodeT{}, headingId, linkUrl, documentName)
 	if level == 0 {
-		mn.Children = append(mn.Children, *newItem)
+		mn.Children = append(mn.Children, newItem)
 		mn.LastChildAtLevel[0] = newItem
 	} else {
 		if level < len(mn.LastChildAtLevel) {
 			parent := mn.LastChildAtLevel[level-1]
-			parent.Children = append(parent.Children, *newItem)
+			parent.Children = append(parent.Children, newItem)
 			// Clear "last child" of all levels deeper than this one.
 			// NOTE: This is not strictly necessary, but it will
 			//       defensively keep us from creating a weird tree if the
