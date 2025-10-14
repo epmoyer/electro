@@ -74,7 +74,7 @@ type menuNodeT struct {
 	Children    []menuNodeT
 
 	// NodeType:NodeMenuSection
-	LastChildAtLevel []menuNodeT
+	LastChildAtLevel []*menuNodeT
 	IsDivider        bool
 
 	// NodeType:NodeMenuItem
@@ -659,7 +659,7 @@ func newMenuSection(displayText string, isDivider bool) *menuNodeT {
 		NodeType:         NodeTypeMenuSection,
 		DisplayText:      displayText,
 		IsDivider:        isDivider,
-		LastChildAtLevel: make([]menuNodeT, maxMenuDepth),
+		LastChildAtLevel: make([]*menuNodeT, maxMenuDepth),
 	}
 }
 
@@ -684,18 +684,19 @@ func (mn *menuNodeT) Add(
 	newItem := newMenuItem(displayText, []menuNodeT{}, headingId, linkUrl, documentName)
 	if level == 0 {
 		mn.Children = append(mn.Children, *newItem)
-		mn.LastChildAtLevel[0] = *newItem
+		mn.LastChildAtLevel[0] = newItem
 	} else {
 		if level < len(mn.LastChildAtLevel) {
-			parent := &mn.LastChildAtLevel[level-1]
+			parent := mn.LastChildAtLevel[level-1]
 			parent.Children = append(parent.Children, *newItem)
 			// Clear "last child" of all levels deeper than this one.
 			// NOTE: This is not strictly necessary, but it will
 			//       defensively keep us from creating a weird tree if the
 			//       input is badly formed.
-			for i := level; i < len(mn.LastChildAtLevel); i++ {
-				mn.LastChildAtLevel[i] = menuNodeT{}
-			}
+			// for i := level; i < len(mn.LastChildAtLevel); i++ {
+			// 	mn.LastChildAtLevel[i] = &menuNodeT{}
+			// }
+			mn.LastChildAtLevel[level] = newItem
 		} else {
 			// Invalid level, ignore
 		}
