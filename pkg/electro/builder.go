@@ -236,16 +236,21 @@ func (b *builderT) MdParseNotices(md string) (string, error) {
 		noticeDirective := match[0]
 		// This is the type of notice, e.g. "info"
 		noticeType := match[1]
-		htmlNoticeStart := buildHtmlSnippetNoticeStart(noticeType)
+		htmlNoticeStart, err := buildHtmlSnippetNoticeStart(noticeType)
+		if err != nil {
+			return "", fmt.Errorf("error building notice snippet for type %q: %w", noticeType, err)
+		}
+		sub := b.CreateSubstitution(htmlNoticeStart)
+		md = strings.ReplaceAll(md, noticeDirective, sub)
 	}
 	return md, nil
 }
 
-func (b *builderT) CreateSubstitution(final string) (string, error) {
+func (b *builderT) CreateSubstitution(final string) string {
 	// Create a substitution entry and return the placeholder
 	placeholder := fmt.Sprintf("<div class=\"PRE-PARSER-SUBSTITUTION-%d\"></div>", len(b.Substitutions)+1)
 	b.Substitutions[placeholder] = final
-	return placeholder, nil
+	return placeholder
 }
 
 func (b *builderT) PostParseHtml(html string) (string, error) {

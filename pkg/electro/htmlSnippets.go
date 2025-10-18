@@ -18,17 +18,7 @@ var noticeIcons = map[string]string{
 	"warning": "fa-exclamation-triangle",
 }
 
-// def build_snippet_notice_start(notice_type) -> Result[str, str]:
-//     icon = NOTICE_ICONS.get(notice_type)
-//     if notice_type is None:
-//         return Err(f'Unrecognized notice_type: {notice_type}.')
-//     return Ok(
-//         SNIPPET_NOTICE_START_TEMPLATE.replace('[[notice_type]]', notice_type)
-//         .replace('[[icon]]', icon)
-//         .replace('[[title]]', notice_type.capitalize())
-//     )
-
-func BuildSnippetNoticeStart(noticeType string) (string, error) {
+func buildHtmlSnippetNoticeStart(noticeType string) (string, error) {
 	var icon string
 	var ok bool
 
