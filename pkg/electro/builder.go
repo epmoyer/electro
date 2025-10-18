@@ -113,9 +113,10 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	}
 	b.MenuHtml += "</ul>\n"
 
-	qlog.Debugf("Menu structure after adding section %#v:", b.MenuBuilder.Nodes)
+	// For debugging:
+	// qlog.Debugf("Menu structure after adding section %#v:", b.MenuBuilder.Nodes)
+	// b.MenuBuilder.Dump(true)
 
-	b.MenuBuilder.Dump(true)
 	return nil
 }
 
