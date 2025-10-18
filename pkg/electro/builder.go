@@ -154,11 +154,22 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	if !pathIsFile(pathMarkdown) {
 		return fmt.Errorf("markdown document does not exist: %q", pathMarkdown)
 	}
+
+	// -------------------------
 	// Read markdown file
+	// -------------------------
 	mdData, err := os.ReadFile(pathMarkdown)
 	if err != nil {
 		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
 	}
+
+	// -------------------------
+	// Pre-parser
+	// -------------------------
+
+	// -------------------------
+	// Render markdown to HTML
+	// -------------------------
 	var bufHtmlBytes bytes.Buffer
 	mdConverter := goldmark.New(
 		goldmark.WithExtensions(
@@ -168,13 +179,18 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 			),
 		),
 	)
-	// Convert markdown to HTML
-
 	err = mdConverter.Convert(mdData, &bufHtmlBytes)
 	if err != nil {
 		return fmt.Errorf("error converting markdown to HTML for document %q: %w", documentName, err)
 	}
 
+	// -------------------------
+	// Post-parser
+	// -------------------------
+
+	// -------------------------
+	// Modify HTML
+	// -------------------------
 	// FIXME: implement
 	// Fix inter-document links
 	// Wrap images
