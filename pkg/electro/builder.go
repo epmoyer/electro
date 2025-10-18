@@ -237,7 +237,7 @@ func (b *builderT) RenderSite() error {
 		}
 	}
 
-	// TODO: Append customizations and mixins to overlay.css
+	// FIXME: Append customizations and mixins to overlay.css
 
 	// -------------------
 	// Copy Images
