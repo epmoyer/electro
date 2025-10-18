@@ -227,7 +227,18 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 
 func (b *builderT) MdParseNotices(md string) (string, error) {
 	// Parse custom notice blocks
-
+	// notice_start_types = re.findall(r'{{% notice (\S*) %}}', markdown)
+	reNoticeStart := regexp.MustCompile(`{{% notice (\S*) %}}`)
+	noticeTypes := reNoticeStart.FindAllStringSubmatch(md, -1)
+	for _, match := range noticeTypes {
+		fmt.Printf("*** Notice: %#v", match)
+		// This is the full directice, e.g. "{{% notice info %}}"
+		noticeDirective := match[0]
+		// This is the type of notice, e.g. "info"
+		noticeType := match[1]
+		htmlNoticeStart := buildHtmlSnippetNoticeStart(noticeType)
+	}
+	return md, nil
 }
 
 func (b *builderT) CreateSubstitution(final string) (string, error) {
