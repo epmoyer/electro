@@ -193,7 +193,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// -------------------------
 	// Post-parser
 	// -------------------------
-	html, err = b.PostParseMarkdown(html)
+	html, err = b.PostParseHtml(html)
 	if err != nil {
 		return fmt.Errorf("error post-processing HTML for document %q: %w", documentName, err)
 	}
@@ -217,10 +217,27 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 }
 
 func (b *builderT) PreParseMarkdown(md string) (string, error) {
+	var err error
+	md, err = b.MdParseNotices(md)
+	if err != nil {
+		return "", fmt.Errorf("error parsing notices: %w", err)
+	}
 	return md, nil
 }
 
-func (b *builderT) PostParseMarkdown(html string) (string, error) {
+func (b *builderT) MdParseNotices(md string) (string, error) {
+	// Parse custom notice blocks
+
+}
+
+func (b *builderT) CreateSubstitution(final string) (string, error) {
+	// Create a substitution entry and return the placeholder
+	placeholder := fmt.Sprintf("<div class=\"PRE-PARSER-SUBSTITUTION-%d\"></div>", len(b.Substitutions)+1)
+	b.Substitutions[placeholder] = final
+	return placeholder, nil
+}
+
+func (b *builderT) PostParseHtml(html string) (string, error) {
 	return html, nil
 }
 
