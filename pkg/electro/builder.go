@@ -166,6 +166,10 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// -------------------------
 	// Pre-parser
 	// -------------------------
+	mdData, err = b.PreParseMarkdown(mdData)
+	if err != nil {
+		return fmt.Errorf("error pre-parsing markdown %q content: %w", pathMarkdown, err)
+	}
 
 	// -------------------------
 	// Render markdown to HTML
@@ -204,6 +208,10 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	}
 
 	return nil
+}
+
+func (b *builderT) PreParseMarkdown(mdData []byte) ([]byte, error) {
+	return mdData, nil
 }
 
 func (b *builderT) RenderSite() error {
