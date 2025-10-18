@@ -191,6 +191,10 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// -------------------------
 	// Post-parser
 	// -------------------------
+	htmlString, err := b.PostParseMarkdown(bufHtmlBytes)
+	if err != nil {
+		return fmt.Errorf("error post-processing HTML for document %q: %w", documentName, err)
+	}
 
 	// -------------------------
 	// Modify HTML
@@ -204,7 +208,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 
 	b.SiteDocuments[documentName] = siteDocumentT{
 		PathMarkdown: pathMarkdown,
-		Html:         bufHtmlBytes.String(),
+		Html:         htmlString,
 	}
 
 	return nil
@@ -212,6 +216,10 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 
 func (b *builderT) PreParseMarkdown(mdData []byte) ([]byte, error) {
 	return mdData, nil
+}
+
+func (b *builderT) PostParseMarkdown(bufHtmlBytes bytes.Buffer) (string, error) {
+	return bufHtmlBytes.String(), nil
 }
 
 func (b *builderT) RenderSite() error {
