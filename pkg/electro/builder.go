@@ -162,11 +162,12 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	if err != nil {
 		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
 	}
+	md := string(mdData)
 
 	// -------------------------
 	// Pre-parser
 	// -------------------------
-	mdData, err = b.PreParseMarkdown(mdData)
+	md, err = b.PreParseMarkdown(md)
 	if err != nil {
 		return fmt.Errorf("error pre-parsing markdown %q content: %w", pathMarkdown, err)
 	}
@@ -183,15 +184,16 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 			),
 		),
 	)
-	err = mdConverter.Convert(mdData, &bufHtmlBytes)
+	err = mdConverter.Convert([]byte(md), &bufHtmlBytes)
 	if err != nil {
 		return fmt.Errorf("error converting markdown to HTML for document %q: %w", documentName, err)
 	}
+	html := bufHtmlBytes.String()
 
 	// -------------------------
 	// Post-parser
 	// -------------------------
-	htmlString, err := b.PostParseMarkdown(bufHtmlBytes)
+	html, err = b.PostParseMarkdown(html)
 	if err != nil {
 		return fmt.Errorf("error post-processing HTML for document %q: %w", documentName, err)
 	}
@@ -208,18 +210,18 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 
 	b.SiteDocuments[documentName] = siteDocumentT{
 		PathMarkdown: pathMarkdown,
-		Html:         htmlString,
+		Html:         html,
 	}
 
 	return nil
 }
 
-func (b *builderT) PreParseMarkdown(mdData []byte) ([]byte, error) {
-	return mdData, nil
+func (b *builderT) PreParseMarkdown(md string) (string, error) {
+	return md, nil
 }
 
-func (b *builderT) PostParseMarkdown(bufHtmlBytes bytes.Buffer) (string, error) {
-	return bufHtmlBytes.String(), nil
+func (b *builderT) PostParseMarkdown(html string) (string, error) {
+	return html, nil
 }
 
 func (b *builderT) RenderSite() error {
