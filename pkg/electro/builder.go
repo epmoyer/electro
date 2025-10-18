@@ -52,21 +52,6 @@ type menuBuilderT struct {
 	IsFirstDivider      bool
 }
 
-// type menuItemT struct {
-// 	DisplayText  string
-// 	LinkUrl      string
-// 	DocumentName string
-// 	HeadingId    string
-// 	Children     []menuItemT
-// }
-
-// type menuSectionT struct {
-// 	DisplayText      string
-// 	LastChildAtLevel []menuItemT
-// 	Children         []menuItemT
-// 	IsDivider        bool
-// }
-
 type menuNodeT struct {
 	// Common to all node types
 	NodeType    MenuNodeTypeT
