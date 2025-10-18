@@ -243,6 +243,13 @@ func (b *builderT) MdParseNotices(md string) (string, error) {
 		sub := b.CreateSubstitution(htmlNoticeStart)
 		md = strings.ReplaceAll(md, noticeDirective, sub)
 	}
+
+	noticeEndDirective := "{{% /notice %}}"
+	if strings.Contains(md, noticeEndDirective) {
+		sub := b.CreateSubstitution(snippetHtmlNoticeEnd)
+		md = strings.ReplaceAll(md, noticeEndDirective, sub)
+	}
+
 	return md, nil
 }
 
@@ -254,6 +261,9 @@ func (b *builderT) CreateSubstitution(final string) string {
 }
 
 func (b *builderT) PostParseHtml(html string) (string, error) {
+	for placeholder, final := range b.Substitutions {
+		html = strings.ReplaceAll(html, placeholder, final)
+	}
 	return html, nil
 }
 

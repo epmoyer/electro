@@ -11,6 +11,8 @@ const snippetNoticeStartTemplate = `
 </div>
 `
 
+const snippetHtmlNoticeEnd = "</div>"
+
 var noticeIcons = map[string]string{
 	"note":    "fa-exclamation-circle",
 	"info":    "fa-info-circle",
