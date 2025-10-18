@@ -5,10 +5,11 @@ import (
 	"strings"
 )
 
-const snippetNoticeStartTemplate = `
+// NOTE: This snippet intentionally has no ending </div> because we insert that separately
+// as a substitution for the notice end directive.
+const snippetHtmlNoticeStartTemplate = `
 <div class="notices [[notice_type]]">
 	<div class="label"><i class="fa [[icon]]"></i>[[title]]</div>
-</div>
 `
 
 const snippetHtmlNoticeEnd = "</div>"
@@ -26,10 +27,10 @@ func buildHtmlSnippetNoticeStart(noticeType string) (string, error) {
 
 	icon, ok = noticeIcons[noticeType]
 	if !ok {
-		return "", fmt.Errorf("Unrecognized noticeType: %s", noticeType)
+		return "", fmt.Errorf("unrecognized noticeType: %s", noticeType)
 	}
 
-	snippet := snippetNoticeStartTemplate
+	snippet := snippetHtmlNoticeStartTemplate
 	snippet = strings.ReplaceAll(snippet, "[[notice_type]]", noticeType)
 	snippet = strings.ReplaceAll(snippet, "[[icon]]", icon)
 	capitalized := strings.ToUpper(noticeType[:1]) + noticeType[1:]

@@ -11,6 +11,7 @@ import (
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
+	gmhtml "github.com/yuin/goldmark/renderer/html"
 	"golang.org/x/net/html"
 )
 
@@ -182,6 +183,9 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("monokai"),
 			),
+		),
+		goldmark.WithRendererOptions(
+			gmhtml.WithUnsafe(),
 		),
 	)
 	err = mdConverter.Convert([]byte(md), &bufHtmlBytes)
