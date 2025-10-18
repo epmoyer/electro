@@ -576,9 +576,9 @@ func (mb *menuBuilderT) formatMenuHeading(
 
 	if includeCaretSpace {
 		if caretVisible {
-			caretItemContent = "<div class=\"caret-item caret-down\"></div>"
+			caretItemContent = "<i class=\"caret fa fa-angle-right\"></i>"
 		} else {
-			caretItemContent = "<div class=\"caret-item\"></div>"
+			caretItemContent = "<i class=\"caret-placeholder\"></i>"
 		}
 	}
 
