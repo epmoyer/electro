@@ -236,7 +236,12 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 
 func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	var err error
-
+	if b.StripFrontmatter {
+		md, err = b.stripFrontmatter(md)
+		if err != nil {
+			return "", fmt.Errorf("error stripping frontmatter: %w", err)
+		}
+	}
 	md = b.MdTightenlBulletLists(md)
 	if b.NumberHeadings {
 		md, err = b.MdAddHeadingNumbers(md)
@@ -244,13 +249,37 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 			return "", fmt.Errorf("error numbering headings: %w", err)
 		}
 	}
+
 	md, err = b.MdParseNotices(md)
 	if err != nil {
 		return "", fmt.Errorf("error parsing notices: %w", err)
 	}
 	md = b.MdParseChecklists(md)
-
+	// FIXME: If single file, wrangle interdocument links.
 	return md, nil
+}
+
+func (b *builderT) stripFrontmatter(md string) string {
+	lines := strings.Split(md, "\n")
+	foundStart := false
+	foundEnd := false
+	outLines := []string{}
+	for i, line := range lines {
+		if !foundStart {
+			if strings.TrimSpace(line) == "---" {
+				foundStart = true
+				continue
+			}
+		} else if !foundEnd {
+			if strings.TrimSpace(line) == "---" {
+				foundEnd = true
+				continue
+			}
+			continue
+		}
+		outLines = append(outLines, line)
+	}
+	return strings.Join(outLines, "\n")
 }
 
 func (b *builderT) MdParseChecklists(md string) string {
