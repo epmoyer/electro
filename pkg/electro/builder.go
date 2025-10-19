@@ -259,27 +259,26 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	return md, nil
 }
 
-func (b *builderT) stripFrontmatter(md string) string {
+func (b *builderT) stripFrontmatter(md string) (string, error) {
 	lines := strings.Split(md, "\n")
-	foundStart := false
-	foundEnd := false
-	outLines := []string{}
-	for i, line := range lines {
-		if !foundStart {
-			if strings.TrimSpace(line) == "---" {
-				foundStart = true
-				continue
-			}
-		} else if !foundEnd {
-			if strings.TrimSpace(line) == "---" {
-				foundEnd = true
-				continue
-			}
-			continue
-		}
-		outLines = append(outLines, line)
+
+	// Frontmatter must start on the first line
+	if len(lines) == 0 || strings.TrimSpace(lines[0]) != "---" {
+		return md, nil // No frontmatter
 	}
-	return strings.Join(outLines, "\n")
+
+	// Find closing ---
+	for i := 1; i < len(lines); i++ {
+		if strings.TrimSpace(lines[i]) == "---" {
+			// Found end of frontmatter, return everything after
+			if i+1 < len(lines) {
+				return strings.Join(lines[i+1:], "\n"), nil
+			}
+			return "", nil // File was only frontmatter
+		}
+	}
+
+	return md, fmt.Errorf("frontmatter start found but no closing '---'")
 }
 
 func (b *builderT) MdParseChecklists(md string) string {

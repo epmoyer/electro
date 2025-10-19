@@ -15,6 +15,7 @@
     "theme": "positron",
     "output_format": "static_site",
     "watermark": "DRAFT",
+    "strip_frontmatter": true,
     "_number_headings": true,
     "_number_headings_at_level": 2
 }
