@@ -239,7 +239,7 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 
 	md = b.MdTightenlBulletLists(md)
 	if b.NumberHeadings {
-		md, err = b.MdNumberHeadings(md)
+		md, err = b.MdAddHeadingNumbers(md)
 		if err != nil {
 			return "", fmt.Errorf("error numbering headings: %w", err)
 		}
@@ -280,9 +280,45 @@ func (b *builderT) MdTightenlBulletLists(md string) string {
 	return strings.Join(tightened, "\n")
 }
 
-func (b *builderT) MdNumberHeadings(md string) (string, error) {
-	// headingManager := newHeadingManager(b.NumberHeadingsAtLevel)
-	return md, nil
+func (b *builderT) MdAddHeadingNumbers(md string) (string, error) {
+	headingManager := newHeadingManager(b.NumberHeadingsAtLevel)
+	headingIdToHeadingIdWithLineNumber := make(map[string]string)
+	renumberedLines := []string{}
+	inFencedBlock := false
+	lines := strings.Split(md, "\n")
+	for _, line := range lines {
+		if strings.HasPrefix(line, "```") {
+			inFencedBlock = !inFencedBlock
+		}
+		if inFencedBlock || !strings.HasPrefix(line, "#") {
+			renumberedLines = append(renumberedLines, line)
+			continue
+		}
+		// This is a heading line, and is not in a fenced code block
+
+		// Split into heading markdown prefix (###...) and heading text
+		pieces := strings.SplitN(line, " ", 2)
+		level := len(pieces[0])
+		headingText := pieces[1]
+
+		if level < b.NumberHeadingsAtLevel {
+			renumberedLines = append(renumberedLines, line)
+			continue
+		}
+		headingNumberText := headingManager.GetNextHeadingNumber(level)
+		idWithoutHeadingNumber := headingTextToId(headingText)
+		idWithHeadingNumber := headingTextToId(headingNumberText + " " + headingText)
+		headingIdToHeadingIdWithLineNumber[idWithoutHeadingNumber] = idWithHeadingNumber
+
+		line = fmt.Sprintf(
+			"%s %s&nbsp;&nbsp;&nbsp;&nbsp;%s",
+			pieces[0],
+			headingNumberText,
+			headingText)
+		renumberedLines = append(renumberedLines, line)
+	}
+
+	return strings.Join(renumberedLines, "\n"), nil
 }
 
 func (b *builderT) MdParseNotices(md string) (string, error) {
