@@ -82,12 +82,17 @@ func BuildProject(pathCommandLineArg string) error {
 	// -----------------------
 	// Build project
 	// -----------------------
-	isStaticSite := strings.ToLower(configProject.OutputFormat) == "static_site"
+	var outputFormat OuputFormatT
+	if strings.ToLower(configProject.OutputFormat) == "static_site" {
+		outputFormat = OutputFormatStaticSite
+	} else if strings.ToLower(configProject.OutputFormat) == "single_file" {
+		outputFormat = OutputFormatSingleFile
+	}
 	builder := newBuilder(
 		pathOutputDir,
 		pathProjectDir,
 		pathThemeDirectory,
-		isStaticSite,
+		outputFormat,
 		configProject.Level1HeadingsAreDocumentTitles,
 		configProject.MasterTitle,
 		configProject.Watermark,
@@ -110,7 +115,7 @@ func BuildProject(pathCommandLineArg string) error {
 	// If requested, publish document as a single stand-alone file
 	// -----------------------
 	// FIXME: implement
-	if isStaticSite {
+	if outputFormat == OutputFormatSingleFile {
 		err = publishSingleFile(pathOutputDir)
 		if err != nil {
 			return fmt.Errorf("error publishing site data as single file: %w", err)

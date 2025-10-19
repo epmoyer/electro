@@ -34,7 +34,7 @@ type builderT struct {
 	PathOutputDir                   string
 	PathProjectDir                  string
 	PathThemeDir                    string
-	IsStaticSite                    bool
+	OutputFormat                    OuputFormatT
 	Level1HeadingsAreDocumentTitles bool
 	MasterTitle                     string
 	Watermark                       string
@@ -75,7 +75,7 @@ type menuNodeT struct {
 func newBuilder(pathOutputDir string,
 	pathProjectDir string,
 	pathThemeDir string,
-	isStaticSite bool,
+	outputFormat OuputFormatT,
 	level1HeadingsAreDocumentTitles bool,
 	masterTitle string,
 	watermark string,
@@ -94,7 +94,7 @@ func newBuilder(pathOutputDir string,
 		PathOutputDir:                   pathOutputDir,
 		PathProjectDir:                  pathProjectDir,
 		PathThemeDir:                    pathThemeDir,
-		IsStaticSite:                    isStaticSite,
+		OutputFormat:                    outputFormat,
 		Level1HeadingsAreDocumentTitles: level1HeadingsAreDocumentTitles,
 		MasterTitle:                     masterTitle,
 		Watermark:                       watermark,
@@ -120,7 +120,7 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 			return err
 		}
 		linkUrl := ""
-		if b.IsStaticSite {
+		if b.OutputFormat == OutputFormatStaticSite {
 			linkUrl = documentName + ".html"
 		}
 		b.MenuBuilder.AddItem(0, menuName, "", linkUrl, documentName)
@@ -154,7 +154,7 @@ func (b *builderT) BuildSubheadingMenus(documentName string) {
 
 		// Create link URL for the heading
 		linkUrl := ""
-		if b.IsStaticSite {
+		if b.OutputFormat == OutputFormatStaticSite {
 			linkUrl = documentName + ".html#" + headingId
 		} else {
 			linkUrl = "#" + headingId

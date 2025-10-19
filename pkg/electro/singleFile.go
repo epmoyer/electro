@@ -6,8 +6,7 @@ import (
 )
 
 func publishSingleFile(pathOutputDir string) error {
-	var err error
-	err = packSite(pathOutputDir)
+	err := packSite(pathOutputDir)
 	if err != nil {
 		return fmt.Errorf("error packing site into single file: %w", err)
 	}

@@ -7,6 +7,13 @@ import (
 
 const projectFilename = "electro.json"
 
+type OuputFormatT int
+
+const (
+	OutputFormatStaticSite OuputFormatT = iota
+	OutputFormatSingleFile
+)
+
 type configElectroProjectT struct {
 	MasterTitle                     string                  `json:"master_title"`
 	Footer                          string                  `json:"footer"`
