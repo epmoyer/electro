@@ -236,12 +236,19 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 
 func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	var err error
+	// -------------------------
+	// Strip frontmatter
+	// -------------------------
 	if b.StripFrontmatter {
 		md, err = b.stripFrontmatter(md)
 		if err != nil {
 			return "", fmt.Errorf("error stripping frontmatter: %w", err)
 		}
 	}
+
+	// -------------------------
+	// Tighten bullet lists
+	// -------------------------
 	md = b.MdTightenlBulletLists(md)
 	if b.NumberHeadings {
 		md, err = b.MdAddHeadingNumbers(md)
@@ -250,11 +257,22 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 		}
 	}
 
+	// -------------------------
+	// Parse notices
+	// -------------------------
 	md, err = b.MdParseNotices(md)
 	if err != nil {
 		return "", fmt.Errorf("error parsing notices: %w", err)
 	}
+
+	// -------------------------
+	// Parse checklists
+	// -------------------------
 	md = b.MdParseChecklists(md)
+
+	// -------------------------
+	// Parse interdocument links
+	// -------------------------
 	// FIXME: If single file, wrangle interdocument links.
 	return md, nil
 }
