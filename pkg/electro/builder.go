@@ -222,11 +222,43 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 
 func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	var err error
+
+	md = b.MdTightenlBulletLists(md)
 	md, err = b.MdParseNotices(md)
 	if err != nil {
 		return "", fmt.Errorf("error parsing notices: %w", err)
 	}
 	return md, nil
+}
+
+func (b *builderT) MdTightenlBulletLists(md string) string {
+	// Remove blank lines between bullet list items
+	lines := strings.Split(md, "\n")
+
+	bulletRe := regexp.MustCompile(`^(\s*[-*+]\s+)`)
+
+	var tightened []string
+	pendingBlank := false
+	previousNonBlankWasBullet := false
+
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			// Blank line
+			pendingBlank = true
+			continue
+		}
+
+		// Non-blank line
+		isBullet := bulletRe.MatchString(line)
+		if pendingBlank && !(isBullet && previousNonBlankWasBullet) {
+			tightened = append(tightened, "")
+		}
+		pendingBlank = false
+		previousNonBlankWasBullet = isBullet
+		tightened = append(tightened, line)
+	}
+
+	return strings.Join(tightened, "\n")
 }
 
 func (b *builderT) MdParseNotices(md string) (string, error) {
