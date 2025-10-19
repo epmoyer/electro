@@ -250,6 +250,10 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	// Tighten bullet lists
 	// -------------------------
 	md = b.MdTightenlBulletLists(md)
+
+	// -------------------------
+	// Number headings
+	// -------------------------
 	if b.NumberHeadings {
 		md, err = b.MdAddHeadingNumbers(md)
 		if err != nil {
