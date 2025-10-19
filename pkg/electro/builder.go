@@ -331,7 +331,24 @@ func (b *builderT) MdAddHeadingNumbers(md string) (string, error) {
 			continue
 		}
 		qlog.Debugf("LINE: %q", line)
-
+		for _, mdLink := range mdLinks {
+			reReference := regexp.MustCompile(`\[.*?\]\(#(?P<reference>.*?)\)`)
+			match := reReference.FindStringSubmatch(mdLink)
+			reference := match[reReference.SubexpIndex("reference")]
+			idWiththHeadingNumber, ok := headingIdToHeadingIdWithLineNumber[reference]
+			if !ok {
+				qlog.Debug("    🔴 Mapping not found")
+				continue
+			}
+			newReference := fmt.Sprintf("#%s", idWiththHeadingNumber)
+			qlog.Debugf("    REPLACEMENT: %q -> %q", mdLink, newReference)
+			newMdLink := strings.ReplaceAll(mdLink, "#"+reference, newReference)
+			qlog.Debugf("    NEW MD LINK: %q", newMdLink)
+			line = strings.ReplaceAll(line, mdLink, newMdLink)
+		}
+		qlog.Debugf("    NEW LINE: %q", line)
+		outLines = append(outLines, line)
+	}
 
 	return strings.Join(outLines, "\n"), nil
 }
