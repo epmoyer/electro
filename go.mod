@@ -7,6 +7,7 @@ module app
 go 1.24
 
 require (
+	github.com/tdewolff/minify/v2 v2.24.4
 	github.com/yuin/goldmark v1.7.13
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	golang.org/x/net v0.19.0
@@ -16,4 +17,5 @@ require (
 require (
 	github.com/alecthomas/chroma/v2 v2.2.0 // indirect
 	github.com/dlclark/regexp2 v1.7.0 // indirect
+	github.com/tdewolff/parse/v2 v2.8.4 // indirect
 )

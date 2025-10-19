@@ -110,6 +110,12 @@ func BuildProject(pathCommandLineArg string) error {
 	// If requested, publish document as a single stand-alone file
 	// -----------------------
 	// FIXME: implement
+	if isStaticSite {
+		err = publishSingleFile(pathOutputDir)
+		if err != nil {
+			return fmt.Errorf("error publishing site data as single file: %w", err)
+		}
+	}
 
 	return nil
 }

@@ -43,7 +43,7 @@ func init() {
 	qlog = quicklog.GetLogger("default")
 }
 
-func SimplePack(pathFileIn string, pathFileOut string, enableMinify bool) error {
+func Pack(pathFileIn string, pathFileOut string, enableMinify bool) error {
 
 	qlog.Infof("SimplePack version: %q", Version)
 	qlog.Infof("    Input file: %q", pathFileIn)
