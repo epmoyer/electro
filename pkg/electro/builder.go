@@ -281,7 +281,7 @@ func (b *builderT) MdTightenlBulletLists(md string) string {
 }
 
 func (b *builderT) MdNumberHeadings(md string) (string, error) {
-	headingManager := newHeadingManager(b.NumberHeadingsAtLevel)
+	// headingManager := newHeadingManager(b.NumberHeadingsAtLevel)
 	return md, nil
 }
 
@@ -976,41 +976,4 @@ func extractTextContent(n *html.Node) string {
 	}
 	traverse(n)
 	return strings.TrimSpace(text.String())
-}
-
-// headingTextToId converts heading text to a valid HTML ID
-// Based on the Python implementation in the build.py file
-func headingTextToId(text string) string {
-	originalText := text
-	var id strings.Builder
-	dashAppended := false
-
-	// Replace non-breaking space with regular space
-	text = strings.ReplaceAll(text, "&nbsp;", " ")
-	text = strings.ReplaceAll(text, "\u00a0", " ")
-
-	// Replace &amp; back to & (for consistency with markdown processing)
-	text = strings.ReplaceAll(text, "&amp;", "&")
-
-	// Replace decimal with dashes so that heading numbers like "3.12" vs "31.2" remain unique
-	text = strings.ReplaceAll(text, ".", "-")
-
-	for _, char := range strings.ToLower(text) {
-		if (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9') {
-			id.WriteRune(char)
-			dashAppended = false
-		} else if !dashAppended {
-			id.WriteRune('-')
-			dashAppended = true
-		}
-	}
-
-	// Combine multiple dashes into single dash
-	result := regexp.MustCompile(`-+`).ReplaceAllString(id.String(), "-")
-
-	// Remove leading and trailing dashes
-	result = strings.Trim(result, "-")
-
-	qlog.Debugf("headingTextToId() %q -> %q", originalText, result)
-	return result
 }
