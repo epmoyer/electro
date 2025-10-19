@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -46,8 +47,6 @@ func SimplePack(pathFileIn string, pathFileOut string, enableMinify bool) error 
 	qlog.Infof("    Output file: %q", pathFileOut)
 	qlog.Infof("    Minify: %v", enableMinify)
 
-	// Implementation goes here
-	// read file
 	data, err := os.ReadFile(pathFileIn)
 	if err != nil {
 		return fmt.Errorf("error reading input file: %w", err)
@@ -75,4 +74,36 @@ func SimplePack(pathFileIn string, pathFileOut string, enableMinify bool) error 
 }
 
 func expandLine(line string, pathFileInParentDir string, enableMinify bool) ([]string, error) {
+	for _, descriptor := range replacementDescriptors {
+		reg := regexp.MustCompile(descriptor.Regex)
+
+		matches := reg.FindStringSubmatch(line)
+		if len(matches) > 1 {
+			pathFileToEmbed := matches[1]
+			if strings.HasPrefix(pathFileToEmbed, "http://") || strings.HasPrefix(pathFileToEmbed, "https://") {
+				// Do not embed remote files
+				qlog.Infof("Skipping embedding remote %s file: %q", descriptor.ContentType, pathFileToEmbed)
+				return []string{line}, nil
+			}
+			qlog.Infof("Embedding %s file: %q", descriptor.ContentType, pathFileToEmbed)
+			// Read file to embed
+			pathFileToEmbedFull := filepath.Join(pathFileInParentDir, pathFileToEmbed)
+			data, err := os.ReadFile(pathFileToEmbedFull)
+			if err != nil {
+				return nil, fmt.Errorf("error reading file to embed (%q): %w", pathFileToEmbedFull, err)
+			}
+			content := string(data)
+			if enableMinify {
+				content = minifyContent(content, descriptor.ContentType)
+			}
+            // FIXME: Consider dropping indentation when minifying
+			replacementTagStart := fmt.Sprintf("    <%s>", descriptor.ReplacementTag)
+			replacementTagEnd := fmt.Sprintf("    </%s>", descriptor.ReplacementTag)
+			embeddedLines := []string{replacementTagStart}
+			for _, contentLine := range strings.Split(content, "\n") {
+				embeddedLines = append(embeddedLines, "        "+contentLine)
+			}
+			embeddedLines = append(embeddedLines, replacementTagEnd)
+			return embeddedLines, nil
+		}
 
