@@ -234,7 +234,6 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 func (b *builderT) MdTightenlBulletLists(md string) string {
 	// Remove blank lines between bullet list items
 	lines := strings.Split(md, "\n")
-
 	bulletRe := regexp.MustCompile(`^(\s*[-*+]\s+)`)
 
 	var tightened []string
