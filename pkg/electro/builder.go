@@ -38,6 +38,8 @@ type builderT struct {
 	Level1HeadingsAreDocumentTitles bool
 	MasterTitle                     string
 	Watermark                       string
+	StripFrontmatter                bool
+	NumberHeadings                  bool
 
 	// Runtime
 	MenuHtml      string
@@ -76,6 +78,8 @@ func newBuilder(pathOutputDir string,
 	level1HeadingsAreDocumentTitles bool,
 	masterTitle string,
 	watermark string,
+	stripFrontmatter bool,
+	numberHeadings bool,
 ) *builderT {
 	return &builderT{
 		// Config
@@ -86,6 +90,8 @@ func newBuilder(pathOutputDir string,
 		Level1HeadingsAreDocumentTitles: level1HeadingsAreDocumentTitles,
 		MasterTitle:                     masterTitle,
 		Watermark:                       watermark,
+		StripFrontmatter:                stripFrontmatter,
+		NumberHeadings:                  numberHeadings,
 		// Runtime
 		SiteDocuments: make(map[string]siteDocumentT),
 		Substitutions: make(map[string]string),

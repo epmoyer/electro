@@ -17,6 +17,8 @@ type configElectroProjectT struct {
 	Watermark                       string                  `json:"watermark"`
 	EnableNewlineToBreak            bool                    `json:"enable_newline_to_break"`
 	Level1HeadingsAreDocumentTitles bool                    `json:"level_1_headings_are_document_titles"`
+	StripFrontmatter                bool                    `json:"strip_frontmatter"`
+	NumberHeadings                  bool                    `json:"number_headings"`
 }
 
 type navigationDescriptorT struct {

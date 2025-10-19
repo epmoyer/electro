@@ -91,6 +91,8 @@ func BuildProject(pathCommandLineArg string) error {
 		configProject.Level1HeadingsAreDocumentTitles,
 		configProject.MasterTitle,
 		configProject.Watermark,
+		configProject.StripFrontmatter,
+		configProject.NumberHeadings,
 	)
 	for _, nd := range configProject.Navigation {
 		err := builder.AddNavigationDescriptor(nd)
