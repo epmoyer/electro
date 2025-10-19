@@ -39,7 +39,7 @@ split from this line.
 
 ## Table
 
-| Column 1 | Column 2 | Column 3 |
+| Column xx | Column 2 | Column 3 |
 | -------- | -------- | -------- |
 | Data 1   | Data 2   | Data 3   |
 | Data 4   | Data 5   | Data 6   |
@@ -66,6 +66,24 @@ This is a [Link to Google](https://www.google.com) in the middle of a line.
 Paragraph Text
 - Bullet list item 1, immediately following paragraph text
 - Bullet list item 2
+
+### Multiline bullets
+- This is a bullet list item
+  that continues on the next line
+  and even the next line again.
+- This is another bullet list item
+  that continues on the next line
+  and even the next line again.
+
+### Blank lines between bullets
+Text
+- bullet
+- adjacent bullet
+
+Text
+- bullet
+
+- bullet with blank line above
 
 ## Ordered list
 1. This is the first
