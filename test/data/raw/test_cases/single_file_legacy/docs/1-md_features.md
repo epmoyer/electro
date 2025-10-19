@@ -1,5 +1,7 @@
 # 1&nbsp;&nbsp;&nbsp;&nbsp;Markdown Features
 
+TEST CASE: `single_file_legacy`
+
 This is text which occurs before the first internal heading.
 
 Jackdaws love my big sphinx of quartz.

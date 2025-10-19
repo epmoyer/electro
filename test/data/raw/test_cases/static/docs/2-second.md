@@ -1,5 +1,7 @@
 # 2&nbsp;&nbsp;&nbsp;&nbsp;Second Section
 
+TEST CASE: `static`
+
 ## Overview
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac ante eget ipsum elementum sollicitudin. Morbi luctus fermentum lectus, in fringilla lacus semper id. Aenean non posuere mi. Sed urna mi, efficitur at lacus nec, vestibulum ornare diam. Morbi vehicula ipsum at mauris tristique semper. Aenean erat sem, auctor ac pretium at, rhoncus a enim. Ut vitae semper nisl, in fringilla odio. Donec luctus arcu quis efficitur scelerisque. Sed turpis lorem, posuere sit amet maximus eu, dictum non ante. Maecenas finibus id orci quis lacinia.
 

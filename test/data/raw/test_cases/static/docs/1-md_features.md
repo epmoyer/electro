@@ -3,6 +3,8 @@ test: "This is a frontmatter strip test."
 ---
 # 1&nbsp;&nbsp;&nbsp;&nbsp;Markdown Features
 
+TEST CASE: `static`
+
 This is text which occurs before the first internal heading.
 
 Jackdaws love my big sphinx of quartz.
