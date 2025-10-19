@@ -15,7 +15,7 @@ type headingManagerT struct {
 func newHeadingManager(level int) *headingManagerT {
 	hm := &headingManagerT{
 		atLevel:       level,
-		headingNumber: make([]int, maxHeadingDepth),
+		headingNumber: make([]int, maxHeadingDepth+1),
 	}
 	return hm
 }
