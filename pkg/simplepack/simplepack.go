@@ -7,6 +7,9 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	minify "github.com/tdewolff/minify/v2"
+	js "github.com/tdewolff/minify/v2/js"
 )
 
 const Version = "2.0.0"
@@ -21,7 +24,7 @@ type ReplacementDescriptorT struct {
 	ReplacementTag string
 }
 
-replacementDescriptors := []ReplacementDescriptorT{
+var replacementDescriptors = []ReplacementDescriptorT{
 	{
 		ContentType:    "javascript",
 		Regex:          `^\s*<script\s*type="text/javascript"\s*src="(.*)">\s*</script>\s$`,
@@ -94,9 +97,16 @@ func expandLine(line string, pathFileInParentDir string, enableMinify bool) ([]s
 			}
 			content := string(data)
 			if enableMinify {
-				content = minifyContent(content, descriptor.ContentType)
+				content, err = minifyContent(content, descriptor.ContentType)
+				if err != nil {
+					return nil, fmt.Errorf(
+						"error minifying embedded %s file (%q): %w",
+						descriptor.ContentType,
+						pathFileToEmbedFull,
+						err)
+				}
 			}
-            // FIXME: Consider dropping indentation when minifying
+			// FIXME: Consider dropping indentation when minifying
 			replacementTagStart := fmt.Sprintf("    <%s>", descriptor.ReplacementTag)
 			replacementTagEnd := fmt.Sprintf("    </%s>", descriptor.ReplacementTag)
 			embeddedLines := []string{replacementTagStart}
@@ -106,4 +116,22 @@ func expandLine(line string, pathFileInParentDir string, enableMinify bool) ([]s
 			embeddedLines = append(embeddedLines, replacementTagEnd)
 			return embeddedLines, nil
 		}
+	}
+	// No matches, return original line
+	return []string{line}, nil
+}
 
+func minifyContent(content string, contentType string) (string, error) {
+	if contentType != "javascript" {
+		// FIXME: Implement CSS?
+		return content, nil
+	}
+	m := minify.New()
+	m.AddFunc("text/javascript", js.Minify)
+
+	output, err := m.String("text/javascript", content)
+	if err != nil {
+		return "", err
+	}
+	return output, nil
+}
