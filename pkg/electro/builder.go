@@ -40,6 +40,7 @@ type builderT struct {
 	Watermark                       string
 	StripFrontmatter                bool
 	NumberHeadings                  bool
+	NumberHeadingsAtLevel           int
 
 	// Runtime
 	MenuHtml      string
@@ -80,7 +81,14 @@ func newBuilder(pathOutputDir string,
 	watermark string,
 	stripFrontmatter bool,
 	numberHeadings bool,
+	numberHeadingsAtLevel int,
 ) *builderT {
+
+	// Set defaults
+	if numberHeadingsAtLevel == 0 {
+		numberHeadingsAtLevel = 1
+	}
+
 	return &builderT{
 		// Config
 		PathOutputDir:                   pathOutputDir,
@@ -92,10 +100,10 @@ func newBuilder(pathOutputDir string,
 		Watermark:                       watermark,
 		StripFrontmatter:                stripFrontmatter,
 		NumberHeadings:                  numberHeadings,
-		// Runtime
-		SiteDocuments: make(map[string]siteDocumentT),
-		Substitutions: make(map[string]string),
-		MenuBuilder:   &menuBuilderT{},
+		NumberHeadingsAtLevel:           numberHeadingsAtLevel,
+		SiteDocuments:                   make(map[string]siteDocumentT),
+		Substitutions:                   make(map[string]string),
+		MenuBuilder:                     &menuBuilderT{},
 	}
 }
 
@@ -230,6 +238,12 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	var err error
 
 	md = b.MdTightenlBulletLists(md)
+	if b.NumberHeadings {
+		md, err = b.MdNumberHeadings(md)
+		if err != nil {
+			return "", fmt.Errorf("error numbering headings: %w", err)
+		}
+	}
 	md, err = b.MdParseNotices(md)
 	if err != nil {
 		return "", fmt.Errorf("error parsing notices: %w", err)
@@ -264,6 +278,11 @@ func (b *builderT) MdTightenlBulletLists(md string) string {
 	}
 
 	return strings.Join(tightened, "\n")
+}
+
+func (b *builderT) MdNumberHeadings(md string) (string, error) {
+	headingManager := newHeadingManager(b.NumberHeadingsAtLevel)
+	return md, nil
 }
 
 func (b *builderT) MdParseNotices(md string) (string, error) {

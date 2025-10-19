@@ -93,6 +93,7 @@ func BuildProject(pathCommandLineArg string) error {
 		configProject.Watermark,
 		configProject.StripFrontmatter,
 		configProject.NumberHeadings,
+		configProject.NumberHeadingsAtLevel,
 	)
 	for _, nd := range configProject.Navigation {
 		err := builder.AddNavigationDescriptor(nd)

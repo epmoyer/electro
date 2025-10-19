@@ -19,6 +19,7 @@ type configElectroProjectT struct {
 	Level1HeadingsAreDocumentTitles bool                    `json:"level_1_headings_are_document_titles"`
 	StripFrontmatter                bool                    `json:"strip_frontmatter"`
 	NumberHeadings                  bool                    `json:"number_headings"`
+	NumberHeadingsAtLevel           int                     `json:"number_headings_at_level"`
 }
 
 type navigationDescriptorT struct {
