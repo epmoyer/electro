@@ -248,7 +248,26 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error parsing notices: %w", err)
 	}
+	md = b.MdParseChecklists(md)
+
 	return md, nil
+}
+
+func (b *builderT) MdParseChecklists(md string) string {
+	outLines := []string{}
+	lines := strings.Split(md, "\n")
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "- [ ] ") {
+			line = strings.Replace(line, "[ ] ", "🔲", 1)
+		} else if strings.HasPrefix(trimmed, "- [x] ") {
+			line = strings.Replace(line, "[x] ", "✅", 1)
+		} else if strings.HasPrefix(trimmed, "- [X] ") {
+			line = strings.Replace(line, "[X] ", "✅", 1)
+		}
+		outLines = append(outLines, line)
+	}
+	return strings.Join(outLines, "\n")
 }
 
 func (b *builderT) MdTightenlBulletLists(md string) string {
