@@ -579,15 +579,30 @@ func (b *builderT) RenderSite() error {
 	}
 	templateHtml := string(templateData)
 
-	// TODO: Implement single file vs multi-file logic
-	// For now, implement basic multi-file output
-	for documentName, siteDocument := range b.SiteDocuments {
-		outputPath := filepath.Join(b.PathOutputDir, documentName+".html")
-		documentHtml := "<div class=\"content-page\">" + siteDocument.Html + "</div>"
-
-		err = b.renderDocument(templateHtml, outputPath, documentHtml, documentName)
+	if b.OutputFormat == OutputFormatSingleFile {
+		htmlPages := ""
+		htmlStyle := ""
+		for documentName, siteDocument := range b.SiteDocuments {
+			htmlPages += "<div class=\"content-page\" id=\"" + documentName + "\"" + htmlStyle + ">\n"
+			htmlPages += siteDocument.Html + "\n"
+			htmlPages += "</div>\n"
+			// Start all subsequent pages hidden
+			htmlStyle = " style=\"display:none;\""
+		}
+		pathSiteDocument := filepath.Join(b.PathOutputDir, "index.raw.html")
+		err = b.renderDocument(templateHtml, pathSiteDocument, htmlPages, "Document")
 		if err != nil {
-			return fmt.Errorf("error rendering document %s: %w", documentName, err)
+			return fmt.Errorf("error rendering single file document: %w", err)
+		}
+	} else {
+		for documentName, siteDocument := range b.SiteDocuments {
+			outputPath := filepath.Join(b.PathOutputDir, documentName+".html")
+			documentHtml := "<div class=\"content-page\">" + siteDocument.Html + "</div>"
+
+			err = b.renderDocument(templateHtml, outputPath, documentHtml, documentName)
+			if err != nil {
+				return fmt.Errorf("error rendering document %s: %w", documentName, err)
+			}
 		}
 	}
 
