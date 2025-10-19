@@ -3,6 +3,8 @@ package electro
 import (
 	"encoding/json"
 	"os"
+
+	"app/pkg/orderedmap"
 )
 
 const projectFilename = "electro.json"
@@ -30,8 +32,8 @@ type configElectroProjectT struct {
 }
 
 type navigationDescriptorT struct {
-	Section   string            `json:"section"`
-	Documents map[string]string `json:"documents"`
+	Section   string                 `json:"section"`
+	Documents *orderedmap.OrderedMap `json:"documents"`
 }
 
 func loadConfigElectroProject(pathProjectFile string) (*configElectroProjectT, error) {

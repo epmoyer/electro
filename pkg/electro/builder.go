@@ -109,12 +109,14 @@ func newBuilder(pathOutputDir string,
 
 func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	qlog.Infof("Adding navigation section: %q", nd.Section)
-	isDivider := len(nd.Documents) == 0
+	isDivider := len(nd.Documents.Keys()) == 0
 	b.MenuBuilder.AddSection(nd.Section, isDivider)
 	b.MenuHtml += "<ul class=\"menu-tree\">\n"
-	for menuName, mdDocumentName := range nd.Documents {
-		documentName := mdDocumentNameToDocumentName(mdDocumentName)
-		pathMarkdown := filepath.Join(b.PathProjectDir, "docs", mdDocumentName)
+	menuNames := nd.Documents.Keys()
+	for _, menuName := range menuNames {
+		mdDocumentName, _ := nd.Documents.Get(menuName)
+		documentName := mdDocumentNameToDocumentName(mdDocumentName.(string))
+		pathMarkdown := filepath.Join(b.PathProjectDir, "docs", mdDocumentName.(string))
 		err := b.BuildDocument(pathMarkdown, documentName)
 		if err != nil {
 			return err
