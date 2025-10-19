@@ -318,7 +318,22 @@ func (b *builderT) MdAddHeadingNumbers(md string) (string, error) {
 		renumberedLines = append(renumberedLines, line)
 	}
 
-	return strings.Join(renumberedLines, "\n"), nil
+	// -------------------------
+	// Replace heading links to maktch re-numbered headings
+	// -------------------------
+	qlog.Debug("---- replacing links ----")
+	outLines := []string{}
+	for _, line := range renumberedLines {
+		reHeadingLink := regexp.MustCompile(`\[.*?\]\(#.*?\)`)
+		mdLinks := reHeadingLink.FindAllString(line, -1)
+		if mdLinks == nil {
+			outLines = append(outLines, line)
+			continue
+		}
+		qlog.Debugf("LINE: %q", line)
+
+
+	return strings.Join(outLines, "\n"), nil
 }
 
 func (b *builderT) MdParseNotices(md string) (string, error) {
