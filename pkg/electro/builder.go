@@ -259,11 +259,11 @@ func (b *builderT) MdParseChecklists(md string) string {
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
 		if strings.HasPrefix(trimmed, "- [ ] ") {
-			line = strings.Replace(line, "[ ] ", "🔲", 1)
+			line = strings.Replace(line, "[ ] ", "🔲&nbsp;&nbsp;", 1)
 		} else if strings.HasPrefix(trimmed, "- [x] ") {
-			line = strings.Replace(line, "[x] ", "✅", 1)
+			line = strings.Replace(line, "[x] ", "✅&nbsp;&nbsp;", 1)
 		} else if strings.HasPrefix(trimmed, "- [X] ") {
-			line = strings.Replace(line, "[X] ", "✅", 1)
+			line = strings.Replace(line, "[X] ", "✅&nbsp;&nbsp;", 1)
 		}
 		outLines = append(outLines, line)
 	}
