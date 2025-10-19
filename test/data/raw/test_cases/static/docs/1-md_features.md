@@ -90,6 +90,14 @@ Text
 2. This is the second
 3. This is the third
 
+## Check lists
+- [ ] This is an unchecked item
+- [x] This is a checked Item (lowercase x)
+- [X] This is a checked Item (uppercase X)
+    - [ ] Nested unchecked item
+    - [x] Nested checked Item (lowercase x)
+    - [X] Nested checked item (uppercase X)
+
 ## Code
 
 This is an `inline` code block
