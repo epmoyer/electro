@@ -43,10 +43,11 @@ type builderT struct {
 	NumberHeadingsAtLevel           int
 
 	// Runtime
-	MenuHtml      string
-	SiteDocuments map[string]siteDocumentT
-	Substitutions map[string]string
-	MenuBuilder   *menuBuilderT
+	MenuHtml             string
+	OrderedDocumentnames []string
+	SiteDocuments        map[string]siteDocumentT
+	Substitutions        map[string]string
+	MenuBuilder          *menuBuilderT
 	// FIXME: add SearchIndex
 }
 
@@ -228,6 +229,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// Add footer text
 	// Update search
 
+	b.OrderedDocumentnames = append(b.OrderedDocumentnames, documentName)
 	b.SiteDocuments[documentName] = siteDocumentT{
 		PathMarkdown: pathMarkdown,
 		Html:         html,
@@ -584,7 +586,8 @@ func (b *builderT) RenderSite() error {
 	if b.OutputFormat == OutputFormatSingleFile {
 		htmlPages := ""
 		htmlStyle := ""
-		for documentName, siteDocument := range b.SiteDocuments {
+		for _, documentName := range b.OrderedDocumentnames {
+			siteDocument := b.SiteDocuments[documentName]
 			htmlPages += "<div class=\"content-page\" id=\"" + documentName + "\"" + htmlStyle + ">\n"
 			htmlPages += siteDocument.Html + "\n"
 			htmlPages += "</div>\n"
@@ -597,7 +600,8 @@ func (b *builderT) RenderSite() error {
 			return fmt.Errorf("error rendering single file document: %w", err)
 		}
 	} else {
-		for documentName, siteDocument := range b.SiteDocuments {
+		for _, documentName := range b.OrderedDocumentnames {
+			siteDocument := b.SiteDocuments[documentName]
 			outputPath := filepath.Join(b.PathOutputDir, documentName+".html")
 			documentHtml := "<div class=\"content-page\">" + siteDocument.Html + "</div>"
 
