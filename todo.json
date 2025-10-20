@@ -4,7 +4,7 @@
     "board": {
         "name": "electro-go",
         "preferences": {
-            "backgroundColor": "#D8BFD8"
+            "backgroundColor": "#8ed1fb"
         },
         "enable_zones": false
     },
