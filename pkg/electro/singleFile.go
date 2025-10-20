@@ -36,5 +36,7 @@ func packSite(pathOutputDir string) error {
 	if err != nil {
 		return fmt.Errorf("error inlining images: %w", err)
 	}
+	// FIXME: Inline fonts
+	// FIXME: Inline icons
 	return nil
 }
