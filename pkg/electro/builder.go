@@ -226,8 +226,13 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// Modify HTML
 	// -------------------------
 
-	// FIXME: implement
 	// Fix inter-document links
+	linkRe := regexp.MustCompile(`<a href="\S*.md(?:\#\S*)?">`)
+	links := linkRe.FindAllString(html, -1)
+	for _, link := range links {
+		html = strings.ReplaceAll(
+			html, link, strings.ReplaceAll(link, ".md", ".html"))
+	}
 
 	// Wrap images
 	imgTagRe := regexp.MustCompile(`<img .*?>`)
