@@ -49,5 +49,28 @@ func makeHTMLIconsInline(pathFileIn, pathFileOut string) error {
 }
 
 func convertIcon(basepath, line string) (string, error) {
+	hrefRe := regexp.MustCompile(`href=["\'](.*?)["\']`)
+	hrefExpressionRe := regexp.MustCompile(`href=["\'].*?["\']`)
+	hrefs := hrefRe.FindAllStringSubmatch(line, -1)
+	hrefExpressions := hrefExpressionRe.FindAllString(line, -1)
+	if len(hrefs) != 1 || len(hrefExpressions) != 1 {
+		return "", fmt.Errorf("expected to find 1 and only 1 font href entry on line: %q", line)
+	}
+	href := hrefs[0][1]
+	hrefExpression := hrefExpressions[0]
+	fmt.Printf("🟣 %q :: %q\n", href, hrefExpression)
+
+	href = strings.TrimPrefix(href, "/")
+	pathIcon := basepath + "/" + href
+	if !pathExists(pathIcon) || !pathIsFile(pathIcon) {
+		return "", fmt.Errorf("no icon file found at url: %q", pathIcon)
+	}
+	iconBase64, err := fileToBase64(pathIcon)
+	if err != nil {
+		return "", err
+	}
+	hrefInline := fmt.Sprintf("href=\"data:image/x-icon;charset=utf-8;base64,%s\"", iconBase64)
+	line = strings.Replace(line, hrefExpression, hrefInline, 1)
+
 	return line, nil
 }
