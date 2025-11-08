@@ -2,6 +2,7 @@ package simplepack
 
 import (
 	"app/pkg/quicklog"
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -50,11 +51,10 @@ func Pack(pathFileIn string, pathFileOut string, enableMinify bool) error {
 	qlog.Infof("    Output file: %q", pathFileOut)
 	qlog.Infof("    Minify: %v", enableMinify)
 
-	data, err := os.ReadFile(pathFileIn)
+	lines, err := readFileLines(pathFileIn)
 	if err != nil {
-		return fmt.Errorf("error reading input file: %w", err)
+		return fmt.Errorf("error reading input file %q as lines: %w", pathFileIn, err)
 	}
-	lines := strings.Split(string(data), "\n")
 	qlog.Debugf("Read %d lines", len(lines))
 
 	newLines := []string{}
@@ -134,4 +134,27 @@ func minifyContent(content string, contentType string) (string, error) {
 		return "", err
 	}
 	return output, nil
+}
+
+// readFileLines reads data from a text file and returns a slice of file lines
+func readFileLines(pathFile string) ([]string, error) {
+	file, err := os.Open(pathFile)
+	if err != nil {
+		return []string{}, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	// We set a large token sixe because we will be parsing HTML with
+	// large (typically ~60K) inlined base64 data which appears on a
+	// single line.
+	scanner.Buffer(make([]byte, 64*1024), 10*1024*1024)
+	var lines []string
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		return []string{}, err
+	}
+	return lines, nil
 }
