@@ -27,7 +27,7 @@ type ReplacementDescriptorT struct {
 var replacementDescriptors = []ReplacementDescriptorT{
 	{
 		ContentType:    "javascript",
-		Regex:          `^\s*<script\s*type="text/javascript"\s*src="(.*)">\s*</script>\s$`,
+		Regex:          `^\s*<script\s*type="text/javascript"\s*src="(.*)"\s*>\s*</script>\s$`,
 		ReplacementTag: "script",
 	},
 	{
