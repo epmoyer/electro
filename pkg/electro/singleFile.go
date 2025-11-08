@@ -25,18 +25,35 @@ func packSite(pathOutputDir string) error {
 	pathFileStage2 := pathOutputDir + "/index.packed.stage2.html"
 	// pathFileStage3 := pathOutputDir + "/index.packed.stage3.html"
 	pathFilePacked := pathOutputDir + "/index.html"
+
+	// ------------------
+	// STAGE 1: Pack
+	// ------------------
 	qlog.InfoPrintf("Packing %q to %q...", pathFile, pathFilePacked)
 	enableMinify := true
 	err = simplepack.Pack(pathFile, pathFileStage1, enableMinify)
 	if err != nil {
 		return fmt.Errorf("error packing site (stage 1): %w", err)
 	}
+
+	// ------------------
+	// STAGE 2: Inline Images
+	// ------------------
 	qlog.InfoPrintf("Inlining images to  %q...", pathFileStage2)
 	err = makeHTMLImagesInline(pathFileStage1, pathFileStage2)
 	if err != nil {
 		return fmt.Errorf("error inlining images: %w", err)
 	}
+
+	// ------------------
+	// STAGE 3: Inline HTML Fonts
+	// ------------------
 	// FIXME: Inline fonts
+
+	// ------------------
+	// STAGE 3: Inline HTML Icons
+	// ------------------
 	// FIXME: Inline icons
+
 	return nil
 }
