@@ -35,6 +35,10 @@ func readFileLines(pathFile string) ([]string, error) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+	// We set a large token sixe because we will be parsing HTML with
+	// large (typically ~60K) inlined base64 data which appears on a
+	// single line.
+	scanner.Buffer(make([]byte, 64*1024), 10*1024*1024)
 	var lines []string
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())

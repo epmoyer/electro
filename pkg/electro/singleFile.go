@@ -58,6 +58,11 @@ func packSite(pathOutputDir string) error {
 	// STAGE 3: Inline HTML Icons
 	// ------------------
 	// FIXME: Inline icons
+	qlog.InfoPrintf("Inlining icons to  %q...", pathFilePacked)
+	err = makeHTMLIconsInline(pathFileStage3, pathFilePacked)
+	if err != nil {
+		return fmt.Errorf("error inlining icons: %w", err)
+	}
 
 	return nil
 }
