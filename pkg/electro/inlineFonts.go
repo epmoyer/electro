@@ -27,10 +27,10 @@ func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 	for _, line := range lines {
 		// FIXME: Implement
 		if woffRe.MatchString(line) {
-			fmt.Printf("*** WOFF:%s\n", line)
+			fmt.Printf("🟣 WOFF:%s\n", line)
 		}
 		if woff2Re.MatchString(line) {
-			fmt.Printf("*** WOFF2:%s\n", line)
+			fmt.Printf("🟣 WOFF2:%s\n", line)
 		}
 		linesOut = append(linesOut, line)
 	}
