@@ -28,12 +28,12 @@ func makeHTMLIconsInline(pathFileIn, pathFileOut string) error {
 
 	for _, line := range lines {
 		if iconRe.MatchString(line) {
-			fmt.Printf("🟣 ICON:%s\n", line)
+			// fmt.Printf("🟣 ICON:%s\n", line)
 			line, err = convertIcon(basepath, line)
 			if err != nil {
 				return fmt.Errorf("failed to inline icon: %w", err)
 			}
-			fmt.Printf("    Converted: %s\n", line)
+			// fmt.Printf("    Converted: %s\n", line)
 		}
 		linesOut = append(linesOut, line)
 	}
@@ -58,7 +58,7 @@ func convertIcon(basepath, line string) (string, error) {
 	}
 	href := hrefs[0][1]
 	hrefExpression := hrefExpressions[0]
-	fmt.Printf("🟣 %q :: %q\n", href, hrefExpression)
+	// fmt.Printf("🟣 %q :: %q\n", href, hrefExpression)
 
 	href = strings.TrimPrefix(href, "/")
 	pathIcon := basepath + "/" + href

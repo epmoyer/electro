@@ -226,6 +226,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// Fix inter-document links
 	// Wrap images
 	// Add id tags to headings
+	html = addIdTagsToHeadings(html)
 	// Add footer text
 	// Update search
 
@@ -1017,6 +1018,25 @@ func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documen
 	}
 
 	return nil
+}
+
+func addIdTagsToHeadings(html string) string {
+	headingsRe := regexp.MustCompile(`<h\d>.*<\/h\d>`)
+	headings := headingsRe.FindAllString(html, -1)
+	for _, heading := range headings {
+		core := heading[4 : len(heading)-5]
+		tagStart := heading[:3]
+		id := headingTextToId(core)
+		replacement := strings.Replace(
+			heading,
+			tagStart,
+			fmt.Sprintf("%s id=\"%s\"", tagStart, id),
+			1)
+		fmt.Printf("🟣  heading: %q, core: %q, id: %q, replacement: %q\n",
+			heading, core, id, replacement)
+		html = strings.Replace(html, heading, replacement, -1)
+	}
+	return html
 }
 
 func copyFile(src, dst string) error {
