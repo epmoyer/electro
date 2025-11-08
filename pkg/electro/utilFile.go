@@ -1,6 +1,9 @@
 package electro
 
-import "os"
+import (
+	"bufio"
+	"os"
+)
 
 func pathExists(path string) bool {
 	_, err := os.Stat(path)
@@ -21,4 +24,23 @@ func pathIsFile(path string) bool {
 		return false
 	}
 	return !info.IsDir()
+}
+
+// readFileLines reads data from a text file and returns a slice of file lines
+func readFileLines(pathFile string) ([]string, error) {
+	file, err := os.Open(pathFile)
+	if err != nil {
+		return []string{}, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var lines []string
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		return []string{}, err
+	}
+	return lines, nil
 }

@@ -1,7 +1,6 @@
 package electro
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -13,25 +12,17 @@ import (
 // inline Base64 encoded fonts
 func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 	var err error
+	var lines []string
+
 	// Get the base directory of the input file
 	basepath := filepath.Dir(strings.TrimRight(inFilepath, string(os.PathSeparator)))
 
 	woffRe := regexp.MustCompile(`.*format\(["\']woff["\']\)`)
 	woff2Re := regexp.MustCompile(`.*format\(["\']woff2["\']\)`)
 
-	file, err := os.Open(inFilepath)
+	lines, err = readFileLines(inFilepath)
 	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	if err := scanner.Err(); err != nil {
-		return err
+		return fmt.Errorf("failed to read lines of file %q: %w", inFilepath, err)
 	}
 
 	linesOut := []string{}
