@@ -1,6 +1,7 @@
 package electro
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,12 +19,21 @@ func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 	woffRe := regexp.MustCompile(`.*format\(["\']woff["\']\)`)
 	woff2Re := regexp.MustCompile(`.*format\(["\']woff2["\']\)`)
 
-	buf, err := os.ReadFile(inFilepath)
+	file, err := os.Open(inFilepath)
 	if err != nil {
-		return fmt.Errorf("failed to open file: %w", err)
+		return err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var lines []string
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		return err
 	}
 
-	lines := strings.Split(string(buf), "\n")
 	linesOut := []string{}
 
 	for _, line := range lines {
