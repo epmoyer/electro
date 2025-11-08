@@ -29,20 +29,20 @@ func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 	for _, line := range lines {
 		// FIXME: Implement
 		if woffRe.MatchString(line) {
-			fmt.Printf("🟣 WOFF:%s\n", line)
+			// fmt.Printf("🟣 WOFF:%s\n", line)
 			line, err = convertFont(basepath, line, "woff")
 			if err != nil {
 				return fmt.Errorf("failed to inline woff font: %w", err)
 			}
-			fmt.Printf("    Converted: %s\n", line)
+			// fmt.Printf("    Converted: %s\n", line)
 		}
 		if woff2Re.MatchString(line) {
-			fmt.Printf("🟣 WOFF2:%s\n", line)
+			// fmt.Printf("🟣 WOFF2:%s\n", line)
 			line, err = convertFont(basepath, line, "woff2")
 			if err != nil {
 				return fmt.Errorf("failed to inline woff2 font: %w", err)
 			}
-			fmt.Printf("    Converted: %s\n", line)
+			// fmt.Printf("    Converted: %s\n", line)
 		}
 		linesOut = append(linesOut, line)
 	}
@@ -60,19 +60,17 @@ func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 func convertFont(basepath, line, format string) (string, error) {
 	// FIXME: Return err in fail cases
 	urlRe := regexp.MustCompile(`url\(["\'](.*?)["\']\)`)
-	urlExpressionRe := regexp.MustCompile(`rl\(["\'].*?["\']\)`)
-	urls := urlRe.FindAllString(line, -1)
+	urlExpressionRe := regexp.MustCompile(`url\(["\'].*?["\']\)`)
+	urls := urlRe.FindAllStringSubmatch(line, -1)
 	urlExpressions := urlExpressionRe.FindAllString(line, -1)
 	if len(urls) != 1 || len(urlExpressions) != 1 {
 		return "", fmt.Errorf("expected to find 1 and only 1 font URL entry on line: %q", line)
 	}
-	url := urls[0]
+	url := urls[0][1]
 	urlExpression := urlExpressions[0]
+	// fmt.Printf("🟣 %q :: %q\n", url, urlExpression)
 
-	if strings.HasPrefix(url, "/") {
-		// Strip the leading slash so we can use it as a local path
-		url = url[1:]
-	}
+	url = strings.TrimPrefix(url, "/")
 	pathFont := basepath + "/" + url
 	if !pathExists(pathFont) || !pathIsFile(pathFont) {
 		return "", fmt.Errorf("no font file found at url: %q", pathFont)
