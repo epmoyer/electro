@@ -23,7 +23,7 @@ func packSite(pathOutputDir string) error {
 	pathFile := pathOutputDir + "/index.raw.html"
 	pathFileStage1 := pathOutputDir + "/index.packed.stage1.html"
 	pathFileStage2 := pathOutputDir + "/index.packed.stage2.html"
-	// pathFileStage3 := pathOutputDir + "/index.packed.stage3.html"
+	pathFileStage3 := pathOutputDir + "/index.packed.stage3.html"
 	pathFilePacked := pathOutputDir + "/index.html"
 
 	// ------------------
@@ -49,6 +49,11 @@ func packSite(pathOutputDir string) error {
 	// STAGE 3: Inline HTML Fonts
 	// ------------------
 	// FIXME: Inline fonts
+	qlog.InfoPrintf("Inlining fonts to  %q...", pathFileStage3)
+	err = makeHTMLFontsInline(pathFileStage2, pathFileStage3)
+	if err != nil {
+		return fmt.Errorf("error inlining fonts: %w", err)
+	}
 
 	// ------------------
 	// STAGE 3: Inline HTML Icons

@@ -3,7 +3,6 @@ package electro
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -11,9 +10,9 @@ import (
 // inline Base64 encoded fonts
 func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 	// Get the base directory of the input file
-	basepath := filepath.Dir(strings.TrimRight(inFilepath, string(os.PathSeparator)))
+	// basepath := filepath.Dir(strings.TrimRight(inFilepath, string(os.PathSeparator)))
 
-	buf, err := os.ReadFile(basepath)
+	buf, err := os.ReadFile(inFilepath)
 	if err != nil {
 		return fmt.Errorf("failed to open file: %w", err)
 	}
