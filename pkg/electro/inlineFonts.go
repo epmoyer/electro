@@ -10,19 +10,19 @@ import (
 
 // makeHTMLFontsInline takes an HTML file and writes a new version with
 // inline Base64 encoded fonts
-func makeHTMLFontsInline(inFilepath, outFilepath string) error {
+func makeHTMLFontsInline(pathFileIn, pathFileOut string) error {
 	var err error
 	var lines []string
 
 	// Get the base directory of the input file
-	basepath := filepath.Dir(strings.TrimRight(inFilepath, string(os.PathSeparator)))
+	basepath := filepath.Dir(strings.TrimRight(pathFileIn, string(os.PathSeparator)))
 
 	woffRe := regexp.MustCompile(`.*format\(["\']woff["\']\)`)
 	woff2Re := regexp.MustCompile(`.*format\(["\']woff2["\']\)`)
 
-	lines, err = readFileLines(inFilepath)
+	lines, err = readFileLines(pathFileIn)
 	if err != nil {
-		return fmt.Errorf("failed to read lines of file %q: %w", inFilepath, err)
+		return fmt.Errorf("failed to read lines of file %q: %w", pathFileIn, err)
 	}
 
 	linesOut := []string{}
@@ -49,7 +49,7 @@ func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 
 	out := strings.Join(linesOut, "\n")
 
-	err = os.WriteFile(outFilepath, []byte(out), 0644)
+	err = os.WriteFile(pathFileOut, []byte(out), 0644)
 	if err != nil {
 		return fmt.Errorf("failed to write output file: %w", err)
 	}

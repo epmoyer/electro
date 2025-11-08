@@ -48,7 +48,6 @@ func packSite(pathOutputDir string) error {
 	// ------------------
 	// STAGE 3: Inline HTML Fonts
 	// ------------------
-	// FIXME: Inline fonts
 	qlog.InfoPrintf("Inlining fonts to  %q...", pathFileStage3)
 	err = makeHTMLFontsInline(pathFileStage2, pathFileStage3)
 	if err != nil {
