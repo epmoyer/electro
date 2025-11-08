@@ -230,6 +230,12 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// Fix inter-document links
 
 	// Wrap images
+	imgTagRe := regexp.MustCompile(`<img .*?>`)
+	imgTags := imgTagRe.FindAllString(html, -1)
+	for _, imgTag := range imgTags {
+		html = strings.ReplaceAll(
+			html, imgTag, fmt.Sprintf("<div class=\"img-wrapper\">%s</div>", imgTag))
+	}
 
 	// Add id tags to headings
 	html = addIdTagsToHeadings(html)
@@ -240,6 +246,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 		b.Footer +
 		"</div>\n</div>\n")
 
+	// FIXME: implement
 	// Update search
 
 	b.OrderedDocumentnames = append(b.OrderedDocumentnames, documentName)
@@ -445,7 +452,7 @@ func (b *builderT) MdParseNotices(md string) (string, error) {
 	reNoticeStart := regexp.MustCompile(`{{% notice (\S*) %}}`)
 	noticeTypes := reNoticeStart.FindAllStringSubmatch(md, -1)
 	for _, match := range noticeTypes {
-		fmt.Printf("*** Notice: %#v", match)
+		// fmt.Printf("*** Notice: %#v\n", match)
 		// This is the full directice, e.g. "{{% notice info %}}"
 		noticeDirective := match[0]
 		// This is the type of notice, e.g. "info"
@@ -1044,8 +1051,8 @@ func addIdTagsToHeadings(html string) string {
 			tagStart,
 			fmt.Sprintf("%s id=\"%s\"", tagStart, id),
 			1)
-		fmt.Printf("🟣  heading: %q, core: %q, id: %q, replacement: %q\n",
-			heading, core, id, replacement)
+		// fmt.Printf("🟣  heading: %q, core: %q, id: %q, replacement: %q\n",
+		// 	heading, core, id, replacement)
 		html = strings.Replace(html, heading, replacement, -1)
 	}
 	return html
