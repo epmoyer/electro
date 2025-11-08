@@ -27,7 +27,6 @@ func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 	linesOut := []string{}
 
 	for _, line := range lines {
-		// FIXME: Implement
 		if woffRe.MatchString(line) {
 			// fmt.Printf("🟣 WOFF:%s\n", line)
 			line, err = convertFont(basepath, line, "woff")
@@ -58,7 +57,6 @@ func makeHTMLFontsInline(inFilepath, outFilepath string) error {
 }
 
 func convertFont(basepath, line, format string) (string, error) {
-	// FIXME: Return err in fail cases
 	urlRe := regexp.MustCompile(`url\(["\'](.*?)["\']\)`)
 	urlExpressionRe := regexp.MustCompile(`url\(["\'].*?["\']\)`)
 	urls := urlRe.FindAllStringSubmatch(line, -1)
