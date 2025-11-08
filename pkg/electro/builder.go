@@ -41,6 +41,7 @@ type builderT struct {
 	StripFrontmatter                bool
 	NumberHeadings                  bool
 	NumberHeadingsAtLevel           int
+	Footer                          string
 
 	// Runtime
 	MenuHtml             string
@@ -83,6 +84,7 @@ func newBuilder(pathOutputDir string,
 	stripFrontmatter bool,
 	numberHeadings bool,
 	numberHeadingsAtLevel int,
+	footer string,
 ) *builderT {
 
 	// Set defaults
@@ -102,6 +104,7 @@ func newBuilder(pathOutputDir string,
 		StripFrontmatter:                stripFrontmatter,
 		NumberHeadings:                  numberHeadings,
 		NumberHeadingsAtLevel:           numberHeadingsAtLevel,
+		Footer:                          footer,
 		SiteDocuments:                   make(map[string]siteDocumentT),
 		Substitutions:                   make(map[string]string),
 		MenuBuilder:                     &menuBuilderT{},
@@ -222,12 +225,21 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// -------------------------
 	// Modify HTML
 	// -------------------------
+
 	// FIXME: implement
 	// Fix inter-document links
+
 	// Wrap images
+
 	// Add id tags to headings
 	html = addIdTagsToHeadings(html)
+
 	// Add footer text
+	html += ("<div class=\"no-indent\"><hr />\n" +
+		"<div class=\"footer\">\n" +
+		b.Footer +
+		"</div>\n</div>\n")
+
 	// Update search
 
 	b.OrderedDocumentnames = append(b.OrderedDocumentnames, documentName)

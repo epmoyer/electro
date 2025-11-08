@@ -98,6 +98,7 @@ func BuildProject(pathCommandLineArg string) error {
 		configProject.StripFrontmatter,
 		configProject.NumberHeadings,
 		configProject.NumberHeadingsAtLevel,
+		configProject.Footer,
 	)
 	for _, nd := range configProject.Navigation {
 		err := builder.AddNavigationDescriptor(nd)
