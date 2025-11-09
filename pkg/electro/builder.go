@@ -185,7 +185,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	}
 	md := string(mdData)
 	// Normalize line endings on load
-	md = strings.ReplaceAll(document, "\r\n", "\n")
+	md = strings.ReplaceAll(md, "\r\n", "\n")
 
 	// -------------------------
 	// Pre-parser
@@ -309,6 +309,7 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	// Parse interdocument links
 	// -------------------------
 	// FIXME: If single file, wrangle interdocument links.
+	qlog.Info("***---***---***---***---***---***---")
 	if b.OutputFormat == OutputFormatSingleFile {
 		md = b.MdWrangleInterDocumentLinks(md)
 	}
@@ -339,12 +340,14 @@ func (b *builderT) stripFrontmatter(md string) (string, error) {
 
 func (b *builderT) MdWrangleInterDocumentLinks(md string) string {
 	qlog.Trace()
-	linesOut := []string{}
+	// linesOut := []string{}
 	mdDocLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md\)`)
-	mdHeadingLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md#.*?\)`)
+	mdDocLinkPgRe := regexp.MustCompile(`\[.*?\]\((?P<page_id>.*?).md\)`)
+	// mdHeadingLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md#.*?\)`)
+	// mdHeadingLinksPgRe := regexp.MustCompile(`\[.*?\]\((?P<page_id>.*?).md#(?P<heading_id>.*?)\)`)
 	lines := strings.Split(md, "\n")
 	for _, line := range lines {
-		lineOriginal := line
+		// lineOriginal := line/s
 
 		// -----------------
 		// Links to .md documents
@@ -354,8 +357,19 @@ func (b *builderT) MdWrangleInterDocumentLinks(md string) string {
 			qlog.Debugf("    MD_LINKS (to .md doc): %#v", mdDocLinks)
 		}
 		for _, mdDocLink := range mdDocLinks {
-
+			results := mdDocLinkPgRe.FindAllStringSubmatch(mdDocLink, -1)
+			pageId := results[0][1]
+			newReference := fmt.Sprintf("?pageId=%s", pageId)
+			qlog.Debugf("    REPLACEMENT: %s -> %s", mdDocLink, newReference)
+			newMdDocLink := strings.Replace(
+				mdDocLink, fmt.Sprintf("%s.md", pageId), newReference, 1)
+			qlog.Debugf("    NEW MD LINK: %s", newMdDocLink)
 		}
+
+		// -----------------
+		// Links to headings within .md documents
+		// -----------------
+		// FIXME: Implent
 	}
 	return md
 }
