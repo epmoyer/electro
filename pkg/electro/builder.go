@@ -513,8 +513,7 @@ func (b *builderT) MdAddHeadingNumbers(md string) (string, error) {
 }
 
 func (b *builderT) MdParseNotices(md string) (string, error) {
-	// Parse custom notice blocks
-	// notice_start_types = re.findall(r'{{% notice (\S*) %}}', markdown)
+	// Parse custom notice blockss
 	reNoticeStart := regexp.MustCompile(`{{% notice (\S*) %}}`)
 	noticeTypes := reNoticeStart.FindAllStringSubmatch(md, -1)
 	for _, match := range noticeTypes {
@@ -528,7 +527,7 @@ func (b *builderT) MdParseNotices(md string) (string, error) {
 			return "", fmt.Errorf("error building notice snippet for type %q: %w", noticeType, err)
 		}
 		sub := b.CreateSubstitution(htmlNoticeStart)
-		md = strings.ReplaceAll(md, noticeDirective, sub)
+		md = strings.ReplaceAll(md, noticeDirective, sub+"\n")
 	}
 
 	noticeEndDirective := "{{% /notice %}}"
