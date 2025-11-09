@@ -162,8 +162,6 @@ func (b *builderT) BuildSubheadingMenus(documentName string) {
 		linkUrl := ""
 		if b.OutputFormat == OutputFormatStaticSite {
 			linkUrl = documentName + ".html#" + headingId
-		} else {
-			linkUrl = "#" + headingId
 		}
 
 		// Add the heading to the menu
