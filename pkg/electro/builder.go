@@ -527,6 +527,12 @@ func (b *builderT) MdParseNotices(md string) (string, error) {
 			return "", fmt.Errorf("error building notice snippet for type %q: %w", noticeType, err)
 		}
 		sub := b.CreateSubstitution(htmlNoticeStart)
+		// NOTE: We need to force an extra newline after the substitution to ensure
+		// that the markdown parser treats the first contiguous lines after the html notice start
+		// substitution as markdown.
+		// e.g. Without it inline code blocks in the first line after a notice start wewe
+		// not rendered if the source contained no blank line between the notice start and
+		// the notice content.
 		md = strings.ReplaceAll(md, noticeDirective, sub+"\n")
 	}
 
