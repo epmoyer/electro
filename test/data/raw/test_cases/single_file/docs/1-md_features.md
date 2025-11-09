@@ -187,7 +187,9 @@ def test_function(arg1, arg2):
 {{% /notice %}}
 
 {{% notice tip %}}
+
 This is a test of a `tip` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
+
 {{% /notice %}}
 
 {{% notice note %}}

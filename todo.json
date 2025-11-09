@@ -71,13 +71,7 @@
                     "id": 103,
                     "id_labels": [],
                     "name": "Fix: Copy final single file output to output location."
-                }
-            ],
-            "id": 2,
-            "name": "Backlog"
-        },
-        {
-            "cards": [
+                },
                 {
                     "description": "",
                     "due": null,
@@ -89,6 +83,11 @@
                     "name": "Inline code within notice block just showing up as ticks"
                 }
             ],
+            "id": 2,
+            "name": "Backlog"
+        },
+        {
+            "cards": [],
             "id": 3,
             "name": "Doing"
         },
