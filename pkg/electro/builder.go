@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
@@ -1093,8 +1094,8 @@ func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documen
 	documentHtml = strings.ReplaceAll(documentHtml, "'{{% single_file %}}'", boolToJsTrueFalseText(b.OutputFormat == OutputFormatSingleFile))
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% watermark %}}", watermark)
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% electro_version %}}", config.Version)
-	documentHtml = strings.ReplaceAll(documentHtml, "{{% year %}}", "2025")                      // FIXME: get current year
-	documentHtml = strings.ReplaceAll(documentHtml, "{{% timestamp %}}", "2025-10-12T00:00:00Z") // FIXME: implement proper timestamp
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% year %}}", time.Now().Format("2006"))
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% timestamp %}}", time.Now().Format(time.RFC3339))
 
 	// Ensure output directory exists
 	err := os.MkdirAll(filepath.Dir(outputPath), 0755)
