@@ -184,6 +184,8 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
 	}
 	md := string(mdData)
+	// Normalize line endings on load
+	md = strings.ReplaceAll(document, "\r\n", "\n")
 
 	// -------------------------
 	// Pre-parser
@@ -336,7 +338,25 @@ func (b *builderT) stripFrontmatter(md string) (string, error) {
 }
 
 func (b *builderT) MdWrangleInterDocumentLinks(md string) string {
+	qlog.Trace()
+	linesOut := []string{}
+	mdDocLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md\)`)
+	mdHeadingLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md#.*?\)`)
+	lines := strings.Split(md, "\n")
+	for _, line := range lines {
+		lineOriginal := line
 
+		// -----------------
+		// Links to .md documents
+		// -----------------
+		mdDocLinks := mdDocLinksRe.FindAllString(line, -1)
+		if len(mdDocLinks) > 0 {
+			qlog.Debugf("    MD_LINKS (to .md doc): %#v", mdDocLinks)
+		}
+		for _, mdDocLink := range mdDocLinks {
+
+		}
+	}
 	return md
 }
 
