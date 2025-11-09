@@ -663,6 +663,10 @@ func (b *builderT) RenderSite() error {
 	// Build search results doc (placeholder)
 	// -------------------
 	// TODO: Implement search results document building
+	err = b.BuildDocument(pathSearchResultsMd, "search")
+	if err != nil {
+		return err
+	}
 
 	// -------------------
 	// Build site pages
