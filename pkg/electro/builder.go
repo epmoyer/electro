@@ -309,7 +309,6 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	// Parse interdocument links
 	// -------------------------
 	// FIXME: If single file, wrangle interdocument links.
-	qlog.Info("***---***---***---***---***---***---")
 	if b.OutputFormat == OutputFormatSingleFile {
 		md = b.MdWrangleInterDocumentLinks(md)
 	}
@@ -339,15 +338,17 @@ func (b *builderT) stripFrontmatter(md string) (string, error) {
 }
 
 func (b *builderT) MdWrangleInterDocumentLinks(md string) string {
+	qlog.Debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
 	qlog.Trace()
-	// linesOut := []string{}
+	linesOut := []string{}
 	mdDocLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md\)`)
 	mdDocLinkPgRe := regexp.MustCompile(`\[.*?\]\((?P<page_id>.*?).md\)`)
-	// mdHeadingLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md#.*?\)`)
-	// mdHeadingLinksPgRe := regexp.MustCompile(`\[.*?\]\((?P<page_id>.*?).md#(?P<heading_id>.*?)\)`)
+	mdHeadingLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md#.*?\)`)
+	mdHeadingLinksPgRe := regexp.MustCompile(`\[.*?\]\((?P<page_id>.*?).md#(?P<heading_id>.*?)\)`)
 	lines := strings.Split(md, "\n")
 	for _, line := range lines {
-		// lineOriginal := line/s
+		// qlog.Debugf("MD line: %s", line)s
+		lineOriginal := line
 
 		// -----------------
 		// Links to .md documents
@@ -364,14 +365,34 @@ func (b *builderT) MdWrangleInterDocumentLinks(md string) string {
 			newMdDocLink := strings.Replace(
 				mdDocLink, fmt.Sprintf("%s.md", pageId), newReference, 1)
 			qlog.Debugf("    NEW MD LINK: %s", newMdDocLink)
+			line = strings.Replace(line, mdDocLink, newMdDocLink, -1)
 		}
 
 		// -----------------
 		// Links to headings within .md documents
 		// -----------------
-		// FIXME: Implent
+		mdHeadingLinks := mdHeadingLinksRe.FindAllString(line, -1)
+		if len(mdHeadingLinks) > 0 {
+			qlog.Debugf("    MD_LINKS (to heading): %#v", mdHeadingLinks)
+		}
+		for _, mdHeadingtLink := range mdHeadingLinks {
+			results := mdHeadingLinksPgRe.FindAllStringSubmatch(mdHeadingtLink, -1)
+			pageId := results[0][1]
+			headingId := results[0][2]
+			newReference := fmt.Sprintf("?pageId=%s&amp;headingId=%s", pageId, headingId)
+			qlog.Debugf("    REPLACEMENT: %s -> %s", mdHeadingtLink, newReference)
+			newMdHeadingLink := strings.Replace(
+				mdHeadingtLink, fmt.Sprintf("%s.md#%s", pageId, headingId), newReference, 1)
+			qlog.Debugf("    NEW MD LINK: %s", newMdHeadingLink)
+			line = strings.Replace(line, mdHeadingtLink, newMdHeadingLink, -1)
+		}
+		if line != lineOriginal {
+			qlog.Debugf("    NEW LINE: %s", line)
+		}
+		linesOut = append(linesOut, line)
 	}
-	return md
+	qlog.Debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+	return strings.Join(linesOut, "\n")
 }
 
 func (b *builderT) MdParseChecklists(md string) string {
