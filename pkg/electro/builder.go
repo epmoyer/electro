@@ -977,6 +977,11 @@ func (mb *menuBuilderT) formatMenuHeading(
 
 	if numberItemContent != "" {
 		// We have a numbered heading
+		classes := "number-item"
+		if isLevelTwo {
+			numberItemContent = fmt.Sprintf(
+				"<div class=\"%s\">%s</div>", classes, numberItemContent)
+		}
 	}
 	textItemContent = fmt.Sprintf("<div class=\"text-item\">%s</div>", textItemContent)
 	coreContent = fmt.Sprintf("<div class=\"core\">%s%s</div>", numberItemContent, textItemContent)
