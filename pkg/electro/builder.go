@@ -1089,9 +1089,10 @@ func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documen
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% master_title_nav %}}", strings.ReplaceAll(masterTitle, "<br>", " "))
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% sidebar_menu %}}", b.MenuHtml)
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% current_document_name %}}", documentName)
-	documentHtml = strings.ReplaceAll(documentHtml, "'{{% single_file %}}'", "false") // FIXME: implement proper logic
+	// NOTE: These single quotes are intentional.  We are replacing a single quoted string in the template with a JS true or false.
+	documentHtml = strings.ReplaceAll(documentHtml, "'{{% single_file %}}'", boolToJsTrueFalseText(b.OutputFormat == OutputFormatSingleFile))
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% watermark %}}", watermark)
-	documentHtml = strings.ReplaceAll(documentHtml, "{{% electro_version %}}", config.Version)   // FIXME: get from config
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% electro_version %}}", config.Version)
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% year %}}", "2025")                      // FIXME: get current year
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% timestamp %}}", "2025-10-12T00:00:00Z") // FIXME: implement proper timestamp
 
@@ -1107,6 +1108,13 @@ func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documen
 	}
 
 	return nil
+}
+
+func boolToJsTrueFalseText(value bool) string {
+	if value {
+		return "true"
+	}
+	return "false"
 }
 
 func addIdTagsToHeadings(html string) string {
