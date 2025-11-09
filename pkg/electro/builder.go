@@ -1089,11 +1089,11 @@ func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documen
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% master_title_nav %}}", strings.ReplaceAll(masterTitle, "<br>", " "))
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% sidebar_menu %}}", b.MenuHtml)
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% current_document_name %}}", documentName)
-	documentHtml = strings.ReplaceAll(documentHtml, "'{{% single_file %}}'", "false") // TODO: implement proper logic
+	documentHtml = strings.ReplaceAll(documentHtml, "'{{% single_file %}}'", "false") // FIXME: implement proper logic
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% watermark %}}", watermark)
-	documentHtml = strings.ReplaceAll(documentHtml, "{{% electro_version %}}", "1.0.0")          // TODO: get from config
-	documentHtml = strings.ReplaceAll(documentHtml, "{{% year %}}", "2025")                      // TODO: get current year
-	documentHtml = strings.ReplaceAll(documentHtml, "{{% timestamp %}}", "2025-10-12T00:00:00Z") // TODO: implement proper timestamp
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% electro_version %}}", config.Version)   // FIXME: get from config
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% year %}}", "2025")                      // FIXME: get current year
+	documentHtml = strings.ReplaceAll(documentHtml, "{{% timestamp %}}", "2025-10-12T00:00:00Z") // FIXME: implement proper timestamp
 
 	// Ensure output directory exists
 	err := os.MkdirAll(filepath.Dir(outputPath), 0755)
