@@ -308,7 +308,6 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	// -------------------------
 	// Parse interdocument links
 	// -------------------------
-	// FIXME: If single file, wrangle interdocument links.
 	if b.OutputFormat == OutputFormatSingleFile {
 		md = b.MdWrangleInterDocumentLinks(md)
 	}
