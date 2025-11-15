@@ -2,6 +2,7 @@ package electro
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -847,16 +848,12 @@ func (b *builderT) RenderSite() error {
 	}
 
 	searchIndexPath := filepath.Join(searchDir, "search_index.js")
-	// TODO: Implement proper search index building
-	searchJs := `App.searchData = {
-    "config": {
-        "lang": ["en"],
-        "min_search_length": 3,
-        "prebuild_index": false,
-        "separator": "[\\s\\-]+"
-    },
-    "docs": []
-};`
+	// FIXME:search Implement proper search index building
+	searchIndexJsonBytes, err := json.MarshalIndent(b.SearchIndex, "", "    ")
+	if err != nil {
+		return fmt.Errorf("error marshaling search index to JSON: %w", err)
+	}
+	searchJs := fmt.Sprintf("App.searchData = %s;", string(searchIndexJsonBytes))
 
 	err = os.WriteFile(searchIndexPath, []byte(searchJs), 0644)
 	if err != nil {

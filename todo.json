@@ -68,14 +68,6 @@
                     "description": "",
                     "due": null,
                     "due_complete": false,
-                    "id": 103,
-                    "id_labels": [],
-                    "name": "Fix: Copy final single file output to output location."
-                },
-                {
-                    "description": "",
-                    "due": null,
-                    "due_complete": false,
                     "id": 107,
                     "id_labels": [],
                     "name": "Figure out how to map site resources to embedded file system within electrro project"
@@ -106,6 +98,20 @@
                     "description": "",
                     "due": null,
                     "due_complete": false,
+                    "id": 103,
+                    "id_labels": [],
+                    "name": "Fix: Copy final single file output to output location."
+                }
+            ],
+            "id": 3,
+            "name": "Doing"
+        },
+        {
+            "cards": [
+                {
+                    "description": "",
+                    "due": null,
+                    "due_complete": false,
                     "id": 108,
                     "id_labels": [],
                     "name": "Reference/embed lunr.js"
@@ -117,13 +123,7 @@
                     "id": 109,
                     "id_labels": [],
                     "name": "Build search results"
-                }
-            ],
-            "id": 3,
-            "name": "Doing"
-        },
-        {
-            "cards": [
+                },
                 {
                     "description": "",
                     "due": null,

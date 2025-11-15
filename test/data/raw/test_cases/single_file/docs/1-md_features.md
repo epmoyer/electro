@@ -2,6 +2,8 @@
 
 TEST CASE: `single_file`
 
+🟣 Debug Text to validate file changes: 1
+
 This is text which occurs before the first internal heading.
 
 Jackdaws love my big sphinx of quartz.
