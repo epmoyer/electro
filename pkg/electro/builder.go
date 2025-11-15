@@ -288,7 +288,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 		b.Footer +
 		"</div>\n</div>\n")
 
-	// FIXME:search: implement
+	// Add document to search
 	markdownFilename := filepath.Base(pathMarkdown)
 	if !slices.Contains(b.ExcludeFromSearch, markdownFilename) {
 		b.addDocumentToSearch(documentName, html)
@@ -848,7 +848,6 @@ func (b *builderT) RenderSite() error {
 	}
 
 	searchIndexPath := filepath.Join(searchDir, "search_index.js")
-	// FIXME:search Implement proper search index building
 	searchIndexJsonBytes, err := json.MarshalIndent(b.SearchIndex, "", "    ")
 	if err != nil {
 		return fmt.Errorf("error marshaling search index to JSON: %w", err)
