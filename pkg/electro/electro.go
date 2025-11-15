@@ -96,7 +96,7 @@ func BuildProject(pathCommandLineArg string) error {
 	// Determine theme dir
 	// -----------------------
 	pathThemeDirectory := filepath.Join(pathDirThemes, configProject.Theme)
-	if !pathIsDir(pathThemeDirectory) {
+	if !pathIsDirFS(embeddedDataFS, pathThemeDirectory) {
 		return fmt.Errorf("theme directory does not exist: %q", pathThemeDirectory)
 	}
 	qlog.InfoPrintf("Using theme: %q", configProject.Theme)

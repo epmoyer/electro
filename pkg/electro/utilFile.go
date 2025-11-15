@@ -11,9 +11,24 @@ func pathExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
+func pathExistsFS(fsys fs.FS, path string) bool {
+	_, err := fs.Stat(fsys, path)
+	return !os.IsNotExist(err)
+}
+
 func pathIsDir(path string) bool {
 	info, err := os.Stat(path)
-	if os.IsNotExist(err) {
+	if err != nil {
+		// Handles both os.ErrNotExist and any other errors
+		return false
+	}
+	return info.IsDir()
+}
+
+func pathIsDirFS(fsys fs.FS, path string) bool {
+	info, err := fs.Stat(fsys, path)
+	if err != nil {
+		// Handles both fs.ErrNotExist and any other errors
 		return false
 	}
 	return info.IsDir()
@@ -21,7 +36,8 @@ func pathIsDir(path string) bool {
 
 func pathIsFile(path string) bool {
 	info, err := os.Stat(path)
-	if os.IsNotExist(err) {
+	if err != nil {
+		// Handles both os.ErrNotExist and any other errors
 		return false
 	}
 	return !info.IsDir()
