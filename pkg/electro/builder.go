@@ -50,7 +50,7 @@ type builderT struct {
 	SiteDocuments        map[string]siteDocumentT
 	Substitutions        map[string]string
 	MenuBuilder          *menuBuilderT
-	// FIXME: add SearchIndex
+	SearchIndex          *searchIndexT
 }
 
 type menuBuilderT struct {
@@ -75,6 +75,25 @@ type menuNodeT struct {
 	HeadingId    string
 }
 
+type searchIndexT struct {
+	Config searchIndexConfigT     `json:"config"`
+	Docs   []searchIndexDocumentT `json:"docs"`
+}
+
+type searchIndexConfigT struct {
+	Lang            []string `json:"lang"`
+	MinSearchLength int      `json:"min_search_length"`
+	PrebuildIndix   bool     `json:"prebuild_index"`
+	Separator       string   `json:"separator"`
+}
+
+type searchIndexDocumentT struct {
+	Title    string `json:"title"`
+	Location string `json:"location"`
+	Heading  string `json:"heading"`
+	Text     string `json:"text"`
+}
+
 func newBuilder(pathOutputDir string,
 	pathProjectDir string,
 	pathThemeDir string,
@@ -93,6 +112,16 @@ func newBuilder(pathOutputDir string,
 		numberHeadingsAtLevel = 1
 	}
 
+	searchIndex := searchIndexT{
+		Config: searchIndexConfigT{
+			Lang:            []string{"en"},
+			MinSearchLength: 3,
+			PrebuildIndix:   false,
+			Separator:       `[\s\-]+`,
+		},
+		Docs: []searchIndexDocumentT{},
+	}
+
 	return &builderT{
 		// Config
 		PathOutputDir:                   pathOutputDir,
@@ -109,6 +138,7 @@ func newBuilder(pathOutputDir string,
 		SiteDocuments:                   make(map[string]siteDocumentT),
 		Substitutions:                   make(map[string]string),
 		MenuBuilder:                     &menuBuilderT{},
+		SearchIndex:                     &searchIndex,
 	}
 }
 
@@ -252,7 +282,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 		b.Footer +
 		"</div>\n</div>\n")
 
-	// FIXME: implement
+	// FIXME:search: implement
 	// Update search
 
 	b.OrderedDocumentnames = append(b.OrderedDocumentnames, documentName)
