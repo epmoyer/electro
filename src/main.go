@@ -41,7 +41,11 @@ func main() {
 	// ------------------------
 	// Initialize local packages
 	// ------------------------
-	// FIXME: TBD
+	err = electro.Init(flagNoEmbed)
+	if err != nil {
+		qlog.InfoPrint("Initialization error: " + err.Error())
+		return
+	}
 
 	// ------------------------
 	// Start

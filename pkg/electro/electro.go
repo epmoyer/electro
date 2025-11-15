@@ -2,18 +2,42 @@ package electro
 
 import (
 	"app/pkg/quicklog"
+	"embed"
 	"fmt"
+	"io/fs"
+	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
 var qlog *quicklog.LoggerT = nil // Assigned at runtime
 
-const pathDirThemes = "../pkg/electro/data/themes"
+// ------------------------
+// Embedded filesystem support
+// ------------------------
+
+//go:embed all:embeddedData
+var embeddedData embed.FS
+
+var dataFS fs.FS
 
 func init() {
 	qlog = quicklog.GetLogger("default")
+}
+
+func Init(noEmbed bool) error {
+	if noEmbed {
+		// Find where THIS package's source code lives
+		_, filename, _, _ := runtime.Caller(0)
+		pkgDir := filepath.Dir(filename)
+		dataDir := filepath.Join(pkgDir, "data")
+		dataFS = os.DirFS(dataDir)
+	} else {
+		dataFS = embeddedData
+	}
+	return nil
 }
 
 func BuildProject(pathCommandLineArg string) error {
