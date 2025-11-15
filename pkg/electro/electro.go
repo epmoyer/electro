@@ -32,8 +32,7 @@ func Init(noEmbed bool) error {
 		// Find where THIS package's source code lives
 		_, filename, _, _ := runtime.Caller(0)
 		pkgDir := filepath.Dir(filename)
-		dataDir := filepath.Join(pkgDir, "embeddedData")
-		dataFS = os.DirFS(dataDir)
+		dataFS = os.DirFS(pkgDir)
 	} else {
 		dataFS = embeddedDataFS
 	}
