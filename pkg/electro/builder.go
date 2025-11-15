@@ -699,7 +699,7 @@ func (b *builderT) RenderSite() error {
 	for _, filename := range cssFiles {
 		srcPath := filepath.Join(b.PathThemeDir, filename)
 		dstPath := filepath.Join(b.PathOutputDir, filename)
-		err := copyFile(srcPath, dstPath)
+		err := copyFileFromFS(embeddedDataFS, srcPath, dstPath)
 		if err != nil {
 			return fmt.Errorf("error copying CSS file %s: %w", filename, err)
 		}
@@ -1254,66 +1254,6 @@ func addIdTagsToHeadings(html string) string {
 		html = strings.Replace(html, heading, replacement, -1)
 	}
 	return html
-}
-
-func copyFile(src, dst string) error {
-	sourceFile, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer sourceFile.Close()
-
-	// Ensure destination directory exists
-	err = os.MkdirAll(filepath.Dir(dst), 0755)
-	if err != nil {
-		return err
-	}
-
-	destFile, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer destFile.Close()
-
-	_, err = destFile.ReadFrom(sourceFile)
-	return err
-}
-
-func copyDirectoryContents(srcDir, dstDir string) error {
-	// Check if source directory exists
-	if !pathIsDir(srcDir) {
-		return fmt.Errorf("source directory does not exist: %s", srcDir)
-	}
-
-	// Create destination directory
-	err := os.MkdirAll(dstDir, 0755)
-	if err != nil {
-		return err
-	}
-
-	entries, err := os.ReadDir(srcDir)
-	if err != nil {
-		return err
-	}
-
-	for _, entry := range entries {
-		srcPath := filepath.Join(srcDir, entry.Name())
-		dstPath := filepath.Join(dstDir, entry.Name())
-
-		if entry.IsDir() {
-			err = copyDirectoryContents(srcPath, dstPath)
-			if err != nil {
-				return err
-			}
-		} else {
-			err = copyFile(srcPath, dstPath)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
 }
 
 // headingT represents an HTML heading element
