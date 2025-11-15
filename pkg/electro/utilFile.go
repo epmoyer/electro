@@ -159,3 +159,40 @@ func copyDirectoryContents(srcDir, dstDir string) error {
 
 	return nil
 }
+
+func copyDirectoryContentsFromFS(fsysSrc fs.FS, srcDir, dstDir string) error {
+	// Check if source directory exists
+	if !pathIsDirFS(fsysSrc, srcDir) {
+		return fmt.Errorf("source directory does not exist: %s", srcDir)
+	}
+
+	// Create destination directory
+	err := os.MkdirAll(dstDir, 0755)
+	if err != nil {
+		return err
+	}
+
+	entries, err := fs.ReadDir(fsysSrc, srcDir)
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range entries {
+		srcPath := filepath.Join(srcDir, entry.Name())
+		dstPath := filepath.Join(dstDir, entry.Name())
+
+		if entry.IsDir() {
+			err = copyDirectoryContentsFromFS(fsysSrc, srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		} else {
+			err = copyFileFromFS(fsysSrc, srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}

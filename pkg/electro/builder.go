@@ -740,7 +740,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	fontsSrcDir := filepath.Join(b.PathThemeDir, "fonts")
 	fontsDstDir := filepath.Join(b.PathOutputDir, "fonts")
-	err = copyDirectoryContents(fontsSrcDir, fontsDstDir)
+	err = copyDirectoryContentsFromFS(embeddedDataFS, fontsSrcDir, fontsDstDir)
 	if err != nil {
 		return fmt.Errorf("error copying fonts: %w", err)
 	}
@@ -770,7 +770,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	jsSrcDir := filepath.Join(b.PathThemeDir, "js")
 	jsDstDir := filepath.Join(b.PathOutputDir, "js")
-	err = copyDirectoryContents(jsSrcDir, jsDstDir)
+	err = copyDirectoryContentsFromFS(embeddedDataFS, jsSrcDir, jsDstDir)
 	if err != nil {
 		return fmt.Errorf("error copying JavaScript files: %w", err)
 	}
@@ -787,7 +787,7 @@ func (b *builderT) RenderSite() error {
 	// Build site pages
 	// -------------------
 	templatePath := filepath.Join(b.PathThemeDir, "template.html")
-	templateData, err := os.ReadFile(templatePath)
+	templateData, err := fs.ReadFile(embeddedDataFS, templatePath)
 	if err != nil {
 		return fmt.Errorf("error reading template file: %w", err)
 	}

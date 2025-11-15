@@ -2,7 +2,7 @@
 
 TEST CASE: `single_file`
 
-🟣 Debug Text to validate file changes: 1
+🟣 Debug Text to validate file changes: 2!
 
 This is text which occurs before the first internal heading.
 
