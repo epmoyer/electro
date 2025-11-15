@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
@@ -600,7 +601,59 @@ func (b *builderT) PostParseHtml(html string) (string, error) {
 
 func (b *builderT) addDocumentToSearch(documentName string, documentHtml string) error {
 	qlog.Trace()
-	b.addSearchItem("test", "test", "test", "test")
+
+	// Parse HTML
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(documentHtml))
+	if err != nil {
+		return fmt.Errorf("failed to parse HTML: %w", err)
+	}
+
+	// Find document title from first h1
+	documentTitle := ""
+	doc.Find("h1").First().Each(func(i int, s *goquery.Selection) {
+		documentTitle = strings.TrimSpace(s.Text())
+	})
+
+	if documentTitle == "" {
+		qlog.Infof("No h1 tag found in %s. Cannot extract document title for search.", documentName)
+		documentTitle = "(Unknown)"
+	}
+
+	baseLocation := fmt.Sprintf("%s.html", documentName)
+	currentLocation := baseLocation
+	currentHeadingText := ""
+	sectionText := ""
+
+	// Iterate through h2, h3, p, li, th, td elements
+	doc.Find("h2, h3, p, li, th, td").Each(func(i int, s *goquery.Selection) {
+		tagName := goquery.NodeName(s)
+
+		if tagName == "p" || tagName == "li" || tagName == "th" || tagName == "td" {
+			// Paragraph, list item, or table cell
+			text := strings.TrimSpace(s.Text())
+			if sectionText != "" {
+				sectionText += " "
+			}
+			sectionText += text
+		} else {
+			// Heading (h2 or h3)
+			if sectionText != "" {
+				b.addSearchItem(documentTitle, currentLocation, currentHeadingText, sectionText)
+				sectionText = ""
+			}
+
+			currentHeadingText = strings.TrimSpace(s.Text())
+			headingId := headingTextToId(currentHeadingText)
+			qlog.Debugf("   %s : %s : %s", tagName, currentHeadingText, headingId)
+			currentLocation = fmt.Sprintf("%s#%s", baseLocation, headingId)
+		}
+	})
+
+	// Commit any remaining text
+	if sectionText != "" {
+		b.addSearchItem(documentTitle, currentLocation, currentHeadingText, sectionText)
+	}
+
 	return nil
 }
 
