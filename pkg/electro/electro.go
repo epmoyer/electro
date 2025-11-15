@@ -19,7 +19,7 @@ var qlog *quicklog.LoggerT = nil // Assigned at runtime
 // ------------------------
 
 //go:embed all:embeddedData
-var embeddedData embed.FS
+var embeddedDataFS embed.FS
 
 var dataFS fs.FS
 
@@ -35,7 +35,7 @@ func Init(noEmbed bool) error {
 		dataDir := filepath.Join(pkgDir, "data")
 		dataFS = os.DirFS(dataDir)
 	} else {
-		dataFS = embeddedData
+		dataFS = embeddedDataFS
 	}
 	return nil
 }

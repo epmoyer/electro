@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -154,11 +155,12 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	b.MenuBuilder.AddSection(nd.Section, isDivider)
 	b.MenuHtml += "<ul class=\"menu-tree\">\n"
 	menuNames := nd.Documents.Keys()
+	fsysLocal := os.DirFS(".")
 	for _, menuName := range menuNames {
 		mdDocumentName, _ := nd.Documents.Get(menuName)
 		documentName := mdDocumentNameToDocumentName(mdDocumentName.(string))
 		pathMarkdown := filepath.Join(b.PathProjectDir, "docs", mdDocumentName.(string))
-		err := b.BuildDocument(pathMarkdown, documentName)
+		err := b.BuildDocument(fsysLocal, pathMarkdown, documentName)
 		if err != nil {
 			return err
 		}
@@ -206,7 +208,7 @@ func (b *builderT) BuildSubheadingMenus(documentName string) {
 	}
 }
 
-func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error {
+func (b *builderT) BuildDocument(fsys fs.FS, pathMarkdown string, documentName string) error {
 	if !pathIsFile(pathMarkdown) {
 		return fmt.Errorf("markdown document does not exist: %q", pathMarkdown)
 	}
@@ -214,7 +216,7 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 	// -------------------------
 	// Read markdown file
 	// -------------------------
-	mdData, err := os.ReadFile(pathMarkdown)
+	mdData, err := fs.ReadFile(fsys, pathMarkdown)
 	if err != nil {
 		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
 	}
@@ -776,7 +778,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Build search results doc (empty placeholder for runtime search resutlts)
 	// -------------------
-	err = b.BuildDocument(pathSearchResultsMd, "search")
+	err = b.BuildDocument(dataFS, pathSearchResultsMd, "search")
 	if err != nil {
 		return err
 	}
