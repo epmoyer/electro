@@ -2,18 +2,41 @@ package electro
 
 import (
 	"app/pkg/quicklog"
+	"embed"
 	"fmt"
+	"io/fs"
+	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
 var qlog *quicklog.LoggerT = nil // Assigned at runtime
 
-const pathDirThemes = "../pkg/electro/data/themes"
+// ------------------------
+// Embedded filesystem support
+// ------------------------
+
+//go:embed all:embeddedData
+var embeddedDataFS embed.FS
+
+var dataFS fs.FS
 
 func init() {
 	qlog = quicklog.GetLogger("default")
+}
+
+func Init(noEmbed bool) error {
+	if noEmbed {
+		// Find where THIS package's source code lives
+		_, filename, _, _ := runtime.Caller(0)
+		pkgDir := filepath.Dir(filename)
+		dataFS = os.DirFS(pkgDir)
+	} else {
+		dataFS = embeddedDataFS
+	}
+	return nil
 }
 
 func BuildProject(pathCommandLineArg string) error {
@@ -73,7 +96,7 @@ func BuildProject(pathCommandLineArg string) error {
 	// Determine theme dir
 	// -----------------------
 	pathThemeDirectory := filepath.Join(pathDirThemes, configProject.Theme)
-	if !pathIsDir(pathThemeDirectory) {
+	if !pathIsDirFS(embeddedDataFS, pathThemeDirectory) {
 		return fmt.Errorf("theme directory does not exist: %q", pathThemeDirectory)
 	}
 	qlog.InfoPrintf("Using theme: %q", configProject.Theme)

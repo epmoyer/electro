@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -154,11 +155,12 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	b.MenuBuilder.AddSection(nd.Section, isDivider)
 	b.MenuHtml += "<ul class=\"menu-tree\">\n"
 	menuNames := nd.Documents.Keys()
+	fsysProject := os.DirFS(b.PathProjectDir)
 	for _, menuName := range menuNames {
 		mdDocumentName, _ := nd.Documents.Get(menuName)
 		documentName := mdDocumentNameToDocumentName(mdDocumentName.(string))
-		pathMarkdown := filepath.Join(b.PathProjectDir, "docs", mdDocumentName.(string))
-		err := b.BuildDocument(pathMarkdown, documentName)
+		pathMarkdown := filepath.Join("docs", mdDocumentName.(string))
+		err := b.BuildDocument(fsysProject, pathMarkdown, documentName)
 		if err != nil {
 			return err
 		}
@@ -206,15 +208,15 @@ func (b *builderT) BuildSubheadingMenus(documentName string) {
 	}
 }
 
-func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error {
-	if !pathIsFile(pathMarkdown) {
+func (b *builderT) BuildDocument(fsys fs.FS, pathMarkdown string, documentName string) error {
+	if !pathIsFileFS(fsys, pathMarkdown) {
 		return fmt.Errorf("markdown document does not exist: %q", pathMarkdown)
 	}
 
 	// -------------------------
 	// Read markdown file
 	// -------------------------
-	mdData, err := os.ReadFile(pathMarkdown)
+	mdData, err := fs.ReadFile(fsys, pathMarkdown)
 	if err != nil {
 		return fmt.Errorf("error reading markdown document %q: %w", pathMarkdown, err)
 	}
@@ -697,7 +699,7 @@ func (b *builderT) RenderSite() error {
 	for _, filename := range cssFiles {
 		srcPath := filepath.Join(b.PathThemeDir, filename)
 		dstPath := filepath.Join(b.PathOutputDir, filename)
-		err := copyFile(srcPath, dstPath)
+		err := copyFileFromFS(embeddedDataFS, srcPath, dstPath)
 		if err != nil {
 			return fmt.Errorf("error copying CSS file %s: %w", filename, err)
 		}
@@ -738,7 +740,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	fontsSrcDir := filepath.Join(b.PathThemeDir, "fonts")
 	fontsDstDir := filepath.Join(b.PathOutputDir, "fonts")
-	err = copyDirectoryContents(fontsSrcDir, fontsDstDir)
+	err = copyDirectoryContentsFromFS(embeddedDataFS, fontsSrcDir, fontsDstDir)
 	if err != nil {
 		return fmt.Errorf("error copying fonts: %w", err)
 	}
@@ -768,7 +770,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	jsSrcDir := filepath.Join(b.PathThemeDir, "js")
 	jsDstDir := filepath.Join(b.PathOutputDir, "js")
-	err = copyDirectoryContents(jsSrcDir, jsDstDir)
+	err = copyDirectoryContentsFromFS(embeddedDataFS, jsSrcDir, jsDstDir)
 	if err != nil {
 		return fmt.Errorf("error copying JavaScript files: %w", err)
 	}
@@ -776,7 +778,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Build search results doc (empty placeholder for runtime search resutlts)
 	// -------------------
-	err = b.BuildDocument(pathSearchResultsMd, "search")
+	err = b.BuildDocument(dataFS, pathSearchResultsMd, "search")
 	if err != nil {
 		return err
 	}
@@ -785,7 +787,7 @@ func (b *builderT) RenderSite() error {
 	// Build site pages
 	// -------------------
 	templatePath := filepath.Join(b.PathThemeDir, "template.html")
-	templateData, err := os.ReadFile(templatePath)
+	templateData, err := fs.ReadFile(embeddedDataFS, templatePath)
 	if err != nil {
 		return fmt.Errorf("error reading template file: %w", err)
 	}
@@ -1252,66 +1254,6 @@ func addIdTagsToHeadings(html string) string {
 		html = strings.Replace(html, heading, replacement, -1)
 	}
 	return html
-}
-
-func copyFile(src, dst string) error {
-	sourceFile, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer sourceFile.Close()
-
-	// Ensure destination directory exists
-	err = os.MkdirAll(filepath.Dir(dst), 0755)
-	if err != nil {
-		return err
-	}
-
-	destFile, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer destFile.Close()
-
-	_, err = destFile.ReadFrom(sourceFile)
-	return err
-}
-
-func copyDirectoryContents(srcDir, dstDir string) error {
-	// Check if source directory exists
-	if !pathIsDir(srcDir) {
-		return fmt.Errorf("source directory does not exist: %s", srcDir)
-	}
-
-	// Create destination directory
-	err := os.MkdirAll(dstDir, 0755)
-	if err != nil {
-		return err
-	}
-
-	entries, err := os.ReadDir(srcDir)
-	if err != nil {
-		return err
-	}
-
-	for _, entry := range entries {
-		srcPath := filepath.Join(srcDir, entry.Name())
-		dstPath := filepath.Join(dstDir, entry.Name())
-
-		if entry.IsDir() {
-			err = copyDirectoryContents(srcPath, dstPath)
-			if err != nil {
-				return err
-			}
-		} else {
-			err = copyFile(srcPath, dstPath)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
 }
 
 // headingT represents an HTML heading element

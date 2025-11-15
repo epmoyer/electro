@@ -23,6 +23,7 @@ func main() {
 
 	versionInfo := config.AppName + " v" + config.Version
 	fmt.Println(versionInfo)
+	fmt.Printf("    electro core package version: v%s\n", electro.Version)
 	if flagVersion {
 		return
 	}
@@ -41,12 +42,15 @@ func main() {
 	// ------------------------
 	// Initialize local packages
 	// ------------------------
-	// FIXME: TBD
+	err = electro.Init(flagNoEmbed)
+	if err != nil {
+		qlog.InfoPrint("Initialization error: " + err.Error())
+		return
+	}
 
 	// ------------------------
 	// Start
 	// ------------------------
-	fmt.Println("🔴  Implementation TBD")
 	err = electro.BuildProject(flagProject)
 	if err != nil {
 		qlog.ErrorPrint("Build error: " + err.Error())

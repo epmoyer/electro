@@ -1,3 +1,4 @@
 package electro
 
-const pathSearchResultsMd = "../pkg/electro/data/site_resources/search.md"
+const pathSearchResultsMd = "embeddedData/site_resources/search.md"
+const pathDirThemes = "embeddedData/themes"
