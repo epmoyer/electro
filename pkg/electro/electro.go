@@ -115,7 +115,6 @@ func BuildProject(pathCommandLineArg string) error {
 	// -----------------------
 	// If requested, publish document as a single stand-alone file
 	// -----------------------
-	// FIXME: implement
 	if outputFormat == OutputFormatSingleFile {
 		err = publishSingleFile(pathOutputDir, configProject.PathOutputSingleFileTargetRelative)
 		if err != nil {
