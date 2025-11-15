@@ -23,6 +23,7 @@ func main() {
 
 	versionInfo := config.AppName + " v" + config.Version
 	fmt.Println(versionInfo)
+	fmt.Printf("    electro core package version: v%s\n", electro.Version)
 	if flagVersion {
 		return
 	}

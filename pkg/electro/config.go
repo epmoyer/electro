@@ -1,8 +1,10 @@
 package electro
 
+const Version = "3.0.0"
+
 var config = configT{
 	AppName: "electro",
-	Version: "3.0.0",
+	Version: Version,
 }
 
 type configT struct {
