@@ -117,7 +117,7 @@ func BuildProject(pathCommandLineArg string) error {
 	// -----------------------
 	// FIXME: implement
 	if outputFormat == OutputFormatSingleFile {
-		err = publishSingleFile(pathOutputDir)
+		err = publishSingleFile(pathOutputDir, configProject.PathOutputSingleFileTargetRelative)
 		if err != nil {
 			return fmt.Errorf("error publishing site data as single file: %w", err)
 		}

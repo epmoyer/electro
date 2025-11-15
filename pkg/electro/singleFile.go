@@ -5,13 +5,34 @@ import (
 	"fmt"
 )
 
-func publishSingleFile(pathOutputDir string) error {
+func publishSingleFile(pathOutputDir string, pathOutputSingleFileTargetRelative string) error {
+
+	// ----------------------------------
+	// Build (single-file) output file
+	// ----------------------------------
+	// We pack always, which generates the single file, because the user may have
+	// specied that they want a single file output format, but may not have specified
+	// that we copy that single file to a specific target location.
 	err := packSite(pathOutputDir)
 	if err != nil {
 		return fmt.Errorf("error packing site into single file: %w", err)
 	}
 
-	// FIXME: implement coping of single file to requested output_single_file path
+	// ----------------------------------
+	// Copy (single-file) output file
+	// ----------------------------------
+	if pathOutputSingleFileTargetRelative == "" {
+		// No target path specified, so we are done
+		return nil
+	}
+	pathSource := fmt.Sprintf("%s/index.html", pathOutputDir)
+	pathDestination := fmt.Sprintf("%s/%s", pathOutputDir, pathOutputSingleFileTargetRelative)
+	qlog.InfoPrintf("Copying single-file output %q to %q...", pathSource, pathDestination)
+	err = copyFile(pathSource, pathDestination)
+	if err != nil {
+		return fmt.Errorf("error copying single-file output to target path: %w", err)
+	}
+
 	return nil
 }
 

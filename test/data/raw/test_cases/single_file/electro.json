@@ -14,5 +14,6 @@
     ],
     "theme": "positron",
     "output_format": "single_file",
+    "output_single_file": "OUTPUT_single_file.html",
     "watermark": "DRAFT"
 }
