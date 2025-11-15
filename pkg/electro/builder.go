@@ -155,12 +155,12 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	b.MenuBuilder.AddSection(nd.Section, isDivider)
 	b.MenuHtml += "<ul class=\"menu-tree\">\n"
 	menuNames := nd.Documents.Keys()
-	fsysLocal := os.DirFS(".")
+	fsysProject := os.DirFS(b.PathProjectDir)
 	for _, menuName := range menuNames {
 		mdDocumentName, _ := nd.Documents.Get(menuName)
 		documentName := mdDocumentNameToDocumentName(mdDocumentName.(string))
-		pathMarkdown := filepath.Join(b.PathProjectDir, "docs", mdDocumentName.(string))
-		err := b.BuildDocument(fsysLocal, pathMarkdown, documentName)
+		pathMarkdown := filepath.Join("docs", mdDocumentName.(string))
+		err := b.BuildDocument(fsysProject, pathMarkdown, documentName)
 		if err != nil {
 			return err
 		}
@@ -209,7 +209,7 @@ func (b *builderT) BuildSubheadingMenus(documentName string) {
 }
 
 func (b *builderT) BuildDocument(fsys fs.FS, pathMarkdown string, documentName string) error {
-	if !pathIsFile(pathMarkdown) {
+	if !pathIsFileFS(fsys, pathMarkdown) {
 		return fmt.Errorf("markdown document does not exist: %q", pathMarkdown)
 	}
 

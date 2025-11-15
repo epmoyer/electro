@@ -2,6 +2,7 @@ package electro
 
 import (
 	"bufio"
+	"io/fs"
 	"os"
 )
 
@@ -21,6 +22,15 @@ func pathIsDir(path string) bool {
 func pathIsFile(path string) bool {
 	info, err := os.Stat(path)
 	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+func pathIsFileFS(fsys fs.FS, path string) bool {
+	info, err := fs.Stat(fsys, path)
+	if err != nil {
+		// Handles both fs.ErrNotExist and any other errors
 		return false
 	}
 	return !info.IsDir()
