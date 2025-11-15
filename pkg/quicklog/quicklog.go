@@ -77,7 +77,6 @@ func (c *ConfigT) SetDefaults() {
 }
 
 type LoggerT struct {
-	// TODO: Should these be capitalized?
 	RollingFile       io.Writer
 	Level             LogLevel
 	FnCallbackOnError func()
