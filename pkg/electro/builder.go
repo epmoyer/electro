@@ -39,6 +39,7 @@ type builderT struct {
 	Level1HeadingsAreDocumentTitles bool
 	MasterTitle                     string
 	Watermark                       string
+	ExcludeFromSearch               []string
 	StripFrontmatter                bool
 	NumberHeadings                  bool
 	NumberHeadingsAtLevel           int
@@ -101,6 +102,7 @@ func newBuilder(pathOutputDir string,
 	level1HeadingsAreDocumentTitles bool,
 	masterTitle string,
 	watermark string,
+	excludeFromSearch []string,
 	stripFrontmatter bool,
 	numberHeadings bool,
 	numberHeadingsAtLevel int,
@@ -131,6 +133,7 @@ func newBuilder(pathOutputDir string,
 		Level1HeadingsAreDocumentTitles: level1HeadingsAreDocumentTitles,
 		MasterTitle:                     masterTitle,
 		Watermark:                       watermark,
+		ExcludeFromSearch:               excludeFromSearch,
 		StripFrontmatter:                stripFrontmatter,
 		NumberHeadings:                  numberHeadings,
 		NumberHeadingsAtLevel:           numberHeadingsAtLevel,
@@ -589,12 +592,13 @@ func (b *builderT) PostParseHtml(html string) (string, error) {
 	return html, nil
 }
 
-func (b *builderT) AddDocumentToSearch(documentName string, documentHtml string) error {
+func (b *builderT) addDocumentToSearch(documentName string, documentHtml string) error {
 	qlog.Trace()
+	b.addSearchItem("test", "test", "test", "test")
 	return nil
 }
 
-func (b *builderT) AddSearchItem(
+func (b *builderT) addSearchItem(
 	title string,
 	location string,
 	heading string,

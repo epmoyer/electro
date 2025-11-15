@@ -24,6 +24,7 @@ type configElectroProjectT struct {
 	Theme                           string                  `json:"theme"`
 	OutputFormat                    string                  `json:"output_format"`
 	Watermark                       string                  `json:"watermark"`
+	ExcludeFromSearch               []string                `json:"exclude_from_search"`
 	EnableNewlineToBreak            bool                    `json:"enable_newline_to_break"`
 	Level1HeadingsAreDocumentTitles bool                    `json:"level_1_headings_are_document_titles"`
 	StripFrontmatter                bool                    `json:"strip_frontmatter"`

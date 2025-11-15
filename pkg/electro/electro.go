@@ -95,6 +95,7 @@ func BuildProject(pathCommandLineArg string) error {
 		configProject.Level1HeadingsAreDocumentTitles,
 		configProject.MasterTitle,
 		configProject.Watermark,
+		configProject.ExcludeFromSearch,
 		configProject.StripFrontmatter,
 		configProject.NumberHeadings,
 		configProject.NumberHeadingsAtLevel,
