@@ -51,7 +51,6 @@ func main() {
 	// ------------------------
 	// Start
 	// ------------------------
-	fmt.Println("🔴  Implementation TBD")
 	err = electro.BuildProject(flagProject)
 	if err != nil {
 		qlog.ErrorPrint("Build error: " + err.Error())
