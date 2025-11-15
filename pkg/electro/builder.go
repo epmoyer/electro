@@ -691,12 +691,12 @@ func (b *builderT) RenderSite() error {
 	cssFiles := []string{
 		"base_electro_doc.css",
 		"base_electro_ui.css",
-		"base_pygments_monokai.css",
 		"fonts.css",
 		"fontawesome.css",
 	}
 
 	for _, filename := range cssFiles {
+		fmt.Printf("Copying CSS file: %s\n", filename)
 		srcPath := filepath.Join(b.PathThemeDir, filename)
 		dstPath := filepath.Join(b.PathOutputDir, filename)
 		err := copyFileFromFS(embeddedDataFS, srcPath, dstPath)

@@ -77,6 +77,11 @@
             "name": "Backlog"
         },
         {
+            "cards": [],
+            "id": 3,
+            "name": "Doing"
+        },
+        {
             "cards": [
                 {
                     "description": "",
@@ -93,13 +98,7 @@
                     "id": 110,
                     "id_labels": [],
                     "name": "Get stand alone executable working (with embeded fs)"
-                }
-            ],
-            "id": 3,
-            "name": "Doing"
-        },
-        {
-            "cards": [
+                },
                 {
                     "description": "",
                     "due": null,
