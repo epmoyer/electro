@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 
@@ -286,6 +287,11 @@ func (b *builderT) BuildDocument(pathMarkdown string, documentName string) error
 		"</div>\n</div>\n")
 
 	// FIXME:search: implement
+	markdownFilename := filepath.Base(pathMarkdown)
+	if !slices.Contains(b.ExcludeFromSearch, markdownFilename) {
+		b.addDocumentToSearch(documentName, html)
+	}
+
 	// Update search
 
 	b.OrderedDocumentnames = append(b.OrderedDocumentnames, documentName)
