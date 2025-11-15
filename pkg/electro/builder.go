@@ -589,6 +589,26 @@ func (b *builderT) PostParseHtml(html string) (string, error) {
 	return html, nil
 }
 
+func (b *builderT) AddDocumentToSearch(documentName string, documentHtml string) error {
+	qlog.Trace()
+	return nil
+}
+
+func (b *builderT) AddSearchItem(
+	title string,
+	location string,
+	heading string,
+	text string,
+) {
+	searchDoc := searchIndexDocumentT{
+		Title:    title,
+		Location: location,
+		Heading:  heading,
+		Text:     text,
+	}
+	b.SearchIndex.Docs = append(b.SearchIndex.Docs, searchDoc)
+}
+
 func (b *builderT) RenderSite() error {
 	if b.Level1HeadingsAreDocumentTitles {
 		b.MenuBuilder.CullItemsAbove(1)
