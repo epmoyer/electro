@@ -774,9 +774,8 @@ func (b *builderT) RenderSite() error {
 	}
 
 	// -------------------
-	// Build search results doc (placeholder)
+	// Build search results doc (empty placeholder for runtime search resutlts)
 	// -------------------
-	// TODO: Implement search results document building
 	err = b.BuildDocument(pathSearchResultsMd, "search")
 	if err != nil {
 		return err
