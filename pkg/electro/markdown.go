@@ -1,6 +1,9 @@
 package electro
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type mdRendererT struct {
 	Markdown           string
@@ -41,5 +44,29 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 		}
 	}
 
+	// FIXME:md:finish implementation
+
 	return md, nil
+}
+
+func (r *mdRendererT) stripFrontmatter(md string) (string, error) {
+	lines := strings.Split(md, "\n")
+
+	// Frontmatter must start on the first line
+	if len(lines) == 0 || strings.TrimSpace(lines[0]) != "---" {
+		return md, nil // No frontmatter
+	}
+
+	// Find closing ---
+	for i := 1; i < len(lines); i++ {
+		if strings.TrimSpace(lines[i]) == "---" {
+			// Found end of frontmatter, return everything after
+			if i+1 < len(lines) {
+				return strings.Join(lines[i+1:], "\n"), nil
+			}
+			return "", nil // File was only frontmatter
+		}
+	}
+
+	return md, fmt.Errorf("frontmatter start found but no closing '---'")
 }
