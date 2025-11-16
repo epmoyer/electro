@@ -199,7 +199,7 @@ func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
 		level := len(pieces[0])
 		headingText := pieces[1]
 
-		if level < b.NumberHeadingsAtLevel {
+		if level < r.NumberHeadingsAtLevel {
 			renumberedLines = append(renumberedLines, line)
 			continue
 		}
@@ -265,7 +265,7 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("error building notice snippet for type %q: %w", noticeType, err)
 		}
-		sub := b.CreateSubstitution(htmlNoticeStart)
+		sub := r.CreateSubstitution(htmlNoticeStart)
 		// NOTE: We need to force an extra newline after the substitution to ensure
 		// that the markdown parser treats the first contiguous lines after the html notice start
 		// substitution as markdown.
