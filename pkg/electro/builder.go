@@ -44,7 +44,7 @@ type builderT struct {
 	MasterTitle                     string
 	Watermark                       string
 	ExcludeFromSearch               []string
-	StripFrontmatter                bool
+	DoStripFrontmatter              bool
 	NumberHeadings                  bool
 	NumberHeadingsAtLevel           int
 	Footer                          string
@@ -138,7 +138,7 @@ func newBuilder(pathOutputDir string,
 		MasterTitle:                     masterTitle,
 		Watermark:                       watermark,
 		ExcludeFromSearch:               excludeFromSearch,
-		StripFrontmatter:                stripFrontmatter,
+		DoStripFrontmatter:              stripFrontmatter,
 		NumberHeadings:                  numberHeadings,
 		NumberHeadingsAtLevel:           numberHeadingsAtLevel,
 		Footer:                          footer,
@@ -312,7 +312,7 @@ func (b *builderT) PreParseMarkdown(md string) (string, error) {
 	// -------------------------
 	// Strip frontmatter
 	// -------------------------
-	if b.StripFrontmatter {
+	if b.DoStripFrontmatter {
 		md, err = b.stripFrontmatter(md)
 		if err != nil {
 			return "", fmt.Errorf("error stripping frontmatter: %w", err)
