@@ -13,20 +13,22 @@ import (
 )
 
 type mdRendererT struct {
-	Markdown              string
-	Substitutions         map[string]string
-	DoStripFrontmatter    bool
-	DoNumberHeadings      bool
-	NumberHeadingsAtLevel int
+	Markdown                    string
+	Substitutions               map[string]string
+	DoStripFrontmatter          bool
+	DoNumberHeadings            bool
+	NumberHeadingsAtLevel       int
+	DoWrangleInterdocumentLinks bool
 }
 
 func NewMdRenderer(markdown string) *mdRendererT {
 	return &mdRendererT{
-		Markdown:              markdown,
-		Substitutions:         make(map[string]string),
-		DoStripFrontmatter:    false,
-		DoNumberHeadings:      false,
-		NumberHeadingsAtLevel: 2,
+		Markdown:                    markdown,
+		Substitutions:               make(map[string]string),
+		DoStripFrontmatter:          true,
+		DoNumberHeadings:            false,
+		NumberHeadingsAtLevel:       2,
+		DoWrangleInterdocumentLinks: false,
 	}
 }
 
@@ -114,6 +116,12 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	// -------------------------
 	md = r.MdParseChecklists(md)
 
+	// -------------------------
+	// Parse interdocument links
+	// -------------------------
+	if r.DoWrangleInterdocumentLinks {
+		md = r.MdWrangleInterDocumentLinks(md)
+	}
 	// FIXME:md:finish implementation
 
 	return md, nil
@@ -276,11 +284,79 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 	return md, nil
 }
 
-func (r *mdRendererT) PostParseHtml(html string) (string, error) {
-	for placeholder, final := range r.Substitutions {
-		html = strings.ReplaceAll(html, placeholder, final)
+func (r *mdRendererT) MdParseChecklists(md string) string {
+	outLines := []string{}
+	lines := strings.Split(md, "\n")
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "- [ ] ") {
+			line = strings.Replace(line, "[ ] ", "🔲&nbsp;&nbsp;", 1)
+		} else if strings.HasPrefix(trimmed, "- [x] ") {
+			line = strings.Replace(line, "[x] ", "✅&nbsp;&nbsp;", 1)
+		} else if strings.HasPrefix(trimmed, "- [X] ") {
+			line = strings.Replace(line, "[X] ", "✅&nbsp;&nbsp;", 1)
+		}
+		outLines = append(outLines, line)
 	}
-	return html, nil
+	return strings.Join(outLines, "\n")
+}
+
+func (r *mdRendererT) MdWrangleInterDocumentLinks(md string) string {
+	qlog.Debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+	qlog.Trace()
+	linesOut := []string{}
+	mdDocLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md\)`)
+	mdDocLinkPgRe := regexp.MustCompile(`\[.*?\]\((?P<page_id>.*?).md\)`)
+	mdHeadingLinksRe := regexp.MustCompile(`\[.*?\]\(.*?\.md#.*?\)`)
+	mdHeadingLinksPgRe := regexp.MustCompile(`\[.*?\]\((?P<page_id>.*?).md#(?P<heading_id>.*?)\)`)
+	lines := strings.Split(md, "\n")
+	for _, line := range lines {
+		// qlog.Debugf("MD line: %s", line)s
+		lineOriginal := line
+
+		// -----------------
+		// Links to .md documents
+		// -----------------
+		mdDocLinks := mdDocLinksRe.FindAllString(line, -1)
+		if len(mdDocLinks) > 0 {
+			qlog.Debugf("    MD_LINKS (to .md doc): %#v", mdDocLinks)
+		}
+		for _, mdDocLink := range mdDocLinks {
+			results := mdDocLinkPgRe.FindAllStringSubmatch(mdDocLink, -1)
+			pageId := results[0][1]
+			newReference := fmt.Sprintf("?pageId=%s", pageId)
+			qlog.Debugf("    REPLACEMENT: %s -> %s", mdDocLink, newReference)
+			newMdDocLink := strings.Replace(
+				mdDocLink, fmt.Sprintf("%s.md", pageId), newReference, 1)
+			qlog.Debugf("    NEW MD LINK: %s", newMdDocLink)
+			line = strings.Replace(line, mdDocLink, newMdDocLink, -1)
+		}
+
+		// -----------------
+		// Links to headings within .md documents
+		// -----------------
+		mdHeadingLinks := mdHeadingLinksRe.FindAllString(line, -1)
+		if len(mdHeadingLinks) > 0 {
+			qlog.Debugf("    MD_LINKS (to heading): %#v", mdHeadingLinks)
+		}
+		for _, mdHeadingtLink := range mdHeadingLinks {
+			results := mdHeadingLinksPgRe.FindAllStringSubmatch(mdHeadingtLink, -1)
+			pageId := results[0][1]
+			headingId := results[0][2]
+			newReference := fmt.Sprintf("?pageId=%s&amp;headingId=%s", pageId, headingId)
+			qlog.Debugf("    REPLACEMENT: %s -> %s", mdHeadingtLink, newReference)
+			newMdHeadingLink := strings.Replace(
+				mdHeadingtLink, fmt.Sprintf("%s.md#%s", pageId, headingId), newReference, 1)
+			qlog.Debugf("    NEW MD LINK: %s", newMdHeadingLink)
+			line = strings.Replace(line, mdHeadingtLink, newMdHeadingLink, -1)
+		}
+		if line != lineOriginal {
+			qlog.Debugf("    NEW LINE: %s", line)
+		}
+		linesOut = append(linesOut, line)
+	}
+	qlog.Debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+	return strings.Join(linesOut, "\n")
 }
 
 func (r *mdRendererT) CreateSubstitution(final string) string {
@@ -289,4 +365,11 @@ func (r *mdRendererT) CreateSubstitution(final string) string {
 		"<div class=\"PRE-PARSER-SUBSTITUTION-%d\"></div>", len(r.Substitutions)+1)
 	r.Substitutions[placeholder] = final
 	return placeholder
+}
+
+func (r *mdRendererT) PostParseHtml(html string) (string, error) {
+	for placeholder, final := range r.Substitutions {
+		html = strings.ReplaceAll(html, placeholder, final)
+	}
+	return html, nil
 }

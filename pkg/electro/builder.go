@@ -1,7 +1,6 @@
 package electro
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/fs"
@@ -13,10 +12,6 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/yuin/goldmark"
-	highlighting "github.com/yuin/goldmark-highlighting/v2"
-	"github.com/yuin/goldmark/extension"
-	gmhtml "github.com/yuin/goldmark/renderer/html"
 	"golang.org/x/net/html"
 )
 
@@ -225,41 +220,55 @@ func (b *builderT) BuildDocument(fsys fs.FS, pathMarkdown string, documentName s
 	md = strings.ReplaceAll(md, "\r\n", "\n")
 
 	// -------------------------
-	// Pre-parser
+	// Render HTML
 	// -------------------------
-	md, err = b.PreParseMarkdown(md)
+	renderer := NewMdRenderer(md)
+	renderer.DoStripFrontmatter = b.DoStripFrontmatter
+	renderer.DoNumberHeadings = b.NumberHeadings
+	renderer.NumberHeadingsAtLevel = b.NumberHeadingsAtLevel
+	renderer.DoWrangleInterdocumentLinks = b.OutputFormat == OutputFormatSingleFile
+	var html string
+	html, err = renderer.Render()
 	if err != nil {
-		return fmt.Errorf("error pre-parsing markdown %q content: %w", pathMarkdown, err)
+		return fmt.Errorf("error rendering markdown document %q: %w", documentName, err)
 	}
 
-	// -------------------------
-	// Render markdown to HTML
-	// -------------------------
-	var bufHtmlBytes bytes.Buffer
-	mdConverter := goldmark.New(
-		goldmark.WithExtensions(
-			extension.GFM,
-			highlighting.NewHighlighting(
-				highlighting.WithStyle("monokai"),
-			),
-		),
-		goldmark.WithRendererOptions(
-			gmhtml.WithUnsafe(),
-		),
-	)
-	err = mdConverter.Convert([]byte(md), &bufHtmlBytes)
-	if err != nil {
-		return fmt.Errorf("error converting markdown to HTML for document %q: %w", documentName, err)
-	}
-	html := bufHtmlBytes.String()
+	// // -------------------------
+	// // Pre-parser
+	// // -------------------------
+	// md, err = b.PreParseMarkdown(md)
+	// if err != nil {
+	// 	return fmt.Errorf("error pre-parsing markdown %q content: %w", pathMarkdown, err)
+	// }
 
-	// -------------------------
-	// Post-parser
-	// -------------------------
-	html, err = b.PostParseHtml(html)
-	if err != nil {
-		return fmt.Errorf("error post-processing HTML for document %q: %w", documentName, err)
-	}
+	// // -------------------------
+	// // Render markdown to HTML
+	// // -------------------------
+	// var bufHtmlBytes bytes.Buffer
+	// mdConverter := goldmark.New(
+	// 	goldmark.WithExtensions(
+	// 		extension.GFM,
+	// 		highlighting.NewHighlighting(
+	// 			highlighting.WithStyle("monokai"),
+	// 		),
+	// 	),
+	// 	goldmark.WithRendererOptions(
+	// 		gmhtml.WithUnsafe(),
+	// 	),
+	// )
+	// err = mdConverter.Convert([]byte(md), &bufHtmlBytes)
+	// if err != nil {
+	// 	return fmt.Errorf("error converting markdown to HTML for document %q: %w", documentName, err)
+	// }
+	// html := bufHtmlBytes.String()
+
+	// // -------------------------
+	// // Post-parser
+	// // -------------------------
+	// html, err = b.PostParseHtml(html)
+	// if err != nil {
+	// 	return fmt.Errorf("error post-processing HTML for document %q: %w", documentName, err)
+	// }
 
 	// -------------------------
 	// Modify HTML
