@@ -70,14 +70,31 @@
                     "due_complete": false,
                     "id": 111,
                     "id_labels": [],
-                    "name": ""
+                    "name": "In BuildDocument() create a call to a b.RenderMarkdownCore() which does the \"core\" rendering we will call from Noteworthy. Pass it a markdown string, get back an HTML string."
+                },
+                {
+                    "description": "",
+                    "due": null,
+                    "due_complete": false,
+                    "id": 112,
+                    "id_labels": [],
+                    "name": "Noteworthy: Make an API call to render the note. On backend call b.RenderMarkdownCore(). Will need to wrap that with some package API function that creates the builder object, uses it, returns the HTML."
                 }
             ],
             "id": 2,
             "name": "Backlog"
         },
         {
-            "cards": [],
+            "cards": [
+                {
+                    "description": "",
+                    "due": null,
+                    "due_complete": false,
+                    "id": 113,
+                    "id_labels": [],
+                    "name": "Try to implement b.RenderMarkdownCore() as \"stand alone\" rather than a b method, and trickle that down to all functions. markdown.go?"
+                }
+            ],
             "id": 3,
             "name": "Doing"
         },
