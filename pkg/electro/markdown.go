@@ -252,7 +252,11 @@ func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
 }
 
 func (r *mdRendererT) MdParseNotices(md string) (string, error) {
-	// Parse custom notice blockss
+	// Parse custom notice blocks
+
+	// FIXME: Find a way to ignore notices inside fenced code blocks.
+	// This only really happens when we write notes about our own markdown syntax
+
 	reNoticeStart := regexp.MustCompile(`{{% notice (\S*) %}}`)
 	noticeTypes := reNoticeStart.FindAllStringSubmatch(md, -1)
 	for _, match := range noticeTypes {
