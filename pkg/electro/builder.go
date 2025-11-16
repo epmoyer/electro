@@ -443,6 +443,16 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Copy JavaScript
 	// -------------------
+
+	// Copy site resources js
+	jsSiteResourcesSrcDir := filepath.Join(pathDirSiteResourcesJs)
+	jsSiteResourcesDstDir := filepath.Join(b.PathOutputDir, "js")
+	err = copyDirectoryContentsFromFS(embeddedDataFS, jsSiteResourcesSrcDir, jsSiteResourcesDstDir)
+	if err != nil {
+		return fmt.Errorf("error copying core JavaScript files: %w", err)
+	}
+
+	// Copy theme js
 	jsSrcDir := filepath.Join(b.PathThemeDir, "js")
 	jsDstDir := filepath.Join(b.PathOutputDir, "js")
 	err = copyDirectoryContentsFromFS(embeddedDataFS, jsSrcDir, jsDstDir)
