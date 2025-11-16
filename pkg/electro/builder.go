@@ -435,7 +435,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	faviconSrcPath := filepath.Join(b.PathThemeDir, "favicon.ico")
 	faviconDstPath := filepath.Join(b.PathOutputDir, "img", "favicon.ico")
-	err = copyFile(faviconSrcPath, faviconDstPath)
+	err = copyFileFromFS(embeddedDataFS, faviconSrcPath, faviconDstPath)
 	if err != nil {
 		qlog.Debugf("Note: Could not copy favicon: %v", err)
 	}
