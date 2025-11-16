@@ -63,7 +63,44 @@
     "zones": null,
     "lists": [
         {
+            "cards": [],
+            "id": 2,
+            "name": "Backlog"
+        },
+        {
             "cards": [
+                {
+                    "description": "",
+                    "due": null,
+                    "due_complete": false,
+                    "id": 114,
+                    "id_labels": [
+                        4
+                    ],
+                    "name": "Icons missing in notices. Missing font awesome import?"
+                },
+                {
+                    "description": "",
+                    "due": null,
+                    "due_complete": false,
+                    "id": 115,
+                    "id_labels": [],
+                    "name": "Spacing for 2 level heading number too narrow for 10.1 etc. in side menu. Enlarge? Make so overflow does not overlap text?"
+                }
+            ],
+            "id": 3,
+            "name": "Doing"
+        },
+        {
+            "cards": [
+                {
+                    "description": "",
+                    "due": null,
+                    "due_complete": false,
+                    "id": 112,
+                    "id_labels": [],
+                    "name": "Noteworthy: Make an API call to render the note. On backend call b.RenderMarkdownCore(). Will need to wrap that with some package API function that creates the builder object, uses it, returns the HTML."
+                },
                 {
                     "description": "",
                     "due": null,
@@ -76,30 +113,10 @@
                     "description": "",
                     "due": null,
                     "due_complete": false,
-                    "id": 112,
-                    "id_labels": [],
-                    "name": "Noteworthy: Make an API call to render the note. On backend call b.RenderMarkdownCore(). Will need to wrap that with some package API function that creates the builder object, uses it, returns the HTML."
-                }
-            ],
-            "id": 2,
-            "name": "Backlog"
-        },
-        {
-            "cards": [
-                {
-                    "description": "",
-                    "due": null,
-                    "due_complete": false,
                     "id": 113,
                     "id_labels": [],
                     "name": "Try to implement b.RenderMarkdownCore() as \"stand alone\" rather than a b method, and trickle that down to all functions. markdown.go?"
-                }
-            ],
-            "id": 3,
-            "name": "Doing"
-        },
-        {
-            "cards": [
+                },
                 {
                     "description": "",
                     "due": null,
