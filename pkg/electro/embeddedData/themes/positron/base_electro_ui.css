@@ -473,10 +473,10 @@ pre::-webkit-scrollbar-thumb {
     /* As flex child */
     flex-grow: 0;
     flex-shrink: 0;
-    width: 20px;
+    min-width: 20px;
 }
 .menu-item-container .core .number-item.level-two {
-    width: 40px;
+    min-width: 40px;
 }
 .menu-item-container  .core .text-item {
     /* As flex child */
