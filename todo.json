@@ -68,6 +68,11 @@
             "name": "Backlog"
         },
         {
+            "cards": [],
+            "id": 3,
+            "name": "Doing"
+        },
+        {
             "cards": [
                 {
                     "description": "",
@@ -76,13 +81,7 @@
                     "id": 115,
                     "id_labels": [],
                     "name": "Spacing for 2 level heading number too narrow for 10.1 etc. in side menu. Enlarge? Make so overflow does not overlap text?"
-                }
-            ],
-            "id": 3,
-            "name": "Doing"
-        },
-        {
-            "cards": [
+                },
                 {
                     "description": "",
                     "due": null,
