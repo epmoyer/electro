@@ -474,6 +474,7 @@ pre::-webkit-scrollbar-thumb {
     flex-grow: 0;
     flex-shrink: 0;
     min-width: 20px;
+    margin-right: 4px;
 }
 .menu-item-container .core .number-item.level-two {
     min-width: 40px;
