@@ -197,7 +197,6 @@ func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
 		//   ...
 		//   @pragma{number_headings:on}
 		//   # Introduction
-		fmt.Printf("🟠 %s", line)
 		if matches := pragmaNumberHeadingsRe.FindStringSubmatch(line); matches != nil {
 			setting := matches[pragmaNumberHeadingsRe.SubexpIndex("setting")]
 			if setting == "off" {

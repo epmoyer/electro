@@ -176,16 +176,33 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 func (b *builderT) BuildSubheadingMenus(documentName string) {
 	documentHtml := b.SiteDocuments[documentName].Html
 
+	// Build list of two html heading tags to include in menu, of the form "h2", "h3", etc.
+	includedLevels := []string{}
+	for i := b.NumberHeadingsAtLevel; i <= b.NumberHeadingsAtLevel+1; i++ {
+		includedLevels = append(includedLevels, fmt.Sprintf("h%d", i))
+	}
+	qlog.Infof("Building subheading menus for %s including levels: %+v", documentName, includedLevels)
+
 	// Parse HTML to extract h2 and h3 headings
-	headings := extractHeadings(documentHtml, []string{"h2", "h3"})
+	headings := extractHeadings(documentHtml, includedLevels)
 	qlog.Debugf("Extracted headings from %s: %+v", documentName, headings)
 
 	for _, heading := range headings {
-		// Determine the level: h2 = level 1, h3 = level 2
-		level := 1
-		if heading.Tag == "h3" {
-			level = 2
+
+		// Determine the menuLevel: h2 = menuLevel 1, h3 = menuLevel 2
+		// Determine menu level from position in includedLevels
+		menuLevel := 1
+		for i, level := range includedLevels {
+			if heading.Tag == level {
+				menuLevel = i + 1
+				break
+			}
 		}
+
+		// menuLevel := 1
+		// if heading.Tag == "h3" {
+		// 	menuLevel = 2
+		// }
 
 		// Generate heading ID from text
 		headingId := headingTextToId(heading.Text)
@@ -197,7 +214,7 @@ func (b *builderT) BuildSubheadingMenus(documentName string) {
 		}
 
 		// Add the heading to the menu
-		b.MenuBuilder.AddItem(level, heading.Text, headingId, linkUrl, documentName)
+		b.MenuBuilder.AddItem(menuLevel, heading.Text, headingId, linkUrl, documentName)
 	}
 }
 
