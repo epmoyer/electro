@@ -179,12 +179,39 @@ func (r *mdRendererT) MdTightenlBulletLists(md string) string {
 }
 
 func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
+	pragmaNumberHeadingsRe := regexp.MustCompile(`@pragma\{number_headings:(?P<setting>\S+)\}`)
+	pragmaNumberHeadingsEnabled := true
 	headingManager := newHeadingManager(r.NumberHeadingsAtLevel)
 	headingIdToHeadingIdWithLineNumber := make(map[string]string)
 	renumberedLines := []string{}
 	inFencedBlock := false
 	lines := strings.Split(md, "\n")
 	for _, line := range lines {
+		// Detect pragmas
+		// NOTE: We allow heading numbering to be "manually" toggled within the document so that
+		// the user disable numbering for certain sections. Typically this is used for
+		// opening sections like "Document Info", "Revision History", "Table of Contents", etc.
+		// Example:
+		//   @pragma{number_headings:off}
+		//   # Document Info
+		//   ...
+		//   @pragma{number_headings:on}
+		//   # Introduction
+		fmt.Printf("🟠 %s", line)
+		if matches := pragmaNumberHeadingsRe.FindStringSubmatch(line); matches != nil {
+			setting := matches[pragmaNumberHeadingsRe.SubexpIndex("setting")]
+			if setting == "off" {
+				pragmaNumberHeadingsEnabled = false
+			} else if setting == "on" {
+				pragmaNumberHeadingsEnabled = true
+			}
+			// We do not include the pragma line in the output.
+			// By convention, pragmas are always on their own line.	Any other text
+			// appearing on the pragma line will not be rendered.
+			continue
+		}
+
+		// Detect fenced code blocks
 		if strings.HasPrefix(line, "```") {
 			inFencedBlock = !inFencedBlock
 		}
@@ -199,10 +226,12 @@ func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
 		level := len(pieces[0])
 		headingText := pieces[1]
 
-		if level < r.NumberHeadingsAtLevel {
+		if level < r.NumberHeadingsAtLevel || !pragmaNumberHeadingsEnabled {
+			// Do not number this heading
 			renumberedLines = append(renumberedLines, line)
 			continue
 		}
+
 		headingNumberText := headingManager.GetNextHeadingNumber(level)
 		idWithoutHeadingNumber := headingTextToId(headingText)
 		idWithHeadingNumber := headingTextToId(headingNumberText + " " + headingText)
@@ -217,7 +246,7 @@ func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
 	}
 
 	// -------------------------
-	// Replace heading links to maktch re-numbered headings
+	// Replace heading links to match re-numbered headings
 	// -------------------------
 	qlog.Debug("---- replacing links ----")
 	outLines := []string{}
