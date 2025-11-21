@@ -25,8 +25,16 @@ func buildHtmlSnippetNoticeStart(noticeType string) (string, error) {
 	var icon string
 	var ok bool
 
+	_, ok = noticeIcons[noticeType]
+	if !ok {
+		noticeType = "note" // Default notice type
+		qlog.Info("Unrecognized notice type, defaulting to 'note': " + noticeType)
+		// FIXME: Should collect warning for user and report them somewhere. Top of page?
+		// or out of band?
+	}
 	icon, ok = noticeIcons[noticeType]
 	if !ok {
+		// This should never happen if the default above exists.
 		return "", fmt.Errorf("unrecognized noticeType: %s", noticeType)
 	}
 
