@@ -208,3 +208,5 @@ This is a test of a `note` notice. It has a tile above, an icon, and a place for
 {{% notice warning %}}
 This is a test of a `warning` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
 {{% /notice %}}
+
+{{% table_of_contents %}}
