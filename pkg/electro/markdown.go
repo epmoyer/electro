@@ -22,7 +22,13 @@ type mdRendererT struct {
 	DoNumberHeadings            bool
 	NumberHeadingsAtLevel       int
 	DoWrangleInterdocumentLinks bool
-	TocLines                    []string
+	TocItems                    []tocItemT
+}
+
+type tocItemT struct {
+	HeadingLevel  int
+	HeadingNumber string
+	HeadingText   string
 }
 
 func NewMdRenderer(markdown string, filename string, pathOutputDir string) *mdRendererT {
@@ -35,7 +41,7 @@ func NewMdRenderer(markdown string, filename string, pathOutputDir string) *mdRe
 		DoNumberHeadings:            false,
 		NumberHeadingsAtLevel:       2,
 		DoWrangleInterdocumentLinks: false,
-		TocLines:                    []string{},
+		TocItems:                    []tocItemT{},
 	}
 }
 
@@ -103,7 +109,7 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	// -------------------------
 	// Tighten bullet lists
 	// -------------------------
-	md = r.MdTightenlBulletLists(md)
+	md = r.MdTightenBulletLists(md)
 
 	// -------------------------
 	// Number headings
@@ -202,7 +208,7 @@ func (r *mdRendererT) stripFrontmatter(md string) (string, error) {
 	return md, fmt.Errorf("frontmatter start found but no closing '---'")
 }
 
-func (r *mdRendererT) MdTightenlBulletLists(md string) string {
+func (r *mdRendererT) MdTightenBulletLists(md string) string {
 	// Remove blank lines between bullet list items
 	lines := strings.Split(md, "\n")
 	bulletRe := regexp.MustCompile(`^(\s*[-*+]\s+)`)
@@ -275,25 +281,33 @@ func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
 
 		// Split into heading markdown prefix (###...) and heading text
 		pieces := strings.SplitN(line, " ", 2)
-		level := len(pieces[0])
-		headingText := pieces[1]
-
-		if level < r.NumberHeadingsAtLevel || !pragmaNumberHeadingsEnabled {
-			// Do not number this heading
+		if len(pieces) < 2 {
+			// Malformed heading, skip
 			renumberedLines = append(renumberedLines, line)
 			continue
 		}
+		level := len(pieces[0])
+		headingText := pieces[1]
+		headingNumberText := ""
 
-		headingNumberText := headingManager.GetNextHeadingNumber(level)
-		idWithoutHeadingNumber := headingTextToId(headingText)
-		idWithHeadingNumber := headingTextToId(headingNumberText + " " + headingText)
-		headingIdToHeadingIdWithLineNumber[idWithoutHeadingNumber] = idWithHeadingNumber
+		if level >= r.NumberHeadingsAtLevel && pragmaNumberHeadingsEnabled {
+			// Add heading number
+			headingNumberText = headingManager.GetNextHeadingNumber(level)
+			idWithoutHeadingNumber := headingTextToId(headingText)
+			idWithHeadingNumber := headingTextToId(headingNumberText + " " + headingText)
+			headingIdToHeadingIdWithLineNumber[idWithoutHeadingNumber] = idWithHeadingNumber
 
-		line = fmt.Sprintf(
-			"%s %s&nbsp;&nbsp;&nbsp;&nbsp;%s",
-			pieces[0],
-			headingNumberText,
-			headingText)
+			line = fmt.Sprintf(
+				"%s %s&nbsp;&nbsp;&nbsp;&nbsp;%s",
+				pieces[0],
+				headingNumberText,
+				headingText)
+		}
+		r.TocItems = append(r.TocItems, tocItemT{
+			HeadingLevel:  level,
+			HeadingNumber: headingNumberText,
+			HeadingText:   headingText,
+		})
 		renumberedLines = append(renumberedLines, line)
 	}
 
