@@ -225,6 +225,8 @@ func (r *mdRendererT) MdTightenBulletLists(md string) string {
 func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string, error) {
 	pragmaNumberHeadingsRe := regexp.MustCompile(`@pragma\{number_headings:(?P<setting>\S+)\}`)
 	pragmaNumberHeadingsEnabled := true
+	pragmaIncludeInTocRe := regexp.MustCompile(`@pragma\{include_in_toc:(?P<setting>\S+)\}`)
+	pragmaIncludeInTocEnabled := true
 	headingManager := newHeadingManager(r.NumberHeadingsAtLevel)
 	headingIdToHeadingIdWithLineNumber := make(map[string]string)
 	renumberedLines := []string{}
@@ -247,6 +249,18 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 				pragmaNumberHeadingsEnabled = false
 			} else if setting == "true" {
 				pragmaNumberHeadingsEnabled = true
+			}
+			// We do not include the pragma line in the output.
+			// By convention, pragmas are always on their own line.	Any other text
+			// appearing on the pragma line will not be rendered.
+			continue
+		}
+		if matches := pragmaIncludeInTocRe.FindStringSubmatch(line); matches != nil {
+			setting := matches[pragmaIncludeInTocRe.SubexpIndex("setting")]
+			if setting == "false" {
+				pragmaIncludeInTocEnabled = false
+			} else if setting == "true" {
+				pragmaIncludeInTocEnabled = true
 			}
 			// We do not include the pragma line in the output.
 			// By convention, pragmas are always on their own line.	Any other text
@@ -288,11 +302,13 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 				headingNumberText,
 				headingText)
 		}
-		r.TocItems = append(r.TocItems, tocItemT{
-			HeadingLevel:  level,
-			HeadingNumber: headingNumberText,
-			HeadingText:   headingText,
-		})
+		if pragmaIncludeInTocEnabled {
+			r.TocItems = append(r.TocItems, tocItemT{
+				HeadingLevel:  level,
+				HeadingNumber: headingNumberText,
+				HeadingText:   headingText,
+			})
+		}
 		renumberedLines = append(renumberedLines, line)
 	}
 
