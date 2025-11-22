@@ -323,3 +323,21 @@ a:visited:hover, a:hover {
 .toc6 {
     min-width: 126px;
 }
+
+@media print {
+    /* Hide sidebar, nav, and other UI elements */
+    .sidebar-container {
+        display: none !important;
+    }
+    .root-container, .main-container, .content-area, .content-container {
+        margin-left: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        /* Remove any fixed positioning */
+        position: static !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        color: black !important;
+    }
+}
