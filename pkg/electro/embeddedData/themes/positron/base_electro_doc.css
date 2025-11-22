@@ -88,6 +88,9 @@ a:visited:hover, a:hover {
     font-size: 27px;
     border-bottom: var(--color-h1-underline) solid 1px;
 }
+.content-page h1:not(:first-of-type) {
+    margin-top: 40px;
+}
 
 /* bar-style headings */
 .content-page h2,
