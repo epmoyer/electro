@@ -468,8 +468,39 @@ func (r *mdRendererT) CreateSubstitution(final string) string {
 }
 
 func (r *mdRendererT) PostParseHtml(html string) (string, error) {
+	// -------------------------
+	// Apply substitutions
+	// -------------------------
 	for placeholder, final := range r.Substitutions {
 		html = strings.ReplaceAll(html, placeholder, final)
 	}
+
+	// -------------------------
+	// Process pragmas
+	// -------------------------
+	pragmaInjectHeadingClassRe := regexp.MustCompile(`@pragma\{inject_heading_class:(?P<setting>\S*)\}`)
+	pragmaInjectHeadingClass := ""
+	reHeading := regexp.MustCompile(`<(h\d)(\s[^>]*)?>`)
+	lines := strings.Split(html, "\n")
+	linesOut := []string{}
+	for _, line := range lines {
+		if matches := pragmaInjectHeadingClassRe.FindStringSubmatch(line); matches != nil {
+			setting := matches[pragmaInjectHeadingClassRe.SubexpIndex("setting")]
+			pragmaInjectHeadingClass = setting
+			// We do not include the pragma line in the output.
+			// By convention, pragmas are always on their own line.	Any other text
+			// appearing on the pragma line will not be rendered.
+			continue
+		}
+		if pragmaInjectHeadingClass != "" {
+			fmt.Printf("🟣  %s\n", pragmaInjectHeadingClass)
+			// Inject class into headings
+			if reHeading.MatchString(line) {
+				line = reHeading.ReplaceAllString(line, fmt.Sprintf("<$1 class=\"%s\"$2>", pragmaInjectHeadingClass))
+			}
+		}
+		linesOut = append(linesOut, line)
+	}
+	html = strings.Join(linesOut, "\n")
 	return html, nil
 }
