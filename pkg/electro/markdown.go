@@ -144,7 +144,7 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 	tocIndent := strings.Repeat("&nbsp;", 4)
 	lines := strings.Split(md, "\n")
-	toc_lines := []string{"", "# Table of Contents"}
+	toc_lines := []string{"", "# Table of Contents", "<div class=\"toc-body\">"}
 	for _, line := range lines {
 		if !strings.HasPrefix(line, "#") {
 			continue
@@ -165,7 +165,7 @@ func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 			"%s<div class=\"toc-number toc{%d}\">%s</div>"+
 				"<a class=\"toc-link\" href=\"?pageId={%s}&headingId={%s}\">"+
 				headingText+
-				"</a>",
+				"</a><br>",
 			indent,
 			level,
 			headingNumberText,
@@ -173,6 +173,7 @@ func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 			headingTextToId(headingText))
 		toc_lines = append(toc_lines, toc_line)
 	}
+	toc_lines = append(toc_lines, "</div>")
 	md = strings.ReplaceAll(md, "{{% table_of_contents %}}", strings.Join(toc_lines, "\n"))
 	return md
 }
