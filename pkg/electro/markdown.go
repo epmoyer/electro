@@ -236,16 +236,16 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 		// the user disable numbering for certain sections. Typically this is used for
 		// opening sections like "Document Info", "Revision History", "Table of Contents", etc.
 		// Example:
-		//   @pragma{number_headings:off}
+		//   @pragma{number_headings:true}
 		//   # Document Info
 		//   ...
-		//   @pragma{number_headings:on}
+		//   @pragma{number_headings:false}
 		//   # Introduction
 		if matches := pragmaNumberHeadingsRe.FindStringSubmatch(line); matches != nil {
 			setting := matches[pragmaNumberHeadingsRe.SubexpIndex("setting")]
-			if setting == "off" {
+			if setting == "false" {
 				pragmaNumberHeadingsEnabled = false
-			} else if setting == "on" {
+			} else if setting == "true" {
 				pragmaNumberHeadingsEnabled = true
 			}
 			// We do not include the pragma line in the output.
