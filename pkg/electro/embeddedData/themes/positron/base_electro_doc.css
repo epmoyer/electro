@@ -286,4 +286,40 @@ a:visited:hover, a:hover {
 .notices :not(pre) > code {
     background: #5050502c;
 }
-
+/* ------------------------
+ * Table of Contents
+ * ------------------------
+ */
+.toc-body {
+    margin-top: 8px;
+    line-height: 150%;
+}
+.toc-link {
+    color: #444;
+}
+.toc-number {
+    display: inline-block;
+    margin-right: 6px;
+    font-weight: 700;
+}
+.toc1 {
+    min-width: 18px;
+}
+.toc2 {
+    min-width: 36px;
+}
+.toc3 {
+    min-width: 54px;
+}
+.toc4 {
+    min-width: 72px;
+}
+.toc5 {
+    min-width: 90px;
+}
+.toc6 {
+    min-width: 108px;
+}
+.toc6 {
+    min-width: 126px;
+}

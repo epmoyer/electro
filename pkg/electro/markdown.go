@@ -132,6 +132,7 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 }
 
 func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
+	tocIndent := strings.Repeat("&nbsp;", 4)
 	lines := strings.Split(md, "\n")
 	toc_lines := []string{"", "# Table of Contents"}
 	for _, line := range lines {
@@ -145,8 +146,21 @@ func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 		}
 		level := strings.Count(pieces[0], "#")
 		headingText := strings.TrimSpace(pieces[1])
-		indent := strings.Repeat("  ", level-1)
-		toc_line := fmt.Sprintf("%s- [%s](#%s)", indent, headingText, headingTextToId(headingText))
+		headingText = strings.ReplaceAll(headingText, "&nbsp;", " ")
+		headingNumberText := "0"
+		indent := strings.Repeat(tocIndent, level-1)
+		pageId := "unassigned"
+		// toc_line := fmt.Sprintf("%s- [%s](#%s)", indent, headingText, headingTextToId(headingText))
+		toc_line := fmt.Sprintf(
+			"%s<div class=\"toc-number toc{%d}\">%s</div>"+
+				"<a class=\"toc-link\" href=\"?pageId={%s}&headingId={%s}\">"+
+				headingText+
+				"</a>",
+			indent,
+			level,
+			headingNumberText,
+			pageId,
+			headingTextToId(headingText))
 		toc_lines = append(toc_lines, toc_line)
 	}
 	md = strings.ReplaceAll(md, "{{% table_of_contents %}}", strings.Join(toc_lines, "\n"))
