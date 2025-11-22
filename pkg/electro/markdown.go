@@ -122,9 +122,35 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	if r.DoWrangleInterdocumentLinks {
 		md = r.MdWrangleInterDocumentLinks(md)
 	}
-	// FIXME:md:finish implementation
+
+	// -------------------------
+	// Generate Table of Contents
+	// -------------------------
+	md = r.MdGenerateTableOfContents(md)
 
 	return md, nil
+}
+
+func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
+	lines := strings.Split(md, "\n")
+	toc_lines := []string{"", "# Table of Contents"}
+	for _, line := range lines {
+		if !strings.HasPrefix(line, "#") {
+			continue
+		}
+		pieces := strings.SplitN(line, " ", 2)
+		if len(pieces) < 2 {
+			// Malformed heading, skip
+			continue
+		}
+		level := strings.Count(pieces[0], "#")
+		headingText := strings.TrimSpace(pieces[1])
+		indent := strings.Repeat("  ", level-1)
+		toc_line := fmt.Sprintf("%s- [%s](#%s)", indent, headingText, headingTextToId(headingText))
+		toc_lines = append(toc_lines, toc_line)
+	}
+	md = strings.ReplaceAll(md, "{{% table_of_contents %}}", strings.Join(toc_lines, "\n"))
+	return md
 }
 
 func (r *mdRendererT) stripFrontmatter(md string) (string, error) {

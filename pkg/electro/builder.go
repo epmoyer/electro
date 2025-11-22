@@ -921,6 +921,9 @@ func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documen
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% year %}}", time.Now().Format("2006"))
 	documentHtml = strings.ReplaceAll(documentHtml, "{{% timestamp %}}", time.Now().Format(time.RFC3339))
 
+	// tocHtml := b.generateTocHtml(contentHtml)
+	// documentHtml = strings.ReplaceAll(documentHtml, "{{% table_of_contents %}}", tocHtml)
+
 	// Ensure output directory exists
 	err := os.MkdirAll(filepath.Dir(outputPath), 0755)
 	if err != nil {
@@ -934,6 +937,16 @@ func (b *builderT) renderDocument(templateHtml, outputPath, contentHtml, documen
 
 	return nil
 }
+
+// func generateTocHtml(contentHtml string) string {
+// 	reHeading := regexp.MustCompile(`<h[\d].*?>.*?<\/h[\d]>`)
+// 	// TODO: Implement TOC generation logic
+// 	lines := strings.Split(contentHtml, "\n")
+// 	for _, line := range lines {
+// 		if reHeading.MatchString(line) {
+
+// 	return ""
+// }
 
 func boolToJsTrueFalseText(value bool) string {
 	if value {
