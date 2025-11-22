@@ -112,13 +112,11 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	md = r.MdTightenBulletLists(md)
 
 	// -------------------------
-	// Number headings
+	// Parse headings (numbering, TOC data generation)
 	// -------------------------
-	if r.DoNumberHeadings {
-		md, err = r.MdAddHeadingNumbers(md)
-		if err != nil {
-			return "", fmt.Errorf("error numbering headings: %w", err)
-		}
+	md, err = r.MdParseHeadings(md, r.DoNumberHeadings)
+	if err != nil {
+		return "", fmt.Errorf("error numbering headings: %w", err)
 	}
 
 	// -------------------------
@@ -151,36 +149,52 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 
 func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 	tocIndent := strings.Repeat("&nbsp;", 4)
-	lines := strings.Split(md, "\n")
 	toc_lines := []string{"", "# Table of Contents", "<div class=\"toc-body\">"}
-	for _, line := range lines {
-		if !strings.HasPrefix(line, "#") {
-			continue
-		}
-		pieces := strings.SplitN(line, " ", 2)
-		if len(pieces) < 2 {
-			// Malformed heading, skip
-			continue
-		}
-		level := strings.Count(pieces[0], "#")
-		headingText := strings.TrimSpace(pieces[1])
-		headingText = strings.ReplaceAll(headingText, "&nbsp;", " ")
-		headingNumberText := "0"
-		indent := strings.Repeat(tocIndent, level-1)
+	// lines := strings.Split(md, "\n")
+	// for _, line := range lines {
+	// 	if !strings.HasPrefix(line, "#") {
+	// 		continue
+	// 	}
+	// 	pieces := strings.SplitN(line, " ", 2)
+	// 	if len(pieces) < 2 {
+	// 		// Malformed heading, skip
+	// 		continue
+	// 	}
+	// 	level := strings.Count(pieces[0], "#")
+	// 	headingText := strings.TrimSpace(pieces[1])
+	// 	headingText = strings.ReplaceAll(headingText, "&nbsp;", " ")
+	// 	headingNumberText := "0"
+	// 	indent := strings.Repeat(tocIndent, level-1)
+	// 	pageId := "unassigned"
+	// 	// toc_line := fmt.Sprintf("%s- [%s](#%s)", indent, headingText, headingTextToId(headingText))
+	// 	toc_line := fmt.Sprintf(
+	// 		"%s<div class=\"toc-number toc{%d}\">%s</div>"+
+	// 			"<a class=\"toc-link\" href=\"?pageId={%s}&headingId={%s}\">"+
+	// 			headingText+
+	// 			"</a><br>",
+	// 		indent,
+	// 		level,
+	// 		headingNumberText,
+	// 		pageId,
+	// 		headingTextToId(headingText))
+	// 	toc_lines = append(toc_lines, toc_line)
+	// }
+	for _, tocItem := range r.TocItems {
+		indent := strings.Repeat(tocIndent, tocItem.HeadingLevel-1)
 		pageId := "unassigned"
-		// toc_line := fmt.Sprintf("%s- [%s](#%s)", indent, headingText, headingTextToId(headingText))
 		toc_line := fmt.Sprintf(
 			"%s<div class=\"toc-number toc{%d}\">%s</div>"+
 				"<a class=\"toc-link\" href=\"?pageId={%s}&headingId={%s}\">"+
-				headingText+
+				tocItem.HeadingText+
 				"</a><br>",
 			indent,
-			level,
-			headingNumberText,
+			tocItem.HeadingLevel,
+			tocItem.HeadingNumber,
 			pageId,
-			headingTextToId(headingText))
+			headingTextToId(tocItem.HeadingText))
 		toc_lines = append(toc_lines, toc_line)
 	}
+
 	toc_lines = append(toc_lines, "</div>")
 	md = strings.ReplaceAll(md, "{{% table_of_contents %}}", strings.Join(toc_lines, "\n"))
 	return md
@@ -237,7 +251,7 @@ func (r *mdRendererT) MdTightenBulletLists(md string) string {
 	return strings.Join(tightened, "\n")
 }
 
-func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
+func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string, error) {
 	pragmaNumberHeadingsRe := regexp.MustCompile(`@pragma\{number_headings:(?P<setting>\S+)\}`)
 	pragmaNumberHeadingsEnabled := true
 	headingManager := newHeadingManager(r.NumberHeadingsAtLevel)
@@ -290,7 +304,7 @@ func (r *mdRendererT) MdAddHeadingNumbers(md string) (string, error) {
 		headingText := pieces[1]
 		headingNumberText := ""
 
-		if level >= r.NumberHeadingsAtLevel && pragmaNumberHeadingsEnabled {
+		if level >= r.NumberHeadingsAtLevel && pragmaNumberHeadingsEnabled && doNumberHeadings {
 			// Add heading number
 			headingNumberText = headingManager.GetNextHeadingNumber(level)
 			idWithoutHeadingNumber := headingTextToId(headingText)
