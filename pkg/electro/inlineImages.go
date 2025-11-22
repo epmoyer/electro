@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -48,7 +49,7 @@ func makeHTMLImagesInline(inFilepath, outFilepath string) error {
 			imgPath = sourcePath
 		} else {
 			// Relative path
-			imgPath = filepath.Join(basepath, sourcePath)
+			imgPath = path.Join(basepath, sourcePath)
 		}
 
 		// Get MIME type and encode to base64

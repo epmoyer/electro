@@ -3,6 +3,7 @@ package electro
 import (
 	"bytes"
 	"fmt"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -55,7 +56,7 @@ func (r *mdRendererT) Render() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error pre-parsing markdown content: %w", err)
 	}
-	pathMdPreParsed := filepath.Join(r.PathOutputDir, "md_pre_parsed", r.Filename)
+	pathMdPreParsed := path.Join(r.PathOutputDir, "md_pre_parsed", r.Filename)
 	err = writeStringToFileEnsureDir(pathMdPreParsed, md)
 	if err != nil {
 		return "", fmt.Errorf("error writing pre-parsed markdown to %q: %w", pathMdPreParsed, err)

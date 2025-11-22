@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"slices"
@@ -155,7 +156,7 @@ func (b *builderT) AddNavigationDescriptor(nd navigationDescriptorT) error {
 	for _, menuName := range menuNames {
 		mdDocumentName, _ := nd.Documents.Get(menuName)
 		documentName := mdDocumentNameToDocumentName(mdDocumentName.(string))
-		pathMarkdown := filepath.Join("docs", mdDocumentName.(string))
+		pathMarkdown := path.Join("docs", mdDocumentName.(string))
 		err := b.BuildDocument(fsysProject, pathMarkdown, documentName)
 		if err != nil {
 			return err
@@ -393,8 +394,8 @@ func (b *builderT) RenderSite() error {
 
 	for _, filename := range cssFiles {
 		fmt.Printf("Copying CSS file: %s\n", filename)
-		srcPath := filepath.Join(b.PathThemeDir, filename)
-		dstPath := filepath.Join(b.PathOutputDir, filename)
+		srcPath := path.Join(b.PathThemeDir, filename)
+		dstPath := path.Join(b.PathOutputDir, filename)
 		err := copyFileFromFS(embeddedDataFS, srcPath, dstPath)
 		if err != nil {
 			return fmt.Errorf("error copying CSS file %s: %w", filename, err)
@@ -404,8 +405,8 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Copy CSS overlay
 	// -------------------
-	overlaySrcPath := filepath.Join(b.PathProjectDir, "docs", "overlay.css")
-	overlayDstPath := filepath.Join(b.PathOutputDir, "overlay.css")
+	overlaySrcPath := path.Join(b.PathProjectDir, "docs", "overlay.css")
+	overlayDstPath := path.Join(b.PathOutputDir, "overlay.css")
 	if !pathIsFile(overlaySrcPath) {
 		// Create empty overlay.css if it doesn't exist
 		err := os.WriteFile(overlayDstPath, []byte(""), 0644)
@@ -424,8 +425,8 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Copy Images
 	// -------------------
-	imgSrcDir := filepath.Join(b.PathProjectDir, "docs", "img")
-	imgDstDir := filepath.Join(b.PathOutputDir, "img")
+	imgSrcDir := path.Join(b.PathProjectDir, "docs", "img")
+	imgDstDir := path.Join(b.PathOutputDir, "img")
 	err := copyDirectoryContents(imgSrcDir, imgDstDir)
 	if err != nil {
 		qlog.Debugf("Note: Could not copy images directory: %v", err)
@@ -434,8 +435,8 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Copy Fonts
 	// -------------------
-	fontsSrcDir := filepath.Join(b.PathThemeDir, "fonts")
-	fontsDstDir := filepath.Join(b.PathOutputDir, "fonts")
+	fontsSrcDir := path.Join(b.PathThemeDir, "fonts")
+	fontsDstDir := path.Join(b.PathOutputDir, "fonts")
 	err = copyDirectoryContentsFromFS(embeddedDataFS, fontsSrcDir, fontsDstDir)
 	if err != nil {
 		return fmt.Errorf("error copying fonts: %w", err)
@@ -444,8 +445,8 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Copy Attachments
 	// -------------------
-	attachSrcDir := filepath.Join(b.PathProjectDir, "docs", "attachments")
-	attachDstDir := filepath.Join(b.PathOutputDir, "attachments")
+	attachSrcDir := path.Join(b.PathProjectDir, "docs", "attachments")
+	attachDstDir := path.Join(b.PathOutputDir, "attachments")
 	err = copyDirectoryContents(attachSrcDir, attachDstDir)
 	if err != nil {
 		qlog.Debugf("Note: Could not copy attachments directory: %v", err)
@@ -454,8 +455,8 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Copy Favicon
 	// -------------------
-	faviconSrcPath := filepath.Join(b.PathThemeDir, "favicon.ico")
-	faviconDstPath := filepath.Join(b.PathOutputDir, "img", "favicon.ico")
+	faviconSrcPath := path.Join(b.PathThemeDir, "favicon.ico")
+	faviconDstPath := path.Join(b.PathOutputDir, "img", "favicon.ico")
 	err = copyFileFromFS(embeddedDataFS, faviconSrcPath, faviconDstPath)
 	if err != nil {
 		qlog.Debugf("Note: Could not copy favicon: %v", err)
@@ -466,16 +467,16 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 
 	// Copy site resources js
-	jsSiteResourcesSrcDir := filepath.Join(pathDirSiteResourcesJs)
-	jsSiteResourcesDstDir := filepath.Join(b.PathOutputDir, "js")
+	jsSiteResourcesSrcDir := path.Join(pathDirSiteResourcesJs)
+	jsSiteResourcesDstDir := path.Join(b.PathOutputDir, "js")
 	err = copyDirectoryContentsFromFS(embeddedDataFS, jsSiteResourcesSrcDir, jsSiteResourcesDstDir)
 	if err != nil {
 		return fmt.Errorf("error copying core JavaScript files: %w", err)
 	}
 
 	// Copy theme js
-	jsSrcDir := filepath.Join(b.PathThemeDir, "js")
-	jsDstDir := filepath.Join(b.PathOutputDir, "js")
+	jsSrcDir := path.Join(b.PathThemeDir, "js")
+	jsDstDir := path.Join(b.PathOutputDir, "js")
 	err = copyDirectoryContentsFromFS(embeddedDataFS, jsSrcDir, jsDstDir)
 	if err != nil {
 		return fmt.Errorf("error copying JavaScript files: %w", err)
@@ -492,7 +493,7 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Build site pages
 	// -------------------
-	templatePath := filepath.Join(b.PathThemeDir, "template.html")
+	templatePath := path.Join(b.PathThemeDir, "template.html")
 	templateData, err := fs.ReadFile(embeddedDataFS, templatePath)
 	if err != nil {
 		return fmt.Errorf("error reading template file: %w", err)
@@ -510,7 +511,7 @@ func (b *builderT) RenderSite() error {
 			// Start all subsequent pages hidden
 			htmlStyle = " style=\"display:none;\""
 		}
-		pathSiteDocument := filepath.Join(b.PathOutputDir, "index.raw.html")
+		pathSiteDocument := path.Join(b.PathOutputDir, "index.raw.html")
 		err = b.renderDocument(templateHtml, pathSiteDocument, htmlPages, "Document")
 		if err != nil {
 			return fmt.Errorf("error rendering single file document: %w", err)
@@ -518,7 +519,7 @@ func (b *builderT) RenderSite() error {
 	} else {
 		for _, documentName := range b.OrderedDocumentnames {
 			siteDocument := b.SiteDocuments[documentName]
-			outputPath := filepath.Join(b.PathOutputDir, documentName+".html")
+			outputPath := path.Join(b.PathOutputDir, documentName+".html")
 			documentHtml := "<div class=\"content-page\">" + siteDocument.Html + "</div>"
 
 			err = b.renderDocument(templateHtml, outputPath, documentHtml, documentName)
@@ -538,7 +539,7 @@ func (b *builderT) RenderSite() error {
 			firstName = name
 			break
 		}
-		indexPath := filepath.Join(b.PathOutputDir, "index.html")
+		indexPath := path.Join(b.PathOutputDir, "index.html")
 		err = b.renderDocument(templateHtml, indexPath, firstDoc.Html, firstName)
 		if err != nil {
 			return fmt.Errorf("error rendering index.html: %w", err)
@@ -548,13 +549,13 @@ func (b *builderT) RenderSite() error {
 	// -------------------
 	// Save search index
 	// -------------------
-	searchDir := filepath.Join(b.PathOutputDir, "search")
+	searchDir := path.Join(b.PathOutputDir, "search")
 	err = os.MkdirAll(searchDir, 0755)
 	if err != nil {
 		return fmt.Errorf("error creating search directory: %w", err)
 	}
 
-	searchIndexPath := filepath.Join(searchDir, "search_index.js")
+	searchIndexPath := path.Join(searchDir, "search_index.js")
 	searchIndexJsonBytes, err := json.MarshalIndent(b.SearchIndex, "", "    ")
 	if err != nil {
 		return fmt.Errorf("error marshaling search index to JSON: %w", err)

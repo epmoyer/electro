@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -90,7 +91,7 @@ func expandLine(line string, pathFileInParentDir string, enableMinify bool) ([]s
 			}
 			qlog.Infof("Embedding %s file: %q", descriptor.ContentType, pathFileToEmbed)
 			// Read file to embed
-			pathFileToEmbedFull := filepath.Join(pathFileInParentDir, pathFileToEmbed)
+			pathFileToEmbedFull := path.Join(pathFileInParentDir, pathFileToEmbed)
 			data, err := os.ReadFile(pathFileToEmbedFull)
 			if err != nil {
 				return nil, fmt.Errorf("error reading file to embed (%q): %w", pathFileToEmbedFull, err)

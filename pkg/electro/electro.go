@@ -86,7 +86,7 @@ func BuildProject(pathCommandLineArg string) error {
 	if configProject.OutputDirectory == "" {
 		return fmt.Errorf("output directory not specified in project config")
 	}
-	pathOutputDir := filepath.Join(pathProjectDir, configProject.OutputDirectory)
+	pathOutputDir := path.Join(pathProjectDir, configProject.OutputDirectory)
 	if !pathIsDir(pathOutputDir) {
 		return fmt.Errorf("output directory does not exist: %q", pathOutputDir)
 	}
@@ -95,7 +95,7 @@ func BuildProject(pathCommandLineArg string) error {
 	// -----------------------
 	// Determine theme dir
 	// -----------------------
-	pathThemeDirectory := filepath.Join(pathDirThemes, configProject.Theme)
+	pathThemeDirectory := path.Join(pathDirThemes, configProject.Theme)
 	if !pathIsDirFS(embeddedDataFS, pathThemeDirectory) {
 		return fmt.Errorf("theme directory does not exist: %q", pathThemeDirectory)
 	}

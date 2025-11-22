@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 )
 
@@ -141,8 +142,8 @@ func copyDirectoryContents(srcDir, dstDir string) error {
 	}
 
 	for _, entry := range entries {
-		srcPath := filepath.Join(srcDir, entry.Name())
-		dstPath := filepath.Join(dstDir, entry.Name())
+		srcPath := path.Join(srcDir, entry.Name())
+		dstPath := path.Join(dstDir, entry.Name())
 
 		if entry.IsDir() {
 			err = copyDirectoryContents(srcPath, dstPath)
@@ -178,8 +179,8 @@ func copyDirectoryContentsFromFS(fsysSrc fs.FS, srcDir, dstDir string) error {
 	}
 
 	for _, entry := range entries {
-		srcPath := filepath.Join(srcDir, entry.Name())
-		dstPath := filepath.Join(dstDir, entry.Name())
+		srcPath := path.Join(srcDir, entry.Name())
+		dstPath := path.Join(dstDir, entry.Name())
 
 		if entry.IsDir() {
 			err = copyDirectoryContentsFromFS(fsysSrc, srcPath, dstPath)
