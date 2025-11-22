@@ -28,6 +28,7 @@ type configElectroProjectT struct {
 	ExcludeFromSearch                  []string                `json:"exclude_from_search"`
 	EnableNewlineToBreak               bool                    `json:"enable_newline_to_break"`
 	Level1HeadingsAreDocumentTitles    bool                    `json:"level_1_headings_are_document_titles"`
+	SideMenuHeadingCaptureStartDepth   int                     `json:"side_menu_heading_capture_start_depth"`
 	StripFrontmatter                   bool                    `json:"strip_frontmatter"`
 	NumberHeadings                     bool                    `json:"number_headings"`
 	NumberHeadingsAtLevel              int                     `json:"number_headings_at_level"`
@@ -47,6 +48,10 @@ func loadConfigElectroProject(pathProjectFile string) (*configElectroProjectT, e
 	}
 	if project.OutputFormat == "" {
 		project.OutputFormat = "static_site"
+	}
+	if project.SideMenuHeadingCaptureStartDepth == 0 {
+		// Default to start capturing from l2 (##) headings
+		project.SideMenuHeadingCaptureStartDepth = 2
 	}
 
 	return &project, nil

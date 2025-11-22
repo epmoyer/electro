@@ -123,6 +123,7 @@ func BuildProject(pathCommandLineArg string) error {
 		configProject.NumberHeadings,
 		configProject.NumberHeadingsAtLevel,
 		configProject.Footer,
+		configProject.SideMenuHeadingCaptureStartDepth,
 	)
 	for _, nd := range configProject.Navigation {
 		err := builder.AddNavigationDescriptor(nd)

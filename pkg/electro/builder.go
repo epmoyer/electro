@@ -31,18 +31,19 @@ type siteDocumentT struct {
 
 type builderT struct {
 	// Config
-	PathOutputDir                   string
-	PathProjectDir                  string
-	PathThemeDir                    string
-	OutputFormat                    OuputFormatT
-	Level1HeadingsAreDocumentTitles bool
-	MasterTitle                     string
-	Watermark                       string
-	ExcludeFromSearch               []string
-	DoStripFrontmatter              bool
-	NumberHeadings                  bool
-	NumberHeadingsAtLevel           int
-	Footer                          string
+	PathOutputDir                    string
+	PathProjectDir                   string
+	PathThemeDir                     string
+	OutputFormat                     OuputFormatT
+	Level1HeadingsAreDocumentTitles  bool
+	MasterTitle                      string
+	Watermark                        string
+	ExcludeFromSearch                []string
+	DoStripFrontmatter               bool
+	NumberHeadings                   bool
+	NumberHeadingsAtLevel            int
+	SideMenuHeadingCaptureStartDepth int
+	Footer                           string
 
 	// Runtime
 	MenuHtml             string
@@ -105,6 +106,7 @@ func newBuilder(pathOutputDir string,
 	numberHeadings bool,
 	numberHeadingsAtLevel int,
 	footer string,
+	sideMenuHeadingCaptureStartDepth int,
 ) *builderT {
 
 	// Set defaults
@@ -124,21 +126,22 @@ func newBuilder(pathOutputDir string,
 
 	return &builderT{
 		// Config
-		PathOutputDir:                   pathOutputDir,
-		PathProjectDir:                  pathProjectDir,
-		PathThemeDir:                    pathThemeDir,
-		OutputFormat:                    outputFormat,
-		Level1HeadingsAreDocumentTitles: level1HeadingsAreDocumentTitles,
-		MasterTitle:                     masterTitle,
-		Watermark:                       watermark,
-		ExcludeFromSearch:               excludeFromSearch,
-		DoStripFrontmatter:              stripFrontmatter,
-		NumberHeadings:                  numberHeadings,
-		NumberHeadingsAtLevel:           numberHeadingsAtLevel,
-		Footer:                          footer,
-		SiteDocuments:                   make(map[string]siteDocumentT),
-		MenuBuilder:                     &menuBuilderT{},
-		SearchIndex:                     &searchIndex,
+		PathOutputDir:                    pathOutputDir,
+		PathProjectDir:                   pathProjectDir,
+		PathThemeDir:                     pathThemeDir,
+		OutputFormat:                     outputFormat,
+		Level1HeadingsAreDocumentTitles:  level1HeadingsAreDocumentTitles,
+		MasterTitle:                      masterTitle,
+		Watermark:                        watermark,
+		ExcludeFromSearch:                excludeFromSearch,
+		DoStripFrontmatter:               stripFrontmatter,
+		NumberHeadings:                   numberHeadings,
+		NumberHeadingsAtLevel:            numberHeadingsAtLevel,
+		SideMenuHeadingCaptureStartDepth: sideMenuHeadingCaptureStartDepth,
+		Footer:                           footer,
+		SiteDocuments:                    make(map[string]siteDocumentT),
+		MenuBuilder:                      &menuBuilderT{},
+		SearchIndex:                      &searchIndex,
 	}
 }
 
@@ -178,7 +181,7 @@ func (b *builderT) BuildSubheadingMenus(documentName string) {
 
 	// Build list of two html heading tags to include in menu, of the form "h2", "h3", etc.
 	includedLevels := []string{}
-	for i := b.NumberHeadingsAtLevel; i <= b.NumberHeadingsAtLevel+1; i++ {
+	for i := b.SideMenuHeadingCaptureStartDepth; i <= b.SideMenuHeadingCaptureStartDepth+1; i++ {
 		includedLevels = append(includedLevels, fmt.Sprintf("h%d", i))
 	}
 	qlog.Infof("Building subheading menus for %s including levels: %+v", documentName, includedLevels)

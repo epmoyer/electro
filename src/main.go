@@ -21,9 +21,9 @@ func main() {
 	flag.BoolVar(&flagEnableLogging, "log", false, "Enable logging")
 	flag.Parse()
 
-	versionInfo := config.AppName + " v" + config.Version
+	versionInfo := config.AppName + " " + config.Version
 	fmt.Println(versionInfo)
-	fmt.Printf("    electro core package version: v%s\n", electro.Version)
+	fmt.Printf("    electro core package version: %s\n", electro.Version)
 	if flagVersion {
 		return
 	}

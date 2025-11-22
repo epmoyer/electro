@@ -1,6 +1,6 @@
 package electro
 
-const Version = "3.0.0"
+const Version = "v3.0.0"
 
 var config = configT{
 	AppName: "electro",
