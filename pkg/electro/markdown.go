@@ -150,35 +150,6 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 	tocIndent := strings.Repeat("&nbsp;", 4)
 	toc_lines := []string{"", "# Table of Contents", "<div class=\"toc-body\">"}
-	// lines := strings.Split(md, "\n")
-	// for _, line := range lines {
-	// 	if !strings.HasPrefix(line, "#") {
-	// 		continue
-	// 	}
-	// 	pieces := strings.SplitN(line, " ", 2)
-	// 	if len(pieces) < 2 {
-	// 		// Malformed heading, skip
-	// 		continue
-	// 	}
-	// 	level := strings.Count(pieces[0], "#")
-	// 	headingText := strings.TrimSpace(pieces[1])
-	// 	headingText = strings.ReplaceAll(headingText, "&nbsp;", " ")
-	// 	headingNumberText := "0"
-	// 	indent := strings.Repeat(tocIndent, level-1)
-	// 	pageId := "unassigned"
-	// 	// toc_line := fmt.Sprintf("%s- [%s](#%s)", indent, headingText, headingTextToId(headingText))
-	// 	toc_line := fmt.Sprintf(
-	// 		"%s<div class=\"toc-number toc{%d}\">%s</div>"+
-	// 			"<a class=\"toc-link\" href=\"?pageId={%s}&headingId={%s}\">"+
-	// 			headingText+
-	// 			"</a><br>",
-	// 		indent,
-	// 		level,
-	// 		headingNumberText,
-	// 		pageId,
-	// 		headingTextToId(headingText))
-	// 	toc_lines = append(toc_lines, toc_line)
-	// }
 	for _, tocItem := range r.TocItems {
 		indent := strings.Repeat(tocIndent, tocItem.HeadingLevel-1)
 		pageId := "unassigned"
