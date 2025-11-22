@@ -22,6 +22,7 @@ type mdRendererT struct {
 	DoNumberHeadings            bool
 	NumberHeadingsAtLevel       int
 	DoWrangleInterdocumentLinks bool
+	TocLines                    []string
 }
 
 func NewMdRenderer(markdown string, filename string, pathOutputDir string) *mdRendererT {
@@ -34,6 +35,7 @@ func NewMdRenderer(markdown string, filename string, pathOutputDir string) *mdRe
 		DoNumberHeadings:            false,
 		NumberHeadingsAtLevel:       2,
 		DoWrangleInterdocumentLinks: false,
+		TocLines:                    []string{},
 	}
 }
 
