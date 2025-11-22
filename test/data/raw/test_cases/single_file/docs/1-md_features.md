@@ -209,4 +209,12 @@ This is a test of a `note` notice. It has a tile above, an icon, and a place for
 This is a test of a `warning` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
 {{% /notice %}}
 
+@pragma{include_in_toc:false}
+## Not included in Table of Contents
+This section should NOT appear in the Table of Contents. 
+@pragma{include_in_toc:true}
+
+## Included in Table of Contents
+This section should appear in the Table of Contents.
+
 {{% table_of_contents %}}
