@@ -162,7 +162,7 @@ func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 			tocItem.HeadingLevel,
 			tocItem.HeadingNumber,
 			pageId,
-			headingTextToId(tocItem.HeadingText))
+			headingTextToId(tocItem.HeadingNumber+" "+tocItem.HeadingText))
 		toc_lines = append(toc_lines, toc_line)
 	}
 
