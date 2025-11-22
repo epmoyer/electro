@@ -152,10 +152,10 @@ func (r *mdRendererT) MdGenerateTableOfContents(md string) string {
 	toc_lines := []string{"", "# Table of Contents", "<div class=\"toc-body\">"}
 	for _, tocItem := range r.TocItems {
 		indent := strings.Repeat(tocIndent, tocItem.HeadingLevel-1)
-		pageId := "unassigned"
+		pageId := strings.TrimSuffix(r.Filename, filepath.Ext(r.Filename))
 		toc_line := fmt.Sprintf(
 			"%s<div class=\"toc-number toc{%d}\">%s</div>"+
-				"<a class=\"toc-link\" href=\"?pageId={%s}&headingId={%s}\">"+
+				"<a class=\"toc-link\" href=\"?pageId=%s&headingId=%s\">"+
 				tocItem.HeadingText+
 				"</a><br>",
 			indent,
