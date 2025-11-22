@@ -196,3 +196,14 @@ func copyDirectoryContentsFromFS(fsysSrc fs.FS, srcDir, dstDir string) error {
 
 	return nil
 }
+
+func writeStringToFileEnsureDir(pathFile string, content string) error {
+	// Ensure directory exists
+	err := os.MkdirAll(filepath.Dir(pathFile), 0755)
+	if err != nil {
+		return err
+	}
+
+	// Write content to file
+	return os.WriteFile(pathFile, []byte(content), 0644)
+}

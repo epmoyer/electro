@@ -3,6 +3,7 @@ package electro
 import (
 	"bytes"
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -14,6 +15,8 @@ import (
 
 type mdRendererT struct {
 	Markdown                    string
+	Filename                    string
+	PathOutputDir               string
 	Substitutions               map[string]string
 	DoStripFrontmatter          bool
 	DoNumberHeadings            bool
@@ -21,9 +24,11 @@ type mdRendererT struct {
 	DoWrangleInterdocumentLinks bool
 }
 
-func NewMdRenderer(markdown string) *mdRendererT {
+func NewMdRenderer(markdown string, filename string, pathOutputDir string) *mdRendererT {
 	return &mdRendererT{
 		Markdown:                    markdown,
+		Filename:                    filename,
+		PathOutputDir:               pathOutputDir,
 		Substitutions:               make(map[string]string),
 		DoStripFrontmatter:          true,
 		DoNumberHeadings:            false,
@@ -41,6 +46,11 @@ func (r *mdRendererT) Render() (string, error) {
 	md, err := r.PreParseMarkdown(md)
 	if err != nil {
 		return "", fmt.Errorf("error pre-parsing markdown content: %w", err)
+	}
+	pathMdPreParsed := filepath.Join(r.PathOutputDir, "md_pre_parsed", r.Filename)
+	err = writeStringToFileEnsureDir(pathMdPreParsed, md)
+	if err != nil {
+		return "", fmt.Errorf("error writing pre-parsed markdown to %q: %w", pathMdPreParsed, err)
 	}
 
 	// -------------------------

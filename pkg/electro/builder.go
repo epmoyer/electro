@@ -240,7 +240,8 @@ func (b *builderT) BuildDocument(fsys fs.FS, pathMarkdown string, documentName s
 	// -------------------------
 	// Render markdown toHTML
 	// -------------------------
-	renderer := NewMdRenderer(md)
+	filename := filepath.Base(pathMarkdown)
+	renderer := NewMdRenderer(md, filename, b.PathOutputDir)
 	renderer.DoStripFrontmatter = b.DoStripFrontmatter
 	renderer.DoNumberHeadings = b.NumberHeadings
 	renderer.NumberHeadingsAtLevel = b.NumberHeadingsAtLevel
