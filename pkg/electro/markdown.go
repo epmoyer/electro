@@ -494,7 +494,6 @@ func (r *mdRendererT) PostParseHtml(html string) (string, error) {
 			continue
 		}
 		if pragmaInjectHeadingClass != "" {
-			fmt.Printf("🟣  %s\n", pragmaInjectHeadingClass)
 			// Inject class into headings
 			if reHeading.MatchString(line) {
 				line = reHeading.ReplaceAllString(line, fmt.Sprintf("<$1 class=\"%s\"$2>", pragmaInjectHeadingClass))
