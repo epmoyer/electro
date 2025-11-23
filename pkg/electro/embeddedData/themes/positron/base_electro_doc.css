@@ -323,6 +323,15 @@ a:visited:hover, a:hover {
     min-width: 126px;
 }
 
+/* ------------------------
+ * Print styles
+ * ------------------------
+ */
+.print-banner {
+    border: 2px solid rgb(255, 0, 0);
+    padding: 10px;
+    display: none;
+}
 @media print {
     /* Hide sidebar, nav, and other UI elements */
     .sidebar-container {
@@ -345,6 +354,9 @@ a:visited:hover, a:hover {
     .content-page pre {
         color: #444 !important;
         border: 1px solid #444 !important;
+    }
+    .print-banner {
+        display: block;
     }
     h1, h2, h3, h4, h5, h6 {
     color: black !important;
