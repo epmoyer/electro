@@ -376,6 +376,9 @@ a:visited:hover, a:hover {
     .notices.warning {
         border-color: #FBE6E5 !important;
     }
+    th {
+        color: #000 !important;
+    }
     /* .notices {
         border: 1px solid #444 !important;
     } */
