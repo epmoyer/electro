@@ -336,6 +336,9 @@ a:visited:hover, a:hover {
         /* Remove any fixed positioning */
         position: static !important;
     }
+    .content-page {
+        color: black !important;
+    }
     h1, h2, h3, h4, h5, h6 {
     color: black !important;
     -webkit-box-shadow:inset 0px 0px 0px 0px transparent !important;
