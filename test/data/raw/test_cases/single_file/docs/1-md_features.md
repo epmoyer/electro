@@ -158,7 +158,7 @@ After the rule
     - ![](img/image3.png)
 
 ## Quote blocks
-Plan text
+Plain text
 
 > Block quote
 > that is written on two lines
