@@ -337,6 +337,10 @@ a:visited:hover, a:hover {
         position: static !important;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: black !important;
+    color: black !important;
+    -webkit-box-shadow:inset 0px 0px 0px 0px transparent !important;
+    -moz-box-shadow:inset 0px 0px 0px 0px transparent !important;
+    box-shadow:inset 0px 0px 0px 0px transparent !important;
+    background-color: transparent !important;
     }
 }
