@@ -239,7 +239,7 @@ func (b *builderT) BuildDocument(fsys fs.FS, pathMarkdown string, documentName s
 	md = strings.ReplaceAll(md, "\r\n", "\n")
 
 	// -------------------------
-	// Render markdown toHTML
+	// Render markdown to HTML
 	// -------------------------
 	filename := filepath.Base(pathMarkdown)
 	renderer := NewMdRenderer(md, filename, b.PathOutputDir)
@@ -958,21 +958,37 @@ func boolToJsTrueFalseText(value bool) string {
 }
 
 func addIdTagsToHeadings(html string) string {
-	headingsRe := regexp.MustCompile(`<h\d>.*<\/h\d>`)
-	headings := headingsRe.FindAllString(html, -1)
-	for _, heading := range headings {
-		core := heading[4 : len(heading)-5]
-		tagStart := heading[:3]
-		id := headingTextToId(core)
-		replacement := strings.Replace(
-			heading,
-			tagStart,
-			fmt.Sprintf("%s id=\"%s\"", tagStart, id),
-			1)
-		// fmt.Printf("🟣  heading: %q, core: %q, id: %q, replacement: %q\n",
-		// 	heading, core, id, replacement)
-		html = strings.Replace(html, heading, replacement, -1)
-	}
+	// Match headings with optional attributes
+	headingsRe := regexp.MustCompile(`<h([1-6])([^>]*)>(.*?)</h[1-6]>`)
+
+	html = headingsRe.ReplaceAllStringFunc(html, func(heading string) string {
+		matches := headingsRe.FindStringSubmatch(heading)
+		if len(matches) != 4 {
+			return heading
+		}
+
+		level := matches[1]         // "1", "2", etc.
+		existingAttrs := matches[2] // existing attributes (may be empty or contain class, etc.)
+		content := matches[3]       // heading text content
+
+		// Verify closing tag matches opening tag level
+		expectedClosing := fmt.Sprintf("</h%s>", level)
+		if !strings.HasSuffix(heading, expectedClosing) {
+			return heading // Mismatched tags, don't modify
+		}
+
+		// Check if id attribute already exists
+		// if strings.Contains(existingAttrs, "id=") {
+		// 	return heading
+		// }
+
+		id := headingTextToId(content)
+
+		// Build new opening tag with id
+		newOpenTag := fmt.Sprintf("<h%s id=\"%s\"%s>", level, id, existingAttrs)
+		return fmt.Sprintf("%s%s</h%s>", newOpenTag, content, level)
+	})
+
 	return html
 }
 
