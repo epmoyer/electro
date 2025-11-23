@@ -353,4 +353,30 @@ a:visited:hover, a:hover {
     box-shadow:inset 0px 0px 0px 0px transparent !important;
     background-color: transparent !important;
     }
+    .notices {
+        border-left-style: solid !important;
+        border-left-width: 2px !important;
+        border-bottom-style: solid !important;
+        border-bottom-width: 2px !important;
+        border-right-style: solid !important;
+        border-right-width: 2px !important;
+    }
+    .notices .label{
+        color:#000 !important;
+    }
+    .notices.info {
+        border-color: #dbf1ff !important;
+    }
+    .notices.note {
+        border-color: #FCEED8 !important;
+    }
+    .notices.tip {
+        border-color: #e2fbeb !important;
+    }
+    .notices.warning {
+        border-color: #FBE6E5 !important;
+    }
+    /* .notices {
+        border: 1px solid #444 !important;
+    } */
 }
