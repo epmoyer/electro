@@ -14,6 +14,7 @@ func headingTextToId(text string) string {
 	// Replace &nbsp; and non-breaking space with regular space
 	text = strings.ReplaceAll(text, "&nbsp;", " ")
 	text = strings.ReplaceAll(text, string(NBSP), " ")
+	text = strings.TrimSpace(text)
 
 	// NOTE: This transformation is subtle. We need headingTextToID() to output identical
 	//       id strings for both "raw" heading text (parsed from markdown text directly) and
