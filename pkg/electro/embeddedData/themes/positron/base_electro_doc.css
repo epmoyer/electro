@@ -342,6 +342,10 @@ a:visited:hover, a:hover {
     .content-page blockquote {
         color: #444 !important;
     }
+    .content-page pre {
+        color: #444 !important;
+        border: 1px solid #444 !important;
+    }
     h1, h2, h3, h4, h5, h6 {
     color: black !important;
     -webkit-box-shadow:inset 0px 0px 0px 0px transparent !important;
