@@ -189,13 +189,13 @@ def test_function(arg1, arg2):
 
 @block{end}
 
-{{% notice tip %}}
+@block{tip}
 
 This is a test of a `tip` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
 
-{{% /notice %}}
+@block{end}
 
-{{% notice note %}}
+@block{note}
 This is a test of a `note` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
 
 - A bullet list
@@ -204,17 +204,35 @@ This is a test of a `note` notice. It has a tile above, an icon, and a place for
 - Heding 2
     - Item 3
     - Item 4
-{{% /notice %}}
+@block{end}
 
-{{% notice warning %}}
+@block{warning}
 This is a test of a `warning` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
-{{% /notice %}}
+@block{end}
 
 ## Notice types (Legacy syntax)
 
 {{% notice info %}}
 
 This is a test of a `info` notice using the LEGACY syntax.
+
+{{% /notice %}}
+
+{{% notice tip %}}
+
+This is a test of a `tip` notice using the LEGACY syntax.
+
+{{% /notice %}}
+
+{{% notice note %}}
+
+This is a test of a `note` notice using the LEGACY syntax.
+
+{{% /notice %}}
+
+{{% notice warning %}}
+
+This is a test of a `warning` notice using the LEGACY syntax.
 
 {{% /notice %}}
 
