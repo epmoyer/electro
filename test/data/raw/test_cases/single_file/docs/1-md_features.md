@@ -169,7 +169,8 @@ Plain text
 
 ## Notice types
 
-{{% notice info %}}
+@block{info}
+
 This is a test of a `info` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
 
 ```
@@ -186,7 +187,7 @@ def test_function(arg1, arg2):
     print(json.dumps(arg2))
 ```
 
-{{% /notice %}}
+@block{end}
 
 {{% notice tip %}}
 
@@ -207,6 +208,14 @@ This is a test of a `note` notice. It has a tile above, an icon, and a place for
 
 {{% notice warning %}}
 This is a test of a `warning` notice. It has a tile above, an icon, and a place for text below. The text below can be any arbitrary markdown content.
+{{% /notice %}}
+
+## Notice types (Legacy syntax)
+
+{{% notice info %}}
+
+This is a test of a `info` notice using the LEGACY syntax.
+
 {{% /notice %}}
 
 @pragma{inject_heading_class:h-doc-info}

@@ -354,11 +354,39 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 	// FIXME: Find a way to ignore notices inside fenced code blocks.
 	// This only really happens when we write notes about our own markdown syntax
 
+	// -------------------------
+	// Begin Notice: @block{<noticeType>}
+	// -------------------------
+	reNoticeStartNew := regexp.MustCompile(`@block\{(\S*)\}`)
+	noticeTypesNew := reNoticeStartNew.FindAllStringSubmatch(md, -1)
+	for _, match := range noticeTypesNew {
+		// fmt.Printf("*** Notice New: %#v\n", match)
+		// This is the full directive, e.g. "@block{info}"
+		noticeDirective := match[0]
+		// This is the type of notice, e.g. "info"
+		noticeType := match[1]
+
+		// Skip @block{end} as it's handled separately below
+		if noticeType == "end" {
+			continue
+		}
+
+		htmlNoticeStart, err := buildHtmlSnippetNoticeStart(noticeType)
+		if err != nil {
+			return "", fmt.Errorf("error building notice snippet for type %q: %w", noticeType, err)
+		}
+		sub := r.CreateSubstitution(htmlNoticeStart)
+		md = strings.ReplaceAll(md, noticeDirective, sub+"\n")
+	}
+
+	// -------------------------
+	// Begin Notice: LEGACY: {{% notice <noticeType> %}}
+	// -------------------------
 	reNoticeStart := regexp.MustCompile(`{{% notice (\S*) %}}`)
 	noticeTypes := reNoticeStart.FindAllStringSubmatch(md, -1)
 	for _, match := range noticeTypes {
-		// fmt.Printf("*** Notice: %#v\n", match)
-		// This is the full directice, e.g. "{{% notice info %}}"
+		// fmt.Printf("*** Notice Legacy: %#v\n", match)
+		// This is the full directive, e.g. "{{% notice info %}}"
 		noticeDirective := match[0]
 		// This is the type of notice, e.g. "info"
 		noticeType := match[1]
@@ -370,16 +398,28 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 		// NOTE: We need to force an extra newline after the substitution to ensure
 		// that the markdown parser treats the first contiguous lines after the html notice start
 		// substitution as markdown.
-		// e.g. Without it inline code blocks in the first line after a notice start wewe
+		// e.g. Without it inline code blocks in the first line after a notice start were
 		// not rendered if the source contained no blank line between the notice start and
 		// the notice content.
 		md = strings.ReplaceAll(md, noticeDirective, sub+"\n")
 	}
 
-	noticeEndDirective := "{{% /notice %}}"
-	if strings.Contains(md, noticeEndDirective) {
+	// -------------------------
+	// End Notice: @block{end}
+	// -------------------------
+	noticeEndDirectiveNew := "@block{end}"
+	if strings.Contains(md, noticeEndDirectiveNew) {
 		sub := r.CreateSubstitution(snippetHtmlNoticeEnd)
-		md = strings.ReplaceAll(md, noticeEndDirective, sub)
+		md = strings.ReplaceAll(md, noticeEndDirectiveNew, sub)
+	}
+
+	// -------------------------
+	// End Notice: LEGACY: {{% /notice %}}
+	// -------------------------
+	noticeEndDirectiveLegacy := "{{% /notice %}}"
+	if strings.Contains(md, noticeEndDirectiveLegacy) {
+		sub := r.CreateSubstitution(snippetHtmlNoticeEnd)
+		md = strings.ReplaceAll(md, noticeEndDirectiveLegacy, sub)
 	}
 
 	return md, nil
