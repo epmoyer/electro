@@ -288,6 +288,27 @@ a:visited:hover, a:hover {
 .notices :not(pre) > code {
     background: #5050502c;
 }
+
+/* ------------------------
+ * Scrollbars
+ * ------------------------
+ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: var(--color-dark-scrollbar-thumb);
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: var(--color-dark-scrollbar-track);
+}
+
 /* ------------------------
  * Table of Contents
  * ------------------------
