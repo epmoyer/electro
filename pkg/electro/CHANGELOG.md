@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v3.2.0 - 2025-12-28
+### Changed
+- Style pre blocks to:
+    - Force background color (over goldmark's inline style).
+    - Auto overflow-x scroll.
+
 ## v3.1.0 - 2025-12-19
 ### Added
 - Support new notice syntax using `@block{<noticeType>}` and `@block{end}` directives, while maintaining compatibility with legacy syntax.

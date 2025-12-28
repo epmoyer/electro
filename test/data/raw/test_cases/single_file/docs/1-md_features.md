@@ -95,7 +95,51 @@ def test_function(arg1, arg2):
     print(json.dumps(arg2))
 ```
 
-### Fenced code block inside an unordered list
+### Very Wide
+
+#### Single line
+
+```text
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Netus et malesuada fames
+```
+
+#### Multiple lines
+
+```text
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Netus et malesuada fames.
+
+ac turpis egestas maecenas pharetra convallis. Duis tristique sollicitudin nibh sit. Nunc sed augue lacus viverra vitae congue eu consequat. Dapibus ultrices.
+```
+
+#### fenced code block
+
+```python
+def foobar(foo):
+    # ----------------------------------------------------------------------------------------------
+    # Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Netus et malesuada fames
+    # ac turpis egestas maecenas pharetra convallis. Duis tristique sollicitudin nibh sit. Nunc sed augue lacus viverra vitae congue eu consequat. Dapibus ultrices.
+    # ----------------------------------------------------------------------------------------------
+    if ('spam' in foo):
+        if ('eggs' in foo):
+            if ('pram' in foo):
+                if ('walks' in foo):
+                    if ('joke' in foo):
+                        if ('parrot' in foo):
+                            if ('cheese' in foo):
+                                if ('brian' in foo):
+                                    if ('spam' in foo):
+                                        if ('eggs' in foo):
+                                            if ('pram' in foo):
+                                                if ('walks' in foo):
+                                                    if ('joke' in foo):
+                                                        if ('parrot' in foo):
+                                                            if ('cheese' in foo):
+                                                                if ('brian' in foo):
+                                                                    print('Ha!')
+    print(foo)
+```
+
+#### Fenced code block inside an unordered list
 
 - Item 1
 - Item 2

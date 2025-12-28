@@ -174,7 +174,8 @@ a:visited:hover, a:hover {
     border-radius: 0;
 }
 .content-page pre {
-    background-color: var(--color-bg-pre);
+    /* We override goldmark's injected inline pre style with !important */
+    background-color: var(--color-bg-pre) !important;
     color: var(--color-text-pre);
     padding: 13px 19px;
     overflow-x: auto;
@@ -184,6 +185,8 @@ a:visited:hover, a:hover {
     color: var(--color-text-pre);
     border-radius: none;
     padding: 0px; 
+    display: block;
+    white-space: pre;
 }
 .content-page strong {
     font-weight: 600;
