@@ -2,6 +2,7 @@ package electro
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"path"
 	"path/filepath"
@@ -13,6 +14,12 @@ import (
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
 	gmhtml "github.com/yuin/goldmark/renderer/html"
+
+	// D2 diagram support
+	goldmarkd2 "github.com/FurqanSoftware/goldmark-d2"
+	"oss.terrastruct.com/d2/d2graph"
+	"oss.terrastruct.com/d2/d2layouts/d2dagrelayout"
+	"oss.terrastruct.com/d2/d2themes/d2themescatalog"
 )
 
 type mdRendererT struct {
@@ -66,6 +73,15 @@ func (r *mdRendererT) Render() (string, error) {
 	// -------------------------
 	// Render markdown to HTML
 	// -------------------------
+
+	// Prepare D2 diagram layout and theme option
+	themeID := d2themescatalog.CoolClassics.ID // take address of a local var (always addressable)
+
+	layout := func(ctx context.Context, g *d2graph.Graph) error {
+		// nil opts = defaults (or use &d2dagrelayout.ConfigurableOpts{} if you prefer explicit)
+		return d2dagrelayout.Layout(ctx, g, nil)
+	}
+
 	var bufHtmlBytes bytes.Buffer
 	mdConverter := goldmark.New(
 		goldmark.WithExtensions(
@@ -73,6 +89,10 @@ func (r *mdRendererT) Render() (string, error) {
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("monokai"),
 			),
+			&goldmarkd2.Extender{
+				Layout:  layout,
+				ThemeID: &themeID,
+			},
 		),
 		goldmark.WithRendererOptions(
 			gmhtml.WithUnsafe(),

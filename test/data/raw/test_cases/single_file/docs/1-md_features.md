@@ -8,6 +8,12 @@
     - `app_version`: `@field{app_version}`
     - `datetime_now`: `@field{datetime_now}`
 
+## d2 Diagram
+
+```d2
+x -> y: hello world
+```
+
 ## Basic Formatting
 
 This is text which occurs before the first internal heading.
