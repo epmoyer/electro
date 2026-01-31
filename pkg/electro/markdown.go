@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
@@ -126,6 +127,14 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	md, err = r.MdParseNotices(md)
 	if err != nil {
 		return "", fmt.Errorf("error parsing notices: %w", err)
+	}
+
+	// -------------------------
+	// Parse fields
+	// -------------------------
+	md, err = r.MdParseFields(md)
+	if err != nil {
+		return "", fmt.Errorf("error parsing fields: %w", err)
 	}
 
 	// -------------------------
@@ -423,6 +432,45 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 	}
 
 	return md, nil
+}
+
+func (r *mdRendererT) MdParseFields(md string) (string, error) {
+	// Substitute field directives with field text
+
+	// @field{<field_name>}
+	reField := regexp.MustCompile(`@field\{(\S*?)\}`)
+	fieldDirectives := reField.FindAllStringSubmatch(md, -1)
+	for _, match := range fieldDirectives {
+		// This is the full directive, e.g. "@field{username}"
+		fieldDirective := match[0]
+		// This is the name of the field, e.g. "username"
+		fieldName := match[1]
+
+		fieldText, ok := fieldManagerGetFieldText(fieldName)
+		if !ok {
+			return "", fmt.Errorf("field %q not found", fieldName)
+		}
+
+		md = strings.ReplaceAll(md, fieldDirective, fieldText)
+	}
+
+	return md, nil
+}
+
+func fieldManagerGetFieldText(fieldName string) (string, bool) {
+	if fieldName == "app_version" {
+		return config.Version, true
+	}
+	if fieldName == "app_name" {
+		return config.AppName, true
+	}
+	if fieldName == "datetime_now" {
+		// Form: 2026-01-31T08:50:07-08:00
+		now := time.Now()
+		formatted := now.Format(time.RFC3339)
+		return formatted, true
+	}
+	return "", false
 }
 
 func (r *mdRendererT) MdParseChecklists(md string) string {

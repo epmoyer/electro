@@ -1,8 +1,14 @@
 # 1&nbsp;&nbsp;&nbsp;&nbsp;Markdown Features
 
-TEST CASE: `single_file`
+## Test Execution Info
 
-🟣 Debug Text to validate file changes: 7
+- Test Case: `single_file`
+- Fields:
+    - `app_name`: `@field{app_name}`
+    - `app_version`: `@field{app_version}`
+    - `datetime_now`: `@field{datetime_now}`
+
+## Basic Formatting
 
 This is text which occurs before the first internal heading.
 
