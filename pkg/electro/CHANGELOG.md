@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v3.4.0 - 2026-04-26
+### Added
+- Dark gray border around images (so that you can see the edges of screenshots that are subsections of white windows)
+
 ## v3.3.0 - 2026-01-31
 ### Added
 - Support d2 diagrams in fenced code blocks with `d2` language tag.

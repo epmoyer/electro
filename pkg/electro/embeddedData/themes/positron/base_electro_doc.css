@@ -21,6 +21,7 @@ body {
     --color-bg-heading-tertiary: #e4eff6;
     --color-heading-border: #d7ebf7;
     --color-heading-text: #444;
+    --color-img-border: #666;
 
     --color-blockquote-bar: #B3C6D3;
     --color-blockquote-text: #888;
@@ -200,6 +201,7 @@ a:visited:hover, a:hover {
 .content-page img {
     max-width: 100%;
     height: auto;
+    border: 1px solid var(--color-img-border);
 }
 .content-page blockquote {
     color: var(--color-blockquote-text);
