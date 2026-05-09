@@ -302,6 +302,27 @@ func (b *builderT) BuildDocument(fsys fs.FS, pathMarkdown string, documentName s
 func (b *builderT) addDocumentToSearch(documentName string, documentHtml string) error {
 	qlog.Trace()
 
+	// --------------------------------------------------------------------------------
+	// This is SUBTLE and IMPORTANT:
+	// Documents may contain special substitution placeholders of the form {{% placeholder %}}.
+	// The use of such substitution placeholders can be OUTSIDE THE SCOPE of electro, so you
+	// may find NO OTHER MENTION of them in the electro codebase.   On example is the Dynamo app
+	// which uses a {{% doc_control_stamp_here %}} placeholder to mark the location where a
+	// document control stamp gets inserted AFTER HTML generation.  It is VITALLY important that
+	// we NOT include placeholders in the search index.  If we do, then the placeholder will
+	// appear TWICE in the output HTML (once in the body, and once in the search data).
+	// If the placeholder substitution ends up substituting the version in the search index,
+	// then unpredictable things can happen (including breaking search because the index syntax
+	// gets broken.  We have also seek knock-on effects such as breaking internal document
+	// links.
+	//
+	// For that reason we MUST STRIP OUT ALL PLACEHOLDERS from the HTML before we add
+	// it to the search index.
+	// ---------------------------------------------------------------------------------
+
+	// Strip out all placeholders of the form {{% placeholder %}}
+	documentHtml = regexp.MustCompile(`\{\{%\s*.*?\s*%\}\}`).ReplaceAllString(documentHtml, "")
+
 	// Parse HTML
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(documentHtml))
 	if err != nil {
