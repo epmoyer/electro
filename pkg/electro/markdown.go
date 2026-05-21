@@ -170,6 +170,11 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	}
 
 	// -------------------------
+	// Parse CSV references (into tables)
+	// -------------------------
+	md = r.MdParseCsvReferences(md)
+
+	// -------------------------
 	// Generate Table of Contents
 	// -------------------------
 	md = r.MdGenerateTableOfContents(md)
@@ -452,6 +457,16 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 	}
 
 	return md, nil
+}
+
+// MdParseCsvReferences parses CSV references in the markdown and replaces them with table markup.
+// CSV references have the form `@table{attachments/<csv_filename>}`.
+// The first row of the CSV is treated as the table header.
+// The remaining rows are treated as table data.
+// Nelwlines are converted to "<br>" tags.
+// The Markdown table format is not padded to be pretty; only to be syntactically correct.
+func (r *mdRendererT) MdParseCsvReferences(md string) string {
+
 }
 
 func (r *mdRendererT) MdParseFields(md string) (string, error) {
