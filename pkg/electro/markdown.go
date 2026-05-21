@@ -27,7 +27,7 @@ import (
 type mdRendererT struct {
 	Markdown                    string
 	Filename                    string
-	PathProjectDir              string
+	PathMdSourceDir              string
 	PathOutputDir               string
 	Substitutions               map[string]string
 	DoStripFrontmatter          bool
@@ -47,7 +47,7 @@ func NewMdRenderer(markdown string, filename string, pathProjectDir string, path
 	return &mdRendererT{
 		Markdown:                    markdown,
 		Filename:                    filename,
-		PathProjectDir:              pathProjectDir,
+		PathMdSourceDir:              pathProjectDir,
 		PathOutputDir:               pathOutputDir,
 		Substitutions:               make(map[string]string),
 		DoStripFrontmatter:          true,
@@ -478,7 +478,7 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 		csvRelativePath := match[1]
 		// NOTE: The attachments dir has not yet been copied to the output dir at the time
 		// when we render the markdown to HTML, so we need to get the CSV file from the project dir.
-		csvAbsolutePath := path.Join(r.PathProjectDir, "docs", csvRelativePath)
+		csvAbsolutePath := path.Join(r.PathMdSourceDir, csvRelativePath)
 
 		data, err := os.ReadFile(csvAbsolutePath)
 		if err != nil {
