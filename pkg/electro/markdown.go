@@ -3,7 +3,9 @@ package electro
 import (
 	"bytes"
 	"context"
+	"encoding/csv"
 	"fmt"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -25,6 +27,7 @@ import (
 type mdRendererT struct {
 	Markdown                    string
 	Filename                    string
+	PathProjectDir              string
 	PathOutputDir               string
 	Substitutions               map[string]string
 	DoStripFrontmatter          bool
@@ -40,10 +43,11 @@ type tocItemT struct {
 	HeadingText   string
 }
 
-func NewMdRenderer(markdown string, filename string, pathOutputDir string) *mdRendererT {
+func NewMdRenderer(markdown string, filename string, pathProjectDir string, pathOutputDir string) *mdRendererT {
 	return &mdRendererT{
 		Markdown:                    markdown,
 		Filename:                    filename,
+		PathProjectDir:              pathProjectDir,
 		PathOutputDir:               pathOutputDir,
 		Substitutions:               make(map[string]string),
 		DoStripFrontmatter:          true,
@@ -168,6 +172,11 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	if r.DoWrangleInterdocumentLinks {
 		md = r.MdWrangleInterDocumentLinks(md)
 	}
+
+	// -------------------------
+	// Parse CSV references (into tables)
+	// -------------------------
+	md = r.MdParseCsvReferences(md)
 
 	// -------------------------
 	// Generate Table of Contents
@@ -452,6 +461,102 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 	}
 
 	return md, nil
+}
+
+// MdParseCsvReferences parses CSV references in the markdown and replaces them with table markup.
+// CSV references have the form `@table{attachments/<csv_filename>}`.
+// The first row of the CSV is treated as the table header.
+// The remaining rows are treated as table data.
+// Nelwlines are converted to "<br>" tags.
+// The Markdown table format is not padded to be pretty; only to be syntactically correct.
+func (r *mdRendererT) MdParseCsvReferences(md string) string {
+	qlog.Trace()
+	reTable := regexp.MustCompile(`@table\{(attachments/[^}]+)\}`)
+	matches := reTable.FindAllStringSubmatch(md, -1)
+	for _, match := range matches {
+		tableDirective := match[0]
+		csvRelativePath := match[1]
+		// NOTE: The attachments dir has not yet been copied to the output dir at the time
+		// when we render the markdown to HTML, so we need to get the CSV file from the project dir.
+		csvAbsolutePath := path.Join(r.PathProjectDir, "docs", csvRelativePath)
+
+		data, err := os.ReadFile(csvAbsolutePath)
+		if err != nil {
+			qlog.Debugf("Could not read CSV table reference %q: %v", csvAbsolutePath, err)
+			continue
+		}
+
+		reader := csv.NewReader(strings.NewReader(string(data)))
+		reader.FieldsPerRecord = -1
+		records, err := reader.ReadAll()
+		if err != nil {
+			qlog.Debugf("Could not parse CSV table reference %q: %v", csvAbsolutePath, err)
+			continue
+		}
+		if len(records) == 0 {
+			qlog.Debugf("CSV table reference %q is empty", csvAbsolutePath)
+			continue
+		}
+
+		columnCount := 0
+		for _, record := range records {
+			if len(record) > columnCount {
+				columnCount = len(record)
+			}
+		}
+		if columnCount == 0 {
+			qlog.Debugf("CSV table reference %q has no columns", csvAbsolutePath)
+			continue
+		}
+
+		sanitizeCell := func(cell string) string {
+			cell = strings.ReplaceAll(cell, "\r\n", "\n")
+			cell = strings.ReplaceAll(cell, "\r", "\n")
+			cell = strings.ReplaceAll(cell, "\n", "<br>")
+			cell = strings.ReplaceAll(cell, "|", `\|`)
+			// Today we "brute force" cells containing "n/a" to use the gray background.
+			// FIXME: make this association a @pragma so that we can assign background colors in the
+			// markdown source to cells containing specific values.
+			if strings.Contains(strings.ToLower(cell), "n/a") {
+				cell += `<span class="td_bg_gray"></span>`
+			}
+			return cell
+		}
+		padRecord := func(record []string) []string {
+			if len(record) >= columnCount {
+				return record
+			}
+			out := make([]string, columnCount)
+			copy(out, record)
+			return out
+		}
+
+		header := padRecord(records[0])
+		var b strings.Builder
+		b.WriteString("\n")
+		b.WriteString("|")
+		for _, cell := range header {
+			b.WriteString(sanitizeCell(cell))
+			b.WriteString("|")
+		}
+		b.WriteString("\n|")
+		for i := 0; i < columnCount; i++ {
+			b.WriteString("---|")
+		}
+
+		for _, record := range records[1:] {
+			b.WriteString("\n|")
+			for _, cell := range padRecord(record) {
+				b.WriteString(sanitizeCell(cell))
+				b.WriteString("|")
+			}
+		}
+		b.WriteString("\n")
+
+		md = strings.ReplaceAll(md, tableDirective, b.String())
+	}
+
+	return md
 }
 
 func (r *mdRendererT) MdParseFields(md string) (string, error) {
