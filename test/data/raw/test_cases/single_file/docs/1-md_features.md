@@ -47,11 +47,16 @@ split from this line.
 ## Styles
 **Bold**, _Italics Form 1_, *Italics Form 2*
 
-## Table
+## Tables
+### Standard Markdoown Syntax
 | Column 1 | Column 2 | Column 3 |
 | -------- | -------- | -------- |
 | Data 1   | Data 2   | Data 3   |
 | Data 4   | Data 5   | Data 6   |
+
+### Ebedded CSV syntax
+
+@table{attachments/table_1.csv}
 
 ## Link
 This is a [Link to Google](https://www.google.com) in the middle of a line.

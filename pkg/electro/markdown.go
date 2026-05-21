@@ -27,6 +27,7 @@ import (
 type mdRendererT struct {
 	Markdown                    string
 	Filename                    string
+	PathProjectDir              string
 	PathOutputDir               string
 	Substitutions               map[string]string
 	DoStripFrontmatter          bool
@@ -42,10 +43,11 @@ type tocItemT struct {
 	HeadingText   string
 }
 
-func NewMdRenderer(markdown string, filename string, pathOutputDir string) *mdRendererT {
+func NewMdRenderer(markdown string, filename string, pathProjectDir string, pathOutputDir string) *mdRendererT {
 	return &mdRendererT{
 		Markdown:                    markdown,
 		Filename:                    filename,
+		PathProjectDir:              pathProjectDir,
 		PathOutputDir:               pathOutputDir,
 		Substitutions:               make(map[string]string),
 		DoStripFrontmatter:          true,
@@ -468,12 +470,15 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 // Nelwlines are converted to "<br>" tags.
 // The Markdown table format is not padded to be pretty; only to be syntactically correct.
 func (r *mdRendererT) MdParseCsvReferences(md string) string {
+	qlog.Trace()
 	reTable := regexp.MustCompile(`@table\{(attachments/[^}]+)\}`)
 	matches := reTable.FindAllStringSubmatch(md, -1)
 	for _, match := range matches {
 		tableDirective := match[0]
 		csvRelativePath := match[1]
-		csvAbsolutePath := path.Join(r.PathOutputDir, csvRelativePath)
+		// NOTE: The attachments dir has not yet been copied to the output dir at the time
+		// when we render the markdown to HTML, so we need to get the CSV file from the project dir.
+		csvAbsolutePath := path.Join(r.PathProjectDir, csvRelativePath)
 
 		data, err := os.ReadFile(csvAbsolutePath)
 		if err != nil {

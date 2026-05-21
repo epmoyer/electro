@@ -126,6 +126,9 @@ func BuildProject(pathCommandLineArg string) error {
 		configProject.SideMenuHeadingCaptureStartDepth,
 	)
 	for _, nd := range configProject.Navigation {
+		// NOTE: It is not obvious, but this call is where we render the markdown to HTML.
+		// We need the HTML for thenavigation descriptor, but ALSO we need the "side effect" of
+		// having rendered the HTML to the output directory.
 		err := builder.AddNavigationDescriptor(nd)
 		if err != nil {
 			return fmt.Errorf("error adding navigation descriptor: %w", err)
