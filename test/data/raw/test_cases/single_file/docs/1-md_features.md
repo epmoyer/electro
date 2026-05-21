@@ -48,7 +48,7 @@ split from this line.
 **Bold**, _Italics Form 1_, *Italics Form 2*
 
 ## Tables
-### Standard Markdoown Syntax
+### Standard Markdown Syntax
 
 This table is expressed in the "native" Markdown syntax.
 
@@ -57,7 +57,7 @@ This table is expressed in the "native" Markdown syntax.
 | Data 1   | Data 2   | Data 3   |
 | Data 4   | Data 5   | Data 6   |
 
-### Ebedded CSV syntax
+### Embedded CSV syntax
 
 Large and/or complex tables are often cumbersome to author and maintain in Markdown. The `@table` directive allows you to embed CSV data directly into your document.
 
