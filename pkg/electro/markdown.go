@@ -478,7 +478,7 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 		csvRelativePath := match[1]
 		// NOTE: The attachments dir has not yet been copied to the output dir at the time
 		// when we render the markdown to HTML, so we need to get the CSV file from the project dir.
-		csvAbsolutePath := path.Join(r.PathProjectDir, csvRelativePath)
+		csvAbsolutePath := path.Join(r.PathProjectDir, "docs", csvRelativePath)
 
 		data, err := os.ReadFile(csvAbsolutePath)
 		if err != nil {
@@ -514,6 +514,12 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 			cell = strings.ReplaceAll(cell, "\r", "\n")
 			cell = strings.ReplaceAll(cell, "\n", "<br>")
 			cell = strings.ReplaceAll(cell, "|", `\|`)
+			// Today we "brute force" cells containing "n/a" to use the gray background.
+			// FIXME: make this association a @pragma so that we can assign background colors in the
+			// markdown source to cells containing specific values.
+			if strings.Contains(strings.ToLower(cell), "n/a") {
+				cell += `<span class="td_bg_gray"></span>`
+			}
 			return cell
 		}
 		padRecord := func(record []string) []string {

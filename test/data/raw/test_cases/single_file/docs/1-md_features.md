@@ -58,6 +58,8 @@ split from this line.
 
 @table{attachments/table_1.csv}
 
+@table{attachments/table_2.csv}
+
 ## Link
 This is a [Link to Google](https://www.google.com) in the middle of a line.
 
