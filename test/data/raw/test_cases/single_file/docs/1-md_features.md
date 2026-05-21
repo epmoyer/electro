@@ -49,6 +49,9 @@ split from this line.
 
 ## Tables
 ### Standard Markdoown Syntax
+
+This table is expressed in the "native" Markdown syntax.
+
 | Column 1 | Column 2 | Column 3 |
 | -------- | -------- | -------- |
 | Data 1   | Data 2   | Data 3   |
@@ -56,8 +59,14 @@ split from this line.
 
 ### Ebedded CSV syntax
 
+Large and/or complex tables are often cumbersome to author and maintain in Markdown. The `@table` directive allows you to embed CSV data directly into your document.
+
+Currently cells containing "n/a" (case insensitive) are automatically formatted with a gray background.  In the future this behavior will likely become configurable and support assignment of arbitrary background colors to arbitrary matching text content.
+
+#### Simple CSV
 @table{attachments/table_1.csv}
 
+#### Complex CSV
 @table{attachments/table_2.csv}
 
 ## Link
