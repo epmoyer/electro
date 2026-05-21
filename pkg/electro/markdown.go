@@ -3,7 +3,9 @@ package electro
 import (
 	"bytes"
 	"context"
+	"encoding/csv"
 	"fmt"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -466,7 +468,84 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 // Nelwlines are converted to "<br>" tags.
 // The Markdown table format is not padded to be pretty; only to be syntactically correct.
 func (r *mdRendererT) MdParseCsvReferences(md string) string {
+	reTable := regexp.MustCompile(`@table\{(attachments/[^}]+)\}`)
+	matches := reTable.FindAllStringSubmatch(md, -1)
+	for _, match := range matches {
+		tableDirective := match[0]
+		csvRelativePath := match[1]
+		csvAbsolutePath := path.Join(r.PathOutputDir, csvRelativePath)
 
+		data, err := os.ReadFile(csvAbsolutePath)
+		if err != nil {
+			qlog.Debugf("Could not read CSV table reference %q: %v", csvAbsolutePath, err)
+			continue
+		}
+
+		reader := csv.NewReader(strings.NewReader(string(data)))
+		reader.FieldsPerRecord = -1
+		records, err := reader.ReadAll()
+		if err != nil {
+			qlog.Debugf("Could not parse CSV table reference %q: %v", csvAbsolutePath, err)
+			continue
+		}
+		if len(records) == 0 {
+			qlog.Debugf("CSV table reference %q is empty", csvAbsolutePath)
+			continue
+		}
+
+		columnCount := 0
+		for _, record := range records {
+			if len(record) > columnCount {
+				columnCount = len(record)
+			}
+		}
+		if columnCount == 0 {
+			qlog.Debugf("CSV table reference %q has no columns", csvAbsolutePath)
+			continue
+		}
+
+		sanitizeCell := func(cell string) string {
+			cell = strings.ReplaceAll(cell, "\r\n", "\n")
+			cell = strings.ReplaceAll(cell, "\r", "\n")
+			cell = strings.ReplaceAll(cell, "\n", "<br>")
+			cell = strings.ReplaceAll(cell, "|", `\|`)
+			return cell
+		}
+		padRecord := func(record []string) []string {
+			if len(record) >= columnCount {
+				return record
+			}
+			out := make([]string, columnCount)
+			copy(out, record)
+			return out
+		}
+
+		header := padRecord(records[0])
+		var b strings.Builder
+		b.WriteString("\n")
+		b.WriteString("|")
+		for _, cell := range header {
+			b.WriteString(sanitizeCell(cell))
+			b.WriteString("|")
+		}
+		b.WriteString("\n|")
+		for i := 0; i < columnCount; i++ {
+			b.WriteString("---|")
+		}
+
+		for _, record := range records[1:] {
+			b.WriteString("\n|")
+			for _, cell := range padRecord(record) {
+				b.WriteString(sanitizeCell(cell))
+				b.WriteString("|")
+			}
+		}
+		b.WriteString("\n")
+
+		md = strings.ReplaceAll(md, tableDirective, b.String())
+	}
+
+	return md
 }
 
 func (r *mdRendererT) MdParseFields(md string) (string, error) {
