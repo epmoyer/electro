@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## v3.8.0 - 2026-05-21
+### Added
 - Preserve existing styles for tables when printing.
+- Pragma for table cell background color by content partial match.
+  - Example: `@pragma{table_cell_bg_color_by_content_partial:foo, #ffff00}`
+
+### Changed
+- All table cell background color pragmas now do a case-insensitive match.
+  - `table_cell_bg_color_by_content`
+  - `table_cell_bg_color_by_content_partial`
 
 ## v3.7.0 - 2026-05-21
 ### Added

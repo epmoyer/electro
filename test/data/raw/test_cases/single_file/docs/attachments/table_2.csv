@@ -1,15 +1,12 @@
-Heading 1,Heading 2
-Row 1 Col 1,Row 1 Col 2
-Row 2 Col 1,Row 2 Col 2
-A single line cell,"Multi-line cell line 1
+Test Case,Expected Behavior,Content 1,Content 2,Content 3
+Basic Cell,Row 1 Col 1,Row 1 Col 2,,
+Basic Cell,Row 2 Col 1,Row 2 Col 2,,
+Multi Line Cell,,A single line cell,"Multi-line cell line 1
 Line 2
-Line 3"
-n/a,N/A
-Test 1,Test 2
-Should be gray:,n/a
-Should be green:,pass
-Should be orange:,warning
-Should be red:,fail
-Shoudl be yellow:,foo TBD
-Shoudl be yellow:,foo tbd
-Shoudl be yellow:,foo bar TBD
+Line 3",
+No coloring,No color,foo bar,foo bar baz,
+"Background color by content, exact match",Both cells should be gray,n/a,N/A,
+"Background color by content, exact match","First cell should be green, second uncolored.",pass,pass foo,
+"Background color by content, exact match",Should be orange:,warning,,
+"Background color by content, exact match",Should be red:,fail,,
+"Background color by content, partial match",Shoudl all be yellow:,foo TBD,foo tbd,foo bar TBD
