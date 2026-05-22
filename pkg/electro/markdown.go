@@ -48,6 +48,7 @@ type TableCellBgColorDescriptorT struct {
 	id            int
 	bgColor       string
 	isCssRendered bool
+	isPartialMatch bool
 }
 
 func NewMdRenderer(markdown string, filename string, pathProjectDir string, pathOutputDir string) *mdRendererT {
@@ -482,8 +483,9 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 //
 // @pragma{table_cell_bg_color_by_content:pass, #d0d0f0}
 // @pragma{table_cell_bg_color_by_content:fail, #f0d0d0}
-// @pragma{table_cell_bg_color_by_content:warning, #f0f0d0}
+// @pragma{table_cell_bg_color_by_content:warning, #f0e0d0}
 // @pragma{table_cell_bg_color_by_content:n/a, #808080}
+// @pragma{table_cell_bg_color_by_content_partial:TBD, #f0f000}
 // @pragma{table_cell_bg_color_clear_all}
 //
 // The parser will apply/remove the background color pragma directives and the @table directives
@@ -492,6 +494,7 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 	qlog.Trace()
 	reTable := regexp.MustCompile(`^\s*@table\{(attachments/[^}]+)\}\s*$`)
 	reTableCellBgColor := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_by_content:(.*?),\s*([^}]+)\}\s*$`)
+	reTableCellBgColorPartial := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_by_content_partial:(.*?),\s*([^}]+)\}\s*$`)
 	reTableCellBgColorClearAll := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_clear_all\}\s*$`)
 
 	renderPendingCss := func(descriptors map[string]TableCellBgColorDescriptorT) string {
@@ -571,13 +574,30 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 			return out
 		}
 
-		sanitizeCell := func(cell string) string {
-			cellLookup := cell
-			descriptor, ok := descriptors[cellLookup]
-			if !ok {
-				cellLookup = strings.TrimSpace(cellLookup)
-				descriptor, ok = descriptors[cellLookup]
+		findMatchingDescriptor := func(cell string) (TableCellBgColorDescriptorT, bool) {
+			cellLookup := strings.ToLower(strings.TrimSpace(cell))
+			if descriptor, ok := descriptors[cellLookup]; ok && !descriptor.isPartialMatch {
+				return descriptor, true
 			}
+
+			var bestMatch TableCellBgColorDescriptorT
+			found := false
+			for descriptorCellContent, descriptor := range descriptors {
+				if !descriptor.isPartialMatch {
+					continue
+				}
+				if strings.Contains(cellLookup, descriptorCellContent) {
+					if !found || descriptor.id < bestMatch.id {
+						bestMatch = descriptor
+						found = true
+					}
+				}
+			}
+			return bestMatch, found
+		}
+
+		sanitizeCell := func(cell string) string {
+			descriptor, ok := findMatchingDescriptor(cell)
 
 			cell = strings.ReplaceAll(cell, "\r\n", "\n")
 			cell = strings.ReplaceAll(cell, "\r", "\n")
@@ -617,12 +637,26 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 
 	for _, line := range lines {
 		if matches := reTableCellBgColor.FindStringSubmatch(line); matches != nil {
-			cellContent := strings.TrimSpace(matches[1])
+			cellContent := strings.ToLower(strings.TrimSpace(matches[1]))
 			bgColor := strings.TrimSpace(matches[2])
 			tableCellBgColorDescriptors[cellContent] = TableCellBgColorDescriptorT{
-				id:            nextTableCellBgColorDescriptorID,
-				bgColor:       bgColor,
-				isCssRendered: false,
+				id:             nextTableCellBgColorDescriptorID,
+				bgColor:        bgColor,
+				isCssRendered:  false,
+				isPartialMatch: false,
+			}
+			nextTableCellBgColorDescriptorID++
+			continue
+		}
+
+		if matches := reTableCellBgColorPartial.FindStringSubmatch(line); matches != nil {
+			cellContent := strings.ToLower(strings.TrimSpace(matches[1]))
+			bgColor := strings.TrimSpace(matches[2])
+			tableCellBgColorDescriptors[cellContent] = TableCellBgColorDescriptorT{
+				id:             nextTableCellBgColorDescriptorID,
+				bgColor:        bgColor,
+				isCssRendered:  false,
+				isPartialMatch: true,
 			}
 			nextTableCellBgColorDescriptorID++
 			continue

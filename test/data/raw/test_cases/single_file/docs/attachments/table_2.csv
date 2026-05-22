@@ -10,3 +10,6 @@ Should be gray:,n/a
 Should be green:,pass
 Should be orange:,warning
 Should be red:,fail
+Shoudl be yellow:,foo TBD
+Shoudl be yellow:,foo tbd
+Shoudl be yellow:,foo bar TBD

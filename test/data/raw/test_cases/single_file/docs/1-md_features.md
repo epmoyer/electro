@@ -71,6 +71,7 @@ Currently cells containing "n/a" (case insensitive) are automatically formatted 
 @pragma{table_cell_bg_color_by_content:pass, #d0ffd0}
 @pragma{table_cell_bg_color_by_content:fail, #ffd0d0}
 @pragma{table_cell_bg_color_by_content:warning, #ffe8d0}
+@pragma{table_cell_bg_color_by_content_partial:tbd, #ffff00}
 @pragma{table_cell_bg_color_by_content:n/a, #c0c0c0}
 
 With color pragmas applied:
