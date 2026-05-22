@@ -392,11 +392,23 @@ a:visited:hover, a:hover {
     .print-banner {
         display: block;
     }
+
     /* Preserve existing styles for tables */
     th, td {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
+    /* Don't break table rows across pages. Works well in Chrome, not Safari */
+    tr {
+        break-inside: avoid;
+        page-break-inside: avoid; /* legacy fallback */
+    }
+    /* Add sufficient margin such that if a tr breaks across a page,
+       then all pixels are still visible somewhewe */
+    @page {
+        margin: 0.5in;
+    }
+
     h1, h2, h3, h4, h5, h6 {
     color: black !important;
     -webkit-box-shadow:inset 0px 0px 0px 0px transparent !important;

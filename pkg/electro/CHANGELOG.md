@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v3.9.0 - 2026-05-21
+### Added
+- CSS print directives to control page margins and to not break table rows across page boundaries.
+    - Safri ignores the tr break directive, but Edge/Chrome print to PDF very nicely, even replicating table heaings when crossing to a new page.
+
 ## v3.8.0 - 2026-05-21
 ### Added
 - Preserve existing styles for tables when printing.
