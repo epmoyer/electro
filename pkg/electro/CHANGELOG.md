@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v3.7.0 - 2026-05-21
+### Added
+- Add table cell background color control via pragmas.
+  - Examples: 
+    - `@pragma{table_cell_bg_color_by_content:pass, #d0ffd0}`
+    - `@pragma{table_cell_bg_color_by_content:fail, #ffd0d0}`
+    - `@pragma{table_cell_bg_color_clear_all}`
+
 ## v3.6.0 - 2026-05-21
 ### Added
 - Add `@table{attachments/filename.csv}` directive to embed a formatted table from a CSV file.
