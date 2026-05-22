@@ -6,3 +6,7 @@ Line 2
 Line 3"
 n/a,N/A
 Test 1,Test 2
+Should be gray:,n/a
+Should be green:,pass
+Should be orange:,warning
+Should be red:,fail
