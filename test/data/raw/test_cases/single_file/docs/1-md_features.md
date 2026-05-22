@@ -67,6 +67,20 @@ Currently cells containing "n/a" (case insensitive) are automatically formatted 
 @table{attachments/table_1.csv}
 
 #### Complex CSV
+
+@pragma{table_cell_bg_color_by_content:pass, #d0ffd0}
+@pragma{table_cell_bg_color_by_content:fail, #ffd0d0}
+@pragma{table_cell_bg_color_by_content:warning, #ffe8d0}
+@pragma{table_cell_bg_color_by_content:n/a, #c0c0c0}
+
+With color pragmas applied:
+
+@table{attachments/table_2.csv}
+
+With color pragmas cleared:
+
+@pragma{table_cell_bg_color_clear_all}
+
 @table{attachments/table_2.csv}
 
 ## Link

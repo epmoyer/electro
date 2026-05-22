@@ -9,6 +9,7 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -41,6 +42,12 @@ type tocItemT struct {
 	HeadingLevel  int
 	HeadingNumber string
 	HeadingText   string
+}
+
+type TableCellBgColorDescriptorT struct {
+	id            int
+	bgColor       string
+	isCssRendered bool
 }
 
 func NewMdRenderer(markdown string, filename string, pathProjectDir string, pathOutputDir string) *mdRendererT {
@@ -469,21 +476,67 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 // The remaining rows are treated as table data.
 // Nelwlines are converted to "<br>" tags.
 // The Markdown table format is not padded to be pretty; only to be syntactically correct.
+//
+// Additionally, the following pragma directives can be used to control table cell
+// background colors:
+//
+// @pragma{table_cell_bg_color_by_content:pass, #d0d0f0}
+// @pragma{table_cell_bg_color_by_content:fail, #f0d0d0}
+// @pragma{table_cell_bg_color_by_content:warning, #f0f0d0}
+// @pragma{table_cell_bg_color_by_content:n/a, #808080}
+// @pragma{table_cell_bg_color_clear_all}
+//
+// The parser will apply/remove the background color pragma directives and the @table directives
+// in the order in which they appear in the Markdown source.
 func (r *mdRendererT) MdParseCsvReferences(md string) string {
 	qlog.Trace()
-	reTable := regexp.MustCompile(`@table\{(attachments/[^}]+)\}`)
-	matches := reTable.FindAllStringSubmatch(md, -1)
-	for _, match := range matches {
-		tableDirective := match[0]
-		csvRelativePath := match[1]
-		// NOTE: The attachments dir has not yet been copied to the output dir at the time
-		// when we render the markdown to HTML, so we need to get the CSV file from the project dir.
-		csvAbsolutePath := path.Join(r.PathMdSourceDir, csvRelativePath)
+	reTable := regexp.MustCompile(`^\s*@table\{(attachments/[^}]+)\}\s*$`)
+	reTableCellBgColor := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_by_content:(.*?),\s*([^}]+)\}\s*$`)
+	reTableCellBgColorClearAll := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_clear_all\}\s*$`)
 
+	renderPendingCss := func(descriptors map[string]TableCellBgColorDescriptorT) string {
+		type pendingDescriptorT struct {
+			cellContent string
+			descriptor  TableCellBgColorDescriptorT
+		}
+		pending := []pendingDescriptorT{}
+		for cellContent, descriptor := range descriptors {
+			if !descriptor.isCssRendered {
+				pending = append(pending, pendingDescriptorT{
+					cellContent: cellContent,
+					descriptor:  descriptor,
+				})
+			}
+		}
+		if len(pending) == 0 {
+			return ""
+		}
+		sort.Slice(pending, func(i, j int) bool {
+			return pending[i].descriptor.id < pending[j].descriptor.id
+		})
+		var b strings.Builder
+		b.WriteString("<style>\n")
+		for _, item := range pending {
+			fmt.Fprintf(
+				&b,
+				".content-page td:has(.td_bg_custom_%d){\n    background-color: %s;\n}\n",
+				item.descriptor.id,
+				item.descriptor.bgColor,
+			)
+			descriptor := descriptors[item.cellContent]
+			descriptor.isCssRendered = true
+			descriptors[item.cellContent] = descriptor
+		}
+		b.WriteString("</style>")
+		return b.String()
+	}
+
+	renderTableMarkdown := func(csvRelativePath string, descriptors map[string]TableCellBgColorDescriptorT) (string, bool) {
+		csvAbsolutePath := path.Join(r.PathMdSourceDir, csvRelativePath)
 		data, err := os.ReadFile(csvAbsolutePath)
 		if err != nil {
 			qlog.Debugf("Could not read CSV table reference %q: %v", csvAbsolutePath, err)
-			continue
+			return "", false
 		}
 
 		reader := csv.NewReader(strings.NewReader(string(data)))
@@ -491,11 +544,11 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 		records, err := reader.ReadAll()
 		if err != nil {
 			qlog.Debugf("Could not parse CSV table reference %q: %v", csvAbsolutePath, err)
-			continue
+			return "", false
 		}
 		if len(records) == 0 {
 			qlog.Debugf("CSV table reference %q is empty", csvAbsolutePath)
-			continue
+			return "", false
 		}
 
 		columnCount := 0
@@ -506,22 +559,9 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 		}
 		if columnCount == 0 {
 			qlog.Debugf("CSV table reference %q has no columns", csvAbsolutePath)
-			continue
+			return "", false
 		}
 
-		sanitizeCell := func(cell string) string {
-			cell = strings.ReplaceAll(cell, "\r\n", "\n")
-			cell = strings.ReplaceAll(cell, "\r", "\n")
-			cell = strings.ReplaceAll(cell, "\n", "<br>")
-			cell = strings.ReplaceAll(cell, "|", `\|`)
-			// Today we "brute force" cells containing "n/a" to use the gray background.
-			// FIXME: make this association a @pragma so that we can assign background colors in the
-			// markdown source to cells containing specific values.
-			if strings.Contains(strings.ToLower(cell), "n/a") {
-				cell += `<span class="td_bg_gray"></span>`
-			}
-			return cell
-		}
 		padRecord := func(record []string) []string {
 			if len(record) >= columnCount {
 				return record
@@ -531,9 +571,26 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 			return out
 		}
 
+		sanitizeCell := func(cell string) string {
+			cellLookup := cell
+			descriptor, ok := descriptors[cellLookup]
+			if !ok {
+				cellLookup = strings.TrimSpace(cellLookup)
+				descriptor, ok = descriptors[cellLookup]
+			}
+
+			cell = strings.ReplaceAll(cell, "\r\n", "\n")
+			cell = strings.ReplaceAll(cell, "\r", "\n")
+			cell = strings.ReplaceAll(cell, "\n", "<br>")
+			cell = strings.ReplaceAll(cell, "|", `\|`)
+			if ok {
+				cell += fmt.Sprintf(`<span class="td_bg_custom_%d"></span>`, descriptor.id)
+			}
+			return cell
+		}
+
 		header := padRecord(records[0])
 		var b strings.Builder
-		b.WriteString("\n")
 		b.WriteString("|")
 		for _, cell := range header {
 			b.WriteString(sanitizeCell(cell))
@@ -543,7 +600,6 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 		for i := 0; i < columnCount; i++ {
 			b.WriteString("---|")
 		}
-
 		for _, record := range records[1:] {
 			b.WriteString("\n|")
 			for _, cell := range padRecord(record) {
@@ -551,12 +607,52 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 				b.WriteString("|")
 			}
 		}
-		b.WriteString("\n")
-
-		md = strings.ReplaceAll(md, tableDirective, b.String())
+		return b.String(), true
 	}
 
-	return md
+	lines := strings.Split(md, "\n")
+	linesOut := []string{}
+	tableCellBgColorDescriptors := map[string]TableCellBgColorDescriptorT{}
+	nextTableCellBgColorDescriptorID := 1
+
+	for _, line := range lines {
+		if matches := reTableCellBgColor.FindStringSubmatch(line); matches != nil {
+			cellContent := strings.TrimSpace(matches[1])
+			bgColor := strings.TrimSpace(matches[2])
+			tableCellBgColorDescriptors[cellContent] = TableCellBgColorDescriptorT{
+				id:            nextTableCellBgColorDescriptorID,
+				bgColor:       bgColor,
+				isCssRendered: false,
+			}
+			nextTableCellBgColorDescriptorID++
+			continue
+		}
+
+		if reTableCellBgColorClearAll.MatchString(line) {
+			tableCellBgColorDescriptors = map[string]TableCellBgColorDescriptorT{}
+			continue
+		}
+
+		if matches := reTable.FindStringSubmatch(line); matches != nil {
+			csvRelativePath := matches[1]
+			tableMarkdown, ok := renderTableMarkdown(csvRelativePath, tableCellBgColorDescriptors)
+			if !ok {
+				linesOut = append(linesOut, line)
+				continue
+			}
+
+			cssBlock := renderPendingCss(tableCellBgColorDescriptors)
+			if cssBlock != "" {
+				linesOut = append(linesOut, cssBlock)
+			}
+			linesOut = append(linesOut, tableMarkdown)
+			continue
+		}
+
+		linesOut = append(linesOut, line)
+	}
+
+	return strings.Join(linesOut, "\n")
 }
 
 func (r *mdRendererT) MdParseFields(md string) (string, error) {
