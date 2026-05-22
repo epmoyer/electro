@@ -392,6 +392,11 @@ a:visited:hover, a:hover {
     .print-banner {
         display: block;
     }
+    /* Preserve existing styles for tables */
+    th, td {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
     h1, h2, h3, h4, h5, h6 {
     color: black !important;
     -webkit-box-shadow:inset 0px 0px 0px 0px transparent !important;
