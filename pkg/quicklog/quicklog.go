@@ -3,7 +3,7 @@
 package quicklog
 
 import (
-	"app/pkg/format"
+	"github.com/epmoyer/callsite"
 	"fmt"
 	"io"
 	"os"
@@ -180,7 +180,7 @@ func (l LoggerT) Errorf(format string, a ...interface{}) {
 }
 
 func (l LoggerT) ErrorfContext(_format string, a ...interface{}) {
-	l.Error(format.SprintfContext(_format, a...))
+	l.Error(callsite.SprintfContext(_format, a...))
 }
 
 func (l LoggerT) ErrorE(err error) {
