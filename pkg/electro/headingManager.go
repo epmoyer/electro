@@ -7,6 +7,10 @@ import (
 
 const maxHeadingDepth = 6
 
+// appendixLetterStart is the letter just before "A", so that incrementing it
+// up front yields "A" for the first appendix at a level.
+const appendixLetterStart = 'A' - 1
+
 type headingManagerT struct {
 	atLevel       int
 	headingNumber []int
@@ -21,17 +25,23 @@ func newHeadingManager(level int) *headingManagerT {
 		headingLetter: make([]rune, maxHeadingDepth+1),
 		isLetter:      make([]bool, maxHeadingDepth+1),
 	}
-	// Appendix letters start at "A" at every level.
+	// Appendix letters start one before "A"; they are bumped to "A" on first use.
 	for i := range hm.headingLetter {
-		hm.headingLetter[i] = 'A'
+		hm.headingLetter[i] = appendixLetterStart
 	}
 	return hm
 }
 
 func (hm *headingManagerT) GetNextHeadingNumber(level int, isAppendix bool) string {
 	if isAppendix {
-		// Pull the current appendix letter at this level instead of a number.
+		// Bump to the next appendix letter at this level instead of a number. We
+		// never go past "Z"; we just keep repeating "Z" so the behaviour stays
+		// defined beyond 26 appendices. The letter is bumped up front so it stays
+		// stable while lower-level headings reference it as a prefix (e.g. "A.1").
 		hm.isLetter[level] = true
+		if hm.headingLetter[level] < 'Z' {
+			hm.headingLetter[level] += 1
+		}
 	} else {
 		// Bump this heading level
 		hm.isLetter[level] = false
@@ -40,7 +50,7 @@ func (hm *headingManagerT) GetNextHeadingNumber(level int, isAppendix bool) stri
 	// Reset lower levels
 	for i := level + 1; i < maxHeadingDepth; i++ {
 		hm.headingNumber[i] = 0
-		hm.headingLetter[i] = 'A'
+		hm.headingLetter[i] = appendixLetterStart
 		hm.isLetter[i] = false
 	}
 	// Build heading number string
@@ -50,14 +60,6 @@ func (hm *headingManagerT) GetNextHeadingNumber(level int, isAppendix bool) stri
 			parts = append(parts, string(hm.headingLetter[i]))
 		} else {
 			parts = append(parts, strconv.Itoa(hm.headingNumber[i]))
-		}
-	}
-	if isAppendix {
-		// Advance the appendix letter for the next heading at this level. We
-		// never go past "Z"; we just keep repeating "Z" so the behaviour stays
-		// defined beyond 26 appendices.
-		if hm.headingLetter[level] < 'Z' {
-			hm.headingLetter[level] += 1
 		}
 	}
 	return strings.Join(parts, ".")
