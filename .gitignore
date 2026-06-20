@@ -12,3 +12,5 @@ Icon?
 # Outputs
 /test/data/processed/test_cases/
 /src/electro
+# local-only sidecar/ (synced out of band, never committed)
+/sidecar
