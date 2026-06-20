@@ -6,5 +6,8 @@
 # rsync -a --delete ../test/data/raw/test_cases/static/ ../test/data/processed/test_cases/static/incoming/
 # go run . --project ../test/data/processed/test_cases/static/incoming/electro.json
 
+mkdir -p ../test/data/processed/test_cases/single_file/incoming/
+mkdir -p ../test/data/processed/test_cases/single_file/build/
+
 rsync -a --delete ../test/data/raw/test_cases/single_file/ ../test/data/processed/test_cases/single_file/incoming/
-go run . --noembed --project ../test/data/raw/test_cases/single_file/electro.json
+go run . --noembed --project ../test/data/processed/test_cases/single_file/incoming/electro.json
