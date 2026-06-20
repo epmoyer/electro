@@ -338,7 +338,8 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 
 		if level >= r.NumberHeadingsAtLevel && pragmaNumberHeadingsEnabled && doNumberHeadings {
 			// Add heading number
-			headingNumberText = headingManager.GetNextHeadingNumber(level, false)
+			isAppendix := strings.HasPrefix(strings.ToLower(headingText), "appendix")
+			headingNumberText = headingManager.GetNextHeadingNumber(level, isAppendix)
 			idWithoutHeadingNumber := headingTextToId(headingText)
 			idWithHeadingNumber := headingTextToId(headingNumberText + " " + headingText)
 			headingIdToHeadingIdWithLineNumber[idWithoutHeadingNumber] = idWithHeadingNumber
