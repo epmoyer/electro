@@ -338,7 +338,7 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 
 		if level >= r.NumberHeadingsAtLevel && pragmaNumberHeadingsEnabled && doNumberHeadings {
 			// Add heading number
-			headingNumberText = headingManager.GetNextHeadingNumber(level)
+			headingNumberText = headingManager.GetNextHeadingNumber(level, false)
 			idWithoutHeadingNumber := headingTextToId(headingText)
 			idWithHeadingNumber := headingTextToId(headingNumberText + " " + headingText)
 			headingIdToHeadingIdWithLineNumber[idWithoutHeadingNumber] = idWithHeadingNumber

@@ -7,4 +7,4 @@
 # go run . --project ../test/data/processed/test_cases/static/incoming/electro.json
 
 rsync -a --delete ../test/data/raw/test_cases/single_file/ ../test/data/processed/test_cases/single_file/incoming/
-go run . --noembed --project ../test/data/processed/test_cases/single_file/incoming/electro.json
+go run . --noembed --project ../test/data/raw/test_cases/single_file/electro.json
