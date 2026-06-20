@@ -335,25 +335,52 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 		level := len(pieces[0])
 		headingText := pieces[1]
 		headingNumberText := ""
+		tocHeadingNumber := ""
+		tocHeadingText := headingText
 
 		if level >= r.NumberHeadingsAtLevel && pragmaNumberHeadingsEnabled && doNumberHeadings {
-			// Add heading number
-			headingNumberText = headingManager.GetNextHeadingNumber(level)
+			// Add heading number. Appendices are only honoured at the level the
+			// heading manager numbers from (atLevel), so the heading number is a
+			// letter ("A") only when the heading is at that level.
+			isAppendix := strings.HasPrefix(strings.ToLower(headingText), "appendix")
+			appendixHonored := isAppendix && level == r.NumberHeadingsAtLevel
+			headingNumberText = headingManager.GetNextHeadingNumber(level, isAppendix)
 			idWithoutHeadingNumber := headingTextToId(headingText)
-			idWithHeadingNumber := headingTextToId(headingNumberText + " " + headingText)
+
+			var renderedHeadingText string
+			if appendixHonored {
+				// Standardize the appendix word's capitalization and move the
+				// letter after it, e.g. "# aPpendiX" -> "Appendix A" and
+				// "# Appendix Foo Bar" -> "Appendix A: Foo Bar".
+				rest := strings.TrimSpace(headingText[len("appendix"):])
+				if rest != "" {
+					renderedHeadingText = fmt.Sprintf("Appendix %s: %s", headingNumberText, rest)
+				} else {
+					renderedHeadingText = fmt.Sprintf("Appendix %s", headingNumberText)
+				}
+				// The letter is part of the heading text, so leave the TOC number
+				// empty and let the standardized text carry it.
+				tocHeadingNumber = ""
+				tocHeadingText = renderedHeadingText
+			} else {
+				renderedHeadingText = fmt.Sprintf(
+					"%s&nbsp;&nbsp;&nbsp;&nbsp;%s",
+					headingNumberText,
+					headingText)
+				tocHeadingNumber = headingNumberText
+				tocHeadingText = headingText
+			}
+
+			idWithHeadingNumber := headingTextToId(renderedHeadingText)
 			headingIdToHeadingIdWithLineNumber[idWithoutHeadingNumber] = idWithHeadingNumber
 
-			line = fmt.Sprintf(
-				"%s %s&nbsp;&nbsp;&nbsp;&nbsp;%s",
-				pieces[0],
-				headingNumberText,
-				headingText)
+			line = fmt.Sprintf("%s %s", pieces[0], renderedHeadingText)
 		}
 		if pragmaIncludeInTocEnabled {
 			r.TocItems = append(r.TocItems, tocItemT{
 				HeadingLevel:  level,
-				HeadingNumber: headingNumberText,
-				HeadingText:   headingText,
+				HeadingNumber: tocHeadingNumber,
+				HeadingText:   tocHeadingText,
 			})
 		}
 		renumberedLines = append(renumberedLines, line)
