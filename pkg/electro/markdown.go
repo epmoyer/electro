@@ -28,7 +28,7 @@ import (
 type mdRendererT struct {
 	Markdown                    string
 	Filename                    string
-	PathMdSourceDir              string
+	PathMdSourceDir             string
 	PathOutputDir               string
 	Substitutions               map[string]string
 	DoStripFrontmatter          bool
@@ -45,9 +45,9 @@ type tocItemT struct {
 }
 
 type TableCellBgColorDescriptorT struct {
-	id            int
-	bgColor       string
-	isCssRendered bool
+	id             int
+	bgColor        string
+	isCssRendered  bool
 	isPartialMatch bool
 }
 
@@ -55,7 +55,7 @@ func NewMdRenderer(markdown string, filename string, pathProjectDir string, path
 	return &mdRendererT{
 		Markdown:                    markdown,
 		Filename:                    filename,
-		PathMdSourceDir:              pathProjectDir,
+		PathMdSourceDir:             pathProjectDir,
 		PathOutputDir:               pathOutputDir,
 		Substitutions:               make(map[string]string),
 		DoStripFrontmatter:          true,

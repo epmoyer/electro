@@ -4,13 +4,13 @@
 # Build outputs
 
 /data/logs
-/src/data/logs
+/cmd/electro/data/logs
 
 # Windows/Dropbox? Icon Files
 Icon?
 
 # Outputs
 /test/data/processed/test_cases/
-/src/electro
+/cmd/electro/electro
 # local-only sidecar/ (synced out of band, never committed)
 /sidecar

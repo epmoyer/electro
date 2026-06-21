@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## v3.10.0 - 2026-05-21
+## v3.11.0 - 2026-06-20
+### Changed
+- Make this project importable, so that upstream projects can use it as a library by importing `github.com/epmoyer/electro/pkg/electro/v3`.
+
+## v3.10.0 - 2026-06-20
 ### Added
 - Number appendix sections as "A.1", "A.2", etc. if the section title starts with "Appendix" (case-insensitive).
 

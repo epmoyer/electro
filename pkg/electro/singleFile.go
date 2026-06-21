@@ -1,8 +1,9 @@
 package electro
 
 import (
-	"app/pkg/simplepack"
 	"fmt"
+
+	"github.com/epmoyer/electro/v3/pkg/simplepack"
 )
 
 func publishSingleFile(pathOutputDir string, pathOutputSingleFileTargetRelative string) error {
