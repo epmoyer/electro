@@ -1,8 +1,4 @@
-// For internal go apps we consistently use `module app` so that all our
-// internal packages can use `import "app/pkg/{package_name}"` to import
-// project packages. This allows us to copy internal packages between
-// projects without having to edit the import paths.
-module app
+module github.com/epmoyer/electro
 
 go 1.24.4
 

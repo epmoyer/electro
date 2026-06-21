@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"app/pkg/orderedmap"
+	"github.com/epmoyer/electro/pkg/orderedmap"
 )
 
 const projectFilename = "electro.json"

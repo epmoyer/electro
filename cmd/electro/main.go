@@ -1,9 +1,10 @@
 package main
 
 import (
-	"app/pkg/electro"
 	"flag"
 	"fmt"
+
+	"github.com/epmoyer/electro/pkg/electro"
 )
 
 var flagVersion bool
