@@ -3,7 +3,7 @@ package electro
 import (
 	"fmt"
 
-	"github.com/epmoyer/electro/pkg/simplepack"
+	"github.com/epmoyer/electro/v3/pkg/simplepack"
 )
 
 func publishSingleFile(pathOutputDir string, pathOutputSingleFileTargetRelative string) error {

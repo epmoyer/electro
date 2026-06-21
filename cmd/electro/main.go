@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/epmoyer/electro/pkg/electro"
+	"github.com/epmoyer/electro/v3/pkg/electro"
 )
 
 var flagVersion bool
