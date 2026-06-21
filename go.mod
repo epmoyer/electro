@@ -9,6 +9,7 @@ go 1.24.4
 require (
 	github.com/FurqanSoftware/goldmark-d2 v0.0.0-20250906161746-6305edf4a24a
 	github.com/PuerkitoBio/goquery v1.10.3
+	github.com/epmoyer/quicklog/v2 v2.1.0
 	github.com/tdewolff/minify/v2 v2.24.4
 	github.com/yuin/goldmark v1.7.13
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
