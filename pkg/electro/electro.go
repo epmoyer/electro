@@ -1,9 +1,9 @@
 package electro
 
 import (
-	"github.com/epmoyer/quicklog/v2"
 	"embed"
 	"fmt"
+	"github.com/epmoyer/quicklog/v2"
 	"io/fs"
 	"os"
 	"path"

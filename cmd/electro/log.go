@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/epmoyer/quicklog/v2"
 	"fmt"
+	"github.com/epmoyer/quicklog/v2"
 	"os"
 	"strings"
 )

@@ -1,9 +1,9 @@
 package simplepack
 
 import (
-	"github.com/epmoyer/quicklog/v2"
 	"bufio"
 	"fmt"
+	"github.com/epmoyer/quicklog/v2"
 	"os"
 	"path"
 	"path/filepath"
