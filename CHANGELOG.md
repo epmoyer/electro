@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## v3.12.0 - 2026-06-22
 ### Added
 - Include dot after level 1 heading numbers (e.g. "1." instead of "1").
+- Add support for wiki-style links of the form `[[Heading Name]]`.
 
 ## v3.11.0 - 2026-06-20
 ### Changed
