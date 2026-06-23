@@ -36,12 +36,23 @@ type mdRendererT struct {
 	NumberHeadingsAtLevel       int
 	DoWrangleInterdocumentLinks bool
 	TocItems                    []tocItemT
+	headingTargets              map[string]headingTargetT
 }
 
 type tocItemT struct {
 	HeadingLevel  int
 	HeadingNumber string
 	HeadingText   string
+}
+
+// headingTargetT holds the information needed to turn a wiki-style link
+// ("[[Heading Name]]") into a markdown link to the referenced heading.
+type headingTargetT struct {
+	// displayText is the actual heading text, as authored, so that a mistyped
+	// wiki link adopts the heading's correct capitalization in the output.
+	displayText string
+	// id is the final HTML id of the heading (including any heading number).
+	id string
 }
 
 type TableCellBgColorDescriptorT struct {
@@ -63,6 +74,7 @@ func NewMdRenderer(markdown string, filename string, pathProjectDir string, path
 		NumberHeadingsAtLevel:       2,
 		DoWrangleInterdocumentLinks: false,
 		TocItems:                    []tocItemT{},
+		headingTargets:              make(map[string]headingTargetT),
 	}
 }
 
@@ -180,6 +192,11 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	if r.DoWrangleInterdocumentLinks {
 		md = r.MdWrangleInterDocumentLinks(md)
 	}
+
+	// -------------------------
+	// Parse wiki-style links ([[Heading Name]])
+	// -------------------------
+	md = r.MdWrangleWikiLinks(md)
 
 	// -------------------------
 	// Parse CSV references (into tables)
@@ -337,6 +354,10 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 		headingNumberText := ""
 		tocHeadingNumber := ""
 		tocHeadingText := headingText
+		// renderedHeadingText is the heading text as it will appear in the
+		// output (including any heading number). For unnumbered headings it is
+		// simply the authored text.
+		renderedHeadingText := headingText
 
 		if level >= r.NumberHeadingsAtLevel && pragmaNumberHeadingsEnabled && doNumberHeadings {
 			// Add heading number. Appendices are only honoured at the level the
@@ -347,7 +368,6 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 			headingNumberText = headingManager.GetNextHeadingNumber(level, isAppendix)
 			idWithoutHeadingNumber := headingTextToId(headingText)
 
-			var renderedHeadingText string
 			if appendixHonored {
 				// Standardize the appendix word's capitalization and move the
 				// letter after it, e.g. "# aPpendiX" -> "Appendix A" and
@@ -383,6 +403,18 @@ func (r *mdRendererT) MdParseHeadings(md string, doNumberHeadings bool) (string,
 				HeadingText:   tocHeadingText,
 			})
 		}
+
+		// Register this heading as a wiki-link target. We key on the authored
+		// heading text (case-insensitive, whitespace-trimmed). If two headings
+		// share a name the first one wins, which keeps resolution deterministic.
+		wikiKey := strings.ToLower(strings.TrimSpace(headingText))
+		if _, exists := r.headingTargets[wikiKey]; !exists {
+			r.headingTargets[wikiKey] = headingTargetT{
+				displayText: strings.TrimSpace(headingText),
+				id:          headingTextToId(renderedHeadingText),
+			}
+		}
+
 		renumberedLines = append(renumberedLines, line)
 	}
 
@@ -828,6 +860,34 @@ func (r *mdRendererT) MdWrangleInterDocumentLinks(md string) string {
 	}
 	qlog.Debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
 	return strings.Join(linesOut, "\n")
+}
+
+// MdWrangleWikiLinks turns wiki-style links of the form "[[Heading Name]]" into
+// markdown links to the referenced heading within this document.
+//
+// The lookup is case-insensitive and tolerates extra whitespace just inside the
+// brackets (e.g. "[[  Heading Name  ]]"). The link text we emit is the actual
+// heading text we found, so that a mistyped wiki link adopts the heading's
+// correct capitalization in the output.
+//
+// If no matching heading is found we leave the original text untouched (brackets
+// and all) so the author has a chance to notice the mistake in the output
+// document.
+func (r *mdRendererT) MdWrangleWikiLinks(md string) string {
+	qlog.Trace()
+	wikiLinkRe := regexp.MustCompile(`\[\[(.+?)\]\]`)
+	return wikiLinkRe.ReplaceAllStringFunc(md, func(match string) string {
+		inner := wikiLinkRe.FindStringSubmatch(match)[1]
+		key := strings.ToLower(strings.TrimSpace(inner))
+		target, ok := r.headingTargets[key]
+		if !ok {
+			qlog.Debugf("    🔴 Wiki link target not found: %q", match)
+			return match
+		}
+		newLink := fmt.Sprintf("[%s](#%s)", target.displayText, target.id)
+		qlog.Debugf("    REPLACEMENT: %q -> %q", match, newLink)
+		return newLink
+	})
 }
 
 func (r *mdRendererT) CreateSubstitution(final string) string {

@@ -32,12 +32,15 @@ _JACKDAWS LOVE MY BIG SPHINX OF QUARTZ._
 ###### Level 6 Heading
 
 ## Link within document
-Link to [Line Break Test](#line-break-test)
+
+In standard Markdown syntax: Link to [Line break test](#line-break-test)
+
+In wiki-style syntax: Link to [[Line BrEak tEst ]]
 
 ## Link between documents
 Link to [Overview](2-second.md#overview)
 
-## Line Break test
+## Line break test
 This line should not be
 split from this line.
 
