@@ -60,5 +60,10 @@ func (hm *headingManagerT) GetNextHeadingNumber(level int, isAppendix bool) stri
 			parts = append(parts, strconv.Itoa(hm.headingNumber[i]))
 		}
 	}
+	// When the heading is at atLevel there is only a single component, so we
+	// append a trailing dot to yield e.g. "1." instead of "1".
+	if level == hm.atLevel {
+		return parts[0] + "."
+	}
 	return strings.Join(parts, ".")
 }
