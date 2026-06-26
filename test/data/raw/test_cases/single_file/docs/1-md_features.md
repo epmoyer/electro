@@ -379,6 +379,57 @@ Plain text
 
 Plain text
 
+## As-run text
+
+This is a line of regular text.
+
+@( This is as-run text )@
+
+This is a line of text with @( as-run text )@ inside of it.
+
+This is a line of text with @( as-run text containing **markdown** syntax)@ inside of it.
+
+This is a line of regular text.
+
+This table has As-run text in the Value column:
+
+| Property | Value  |
+| -------- | ------ |
+| Date     | @( 2026-06-25T19:51:28-07:00 )@ |
+| Author   | @(Bob Smith)@ |
+
+As-run block starts next:
+
+@(
+
+This is inside a block of as-run text.
+
+This is inside a block of as-run text.
+
+![](img/image2.png)
+
+```
+This is a fenced code block inside an as-run block.
+```
+
+)@
+
+The as-run block has ended.
+
+@block{info}
+
+@(
+
+This text is inside an `asrun` block, inside an `info` block.
+
+- As-run bullet list item 1
+- As-run bullet list item 2
+    - As-run nested bullet list item
+
+)@
+
+@block{end}
+
 ## Notice types
 
 @block{info}
