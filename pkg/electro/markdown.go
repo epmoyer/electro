@@ -897,20 +897,20 @@ func (r *mdRendererT) MdWrangleWikiLinks(md string) string {
 
 // MdParseAsRunInline converts "as-run" delimiters into HTML wrappers.
 //
-// A line consisting solely of `@/` (ignoring surrounding whitespace) that is not
+// A line consisting solely of `@(` (ignoring surrounding whitespace) that is not
 // inside a fenced code block is converted into an opening `<div class="asrun">`
-// block; a line consisting solely of `/@` is converted into the matching closing
+// block; a line consisting solely of `)@` is converted into the matching closing
 // `</div>`.
 //
 // When the delimiters appear inline (not alone on their line, and not in a fenced
 // code block) they are replaced with placeholders that PostParseHtml later turns
-// into <span> wrappers. A `@/` is only recognized when preceded by whitespace or
-// the start of the line, and a `/@` only when followed by whitespace or the end
+// into <span> wrappers. A `@(` is only recognized when preceded by whitespace or
+// the start of the line, and a `)@` only when followed by whitespace or the end
 // of the line. This "break" requirement means a delimiter wrapped in backticks
-// (e.g. `@/foo/@`) is left untouched and renders normally.
+// (e.g. `@(foo)@`) is left untouched and renders normally.
 func (r *mdRendererT) MdParseAsRunInline(md string) string {
-	openInlineRe := regexp.MustCompile(`(^|\s)@/`)
-	closeInlineRe := regexp.MustCompile(`/@(\s|$)`)
+	openInlineRe := regexp.MustCompile(`(^|\s)@\(`)
+	closeInlineRe := regexp.MustCompile(`\)@(\s|$)`)
 	outLines := []string{}
 	inFencedBlock := false
 	for _, line := range strings.Split(md, "\n") {
@@ -926,10 +926,10 @@ func (r *mdRendererT) MdParseAsRunInline(md string) string {
 		}
 		// Handle delimiters that are "alone" on their line (ignoring whitespace)
 		switch strings.TrimSpace(line) {
-		case "@/":
+		case "@(":
 			outLines = append(outLines, "\n<div class=\"asrun\">\n")
 			continue
-		case "/@":
+		case ")@":
 			outLines = append(outLines, "\n</div>\n")
 			continue
 		}
