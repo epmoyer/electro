@@ -395,6 +395,12 @@ This is a block of as-run text.
 
 This is a block of as-run text.
 
+![](img/image2.png)
+
+```
+This is a fenced code block inside an as-run block.
+```
+
 /@
 
 ## Notice types
