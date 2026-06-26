@@ -403,6 +403,20 @@ This is a fenced code block inside an as-run block.
 
 /@
 
+@block{info}
+
+@/
+
+This is as-run text inside an `asrun` block, inside an `info` block.
+
+- As-run bullet list item 1
+- As-run bullet list item 2
+    - As-run nested bullet list item
+
+/@
+
+@block{end}
+
 ## Notice types
 
 @block{info}
