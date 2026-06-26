@@ -204,6 +204,11 @@ func (r *mdRendererT) PreParseMarkdown(md string) (string, error) {
 	md = r.MdParseCsvReferences(md)
 
 	// -------------------------
+	// Parse as-run inline delimiters
+	// -------------------------
+	md = r.MdParseAsRunInline(md)
+
+	// -------------------------
 	// Generate Table of Contents
 	// -------------------------
 	md = r.MdGenerateTableOfContents(md)
@@ -890,6 +895,52 @@ func (r *mdRendererT) MdWrangleWikiLinks(md string) string {
 	})
 }
 
+// MdParseAsRunInline converts "as-run" delimiters into HTML wrappers.
+//
+// A line consisting solely of `@/` (ignoring surrounding whitespace) that is not
+// inside a fenced code block is converted into an opening `<div class="asrun">`
+// block; a line consisting solely of `/@` is converted into the matching closing
+// `</div>`.
+//
+// When the delimiters appear inline (not alone on their line, and not in a fenced
+// code block) they are replaced with placeholders that PostParseHtml later turns
+// into <span> wrappers. A `@/` is only recognized when preceded by whitespace or
+// the start of the line, and a `/@` only when followed by whitespace or the end
+// of the line. This "break" requirement means a delimiter wrapped in backticks
+// (e.g. `@/foo/@`) is left untouched and renders normally.
+func (r *mdRendererT) MdParseAsRunInline(md string) string {
+	openInlineRe := regexp.MustCompile(`(^|\s)@/`)
+	closeInlineRe := regexp.MustCompile(`/@(\s|$)`)
+	outLines := []string{}
+	inFencedBlock := false
+	for _, line := range strings.Split(md, "\n") {
+		// Detect fenced code blocks
+		if strings.HasPrefix(line, "```") {
+			inFencedBlock = !inFencedBlock
+			outLines = append(outLines, line)
+			continue
+		}
+		if inFencedBlock {
+			outLines = append(outLines, line)
+			continue
+		}
+		// Handle delimiters that are "alone" on their line (ignoring whitespace)
+		switch strings.TrimSpace(line) {
+		case "@/":
+			outLines = append(outLines, "\n<div class=\"asrun\">\n")
+			continue
+		case "/@":
+			outLines = append(outLines, "\n</div>\n")
+			continue
+		}
+		// Handle inline delimiters
+		line = openInlineRe.ReplaceAllString(line, "${1}{{placeholder-open-asrun}}")
+		line = closeInlineRe.ReplaceAllString(line, "{{placeholder-close-asrun}}${1}")
+		outLines = append(outLines, line)
+	}
+	return strings.Join(outLines, "\n")
+}
+
 func (r *mdRendererT) CreateSubstitution(final string) string {
 	// Create a substitution entry and return the placeholder
 	placeholder := fmt.Sprintf(
@@ -905,6 +956,12 @@ func (r *mdRendererT) PostParseHtml(html string) (string, error) {
 	for placeholder, final := range r.Substitutions {
 		html = strings.ReplaceAll(html, placeholder, final)
 	}
+
+	// -------------------------
+	// Replace as-run inline placeholders
+	// -------------------------
+	html = strings.ReplaceAll(html, "{{placeholder-open-asrun}}", "<span class=\"asrun\">")
+	html = strings.ReplaceAll(html, "{{placeholder-close-asrun}}", "</span>")
 
 	// -------------------------
 	// Process pragmas

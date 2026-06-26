@@ -379,6 +379,24 @@ Plain text
 
 Plain text
 
+## As-run text
+
+This is a line of regular text.
+
+@/ This is as-run text /@
+
+This is a line of text with @/ as-run text /@ inside of it.
+
+This is a line of regular text.
+
+@/
+
+This is a block of as-run text.
+
+This is a block of as-run text.
+
+/@
+
 ## Notice types
 
 @block{info}
