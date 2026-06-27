@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## v3.14.0 - 2026-06-26
 ### Changed
 - Change As-run color to magenta.
+- Refine As-run styling for print.
 - Support `noprintbanner` URL parameter.
 
 ## v3.13.0 - 2026-06-25
