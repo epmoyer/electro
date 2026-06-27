@@ -16,6 +16,11 @@ var App = App || {}; // Create namespace
         const pageId = App.getUrlValue('pageId');
         const headingId = App.getUrlValue('headingId');
 
+        if(App.getUrlFlag('noprintbanner')){
+            document.querySelector('.print-banner')?.remove();
+            console.log('Print banner removed');
+        }
+
         // -----------------------
         // menu-tree: Find all items (spans) in all menu-tree(s)
         // -----------------------
@@ -123,7 +128,7 @@ var App = App || {}; // Create namespace
             console.log('query', searchText);
             App.doSearch(searchText);
         }
-        
+
         // Navigate to search result location (if requested in url)
         if(pageId){
             console.log('Going to location: pageId:' + pageId + ' headingId:' + headingId);
@@ -203,7 +208,7 @@ var App = App || {}; // Create namespace
             old_span.classList.remove("selected");
             old_span.classList.remove("navigating");
         }
-        
+
         if (App.globalConfig.singleFile){
             App.onClickMenuSingleFile(self);
         }
@@ -211,12 +216,12 @@ var App = App || {}; // Create namespace
             App.onClickMenuStaticSite(self);
         }
     };
-    
+
     App.onClickMenuSingleFile = (self) => {
         // console.log("App.onClickMenuSingleFile");
         const pageId = self.dataset.documentName;
         const targetHeadingId = self.dataset.targetHeadingId;
-        
+
         // -----------------------------
         // Make the target page visible
         // -----------------------------
@@ -249,7 +254,7 @@ var App = App || {}; // Create namespace
             }
         }
         if (target_url !== null){
-            // if(App.globalConfig.currentDocumentName in 
+            // if(App.globalConfig.currentDocumentName in
             if (target_url.indexOf(App.globalConfig.currentDocumentName) > -1) {
                 // We are navigating to the current page
                 self.classList.add("selected");
@@ -297,7 +302,7 @@ var App = App || {}; // Create namespace
 
     App.onMainTouchMove = (e) => {
         if(document.getElementById("sidebar-container").classList.contains("force-show")){
-            // Don't allow the main window to be scrolled while the sidebar is 
+            // Don't allow the main window to be scrolled while the sidebar is
             // deployed in "mobile" (narrow screen) mode.
             e.preventDefault();
         }
@@ -318,6 +323,18 @@ var App = App || {}; // Create namespace
             }
         }
         return null;
+    };
+
+    App.getUrlFlag = (VarSearch) => {
+        var SearchString = window.location.search.substring(1);
+        var VariableArray = SearchString.split('&');
+        for(var i = 0; i < VariableArray.length; i++){
+            var KeyValuePair = VariableArray[i].split('=');
+            if(KeyValuePair[0] == VarSearch){
+                return true;
+            }
+        }
+        return false;
     };
 
     App.onSearch = () => {
@@ -344,7 +361,7 @@ var App = App || {}; // Create namespace
             console.log('Search text blank. Ignoring.');
             return;
         }
-        
+
         const results = App.search(searchText);
         // console.log(results);
 
@@ -430,7 +447,7 @@ var App = App || {}; // Create namespace
     };
 
     /**
-     * Shorten the text of a search result to a "snippet" no longer than some max, 
+     * Shorten the text of a search result to a "snippet" no longer than some max,
      * while attempting to include the search term(s) within that snippet.
      * @param {string} text The search result text.
      * @param {string} query The search query.
@@ -522,7 +539,7 @@ var App = App || {}; // Create namespace
                     elAnchorEnd: elAnchorEnd,
                     elChangeBar: elChangeBar
                 });
-                
+
             }
         });
     };

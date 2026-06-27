@@ -43,7 +43,7 @@ body {
     --color-bg-pre: #1D1D1A;
     --color-text-pre: #f8f8f2;
 
-    --color-text-asrun:#0000ff;
+    --color-text-asrun:#ff00ff;
 
     --font-content-text: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
     --font-code: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier,
@@ -415,6 +415,12 @@ a:visited:hover, a:hover {
     }
     .print-banner {
         display: block;
+    }
+    .asrun {
+        -webkit-print-color-adjust: exact;
+    }
+    .asrun pre, .asrun pre code {
+        border: none !important;
     }
 
     /* Preserve existing styles for tables */
