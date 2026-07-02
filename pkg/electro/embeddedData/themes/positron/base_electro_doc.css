@@ -38,6 +38,7 @@ body {
     --color-table-heading-bg: #c9dbeb;
     --color-table-heading: #414141;
     --color-bg-table-cell-gray: #d0d0d0;
+    --color-bg-heading-private: #f5c6dd;
 
     --color-bg-code: #e4e4e7;
     --color-bg-pre: #1D1D1A;
@@ -165,6 +166,12 @@ a:visited:hover, a:hover {
 }
 .content-page td:has(.td_bg_gray) {
     background-color: var(--color-bg-table-cell-gray);
+}
+.content-page .heading-private {
+    display: none;
+}
+.content-page th:has(.heading-private) {
+    background-color: var(--color-bg-heading-private);
 }
 .content-page p {
     margin-top: 8px;

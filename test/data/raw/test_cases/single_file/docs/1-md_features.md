@@ -69,6 +69,20 @@ Currently cells containing "n/a" (case insensitive) are automatically formatted 
 #### Simple CSV
 @table{attachments/table_1.csv}
 
+CSV files can contain "private" columns by starting their heading with `!`; these columns are hidden by default but can be shown or hidden using the `@pragma{show_csv_private_columns:true|false}` directive.  
+
+Private columns are useful for, for example, making development notes on complex tables which you want to see when authoring but don't wish to publish.
+
+With `@pragma{show_csv_private_columns:true}`:
+
+@pragma{show_csv_private_columns:true}
+@table{attachments/table_1.csv}
+
+With `@pragma{show_csv_private_columns:false}`:
+
+@pragma{show_csv_private_columns:false}
+@table{attachments/table_1.csv}
+
 #### Complex CSV
 
 @pragma{table_cell_bg_color_by_content:pass, #d0ffd0}
