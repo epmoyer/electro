@@ -542,6 +542,17 @@ func (r *mdRendererT) MdParseNotices(md string) (string, error) {
 // Nelwlines are converted to "<br>" tags.
 // The Markdown table format is not padded to be pretty; only to be syntactically correct.
 //
+// Columns whose heading begins with "!" are "private" columns. By default they
+// are omitted from the rendered table. The following pragma controls whether
+// private columns are shown, and may be toggled on and off multiple times within
+// a document (it applies to all subsequent @table directives until changed):
+//
+// @pragma{show_csv_private_columns:true}
+// @pragma{show_csv_private_columns:false}
+//
+// When shown, the "!" marker is stripped from the heading and the heading cell is
+// given the "heading-private" class so it can be styled distinctly.
+//
 // Additionally, the following pragma directives can be used to control table cell
 // background colors:
 //
@@ -560,6 +571,7 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 	reTableCellBgColor := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_by_content:(.*?),\s*([^}]+)\}\s*$`)
 	reTableCellBgColorPartial := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_by_content_partial:(.*?),\s*([^}]+)\}\s*$`)
 	reTableCellBgColorClearAll := regexp.MustCompile(`^\s*@pragma\{table_cell_bg_color_clear_all\}\s*$`)
+	reShowPrivateColumns := regexp.MustCompile(`^\s*@pragma\{show_csv_private_columns:(?P<setting>\S+)\}\s*$`)
 
 	renderPendingCss := func(descriptors map[string]TableCellBgColorDescriptorT) string {
 		type pendingDescriptorT struct {
@@ -598,7 +610,7 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 		return b.String()
 	}
 
-	renderTableMarkdown := func(csvRelativePath string, descriptors map[string]TableCellBgColorDescriptorT) (string, bool) {
+	renderTableMarkdown := func(csvRelativePath string, descriptors map[string]TableCellBgColorDescriptorT, showPrivateColumns bool) (string, bool) {
 		csvAbsolutePath := path.Join(r.PathMdSourceDir, csvRelativePath)
 		data, err := os.ReadFile(csvAbsolutePath)
 		if err != nil {
@@ -674,20 +686,46 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 		}
 
 		header := padRecord(records[0])
+
+		// Determine which columns are "private" (heading begins with "!") and
+		// which columns should actually be rendered. Private columns are hidden
+		// unless the show_csv_private_columns pragma is currently enabled.
+		isPrivateColumn := make([]bool, columnCount)
+		includedColumns := make([]int, 0, columnCount)
+		for i, cell := range header {
+			if strings.HasPrefix(strings.TrimSpace(cell), "!") {
+				isPrivateColumn[i] = true
+				if !showPrivateColumns {
+					continue
+				}
+			}
+			includedColumns = append(includedColumns, i)
+		}
+
 		var b strings.Builder
 		b.WriteString("|")
-		for _, cell := range header {
-			b.WriteString(sanitizeCell(cell))
+		for _, i := range includedColumns {
+			cell := header[i]
+			if isPrivateColumn[i] {
+				// Strip the leading "!" marker and flag the heading cell so it
+				// can be styled to indicate that it is a private column.
+				cell = strings.TrimPrefix(strings.TrimSpace(cell), "!")
+				b.WriteString(sanitizeCell(cell))
+				b.WriteString(`<span class="heading-private"></span>`)
+			} else {
+				b.WriteString(sanitizeCell(cell))
+			}
 			b.WriteString("|")
 		}
 		b.WriteString("\n|")
-		for i := 0; i < columnCount; i++ {
+		for range includedColumns {
 			b.WriteString("---|")
 		}
 		for _, record := range records[1:] {
 			b.WriteString("\n|")
-			for _, cell := range padRecord(record) {
-				b.WriteString(sanitizeCell(cell))
+			padded := padRecord(record)
+			for _, i := range includedColumns {
+				b.WriteString(sanitizeCell(padded[i]))
 				b.WriteString("|")
 			}
 		}
@@ -698,8 +736,20 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 	linesOut := []string{}
 	tableCellBgColorDescriptors := map[string]TableCellBgColorDescriptorT{}
 	nextTableCellBgColorDescriptorID := 1
+	showCsvPrivateColumns := false
 
 	for _, line := range lines {
+		if matches := reShowPrivateColumns.FindStringSubmatch(line); matches != nil {
+			setting := matches[reShowPrivateColumns.SubexpIndex("setting")]
+			if setting == "true" {
+				showCsvPrivateColumns = true
+			} else if setting == "false" {
+				showCsvPrivateColumns = false
+			}
+			// We do not include the pragma line in the output.
+			continue
+		}
+
 		if matches := reTableCellBgColor.FindStringSubmatch(line); matches != nil {
 			cellContent := strings.ToLower(strings.TrimSpace(matches[1]))
 			bgColor := strings.TrimSpace(matches[2])
@@ -733,7 +783,7 @@ func (r *mdRendererT) MdParseCsvReferences(md string) string {
 
 		if matches := reTable.FindStringSubmatch(line); matches != nil {
 			csvRelativePath := matches[1]
-			tableMarkdown, ok := renderTableMarkdown(csvRelativePath, tableCellBgColorDescriptors)
+			tableMarkdown, ok := renderTableMarkdown(csvRelativePath, tableCellBgColorDescriptors, showCsvPrivateColumns)
 			if !ok {
 				linesOut = append(linesOut, line)
 				continue

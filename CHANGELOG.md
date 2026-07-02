@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v3.15.0 - 2026-07-02
+### Added
+- Private CSV table columns: a column whose heading begins with `!` is hidden by default.
+- Pragma `@pragma{show_csv_private_columns:true}` (or `false`) to show/hide private columns; may be toggled multiple times within a document.
+
 ## v3.14.0 - 2026-06-26
 ### Changed
 - Change As-run color to magenta.
