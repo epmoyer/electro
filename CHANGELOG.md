@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v3.16.0 - 2026-11-10
+### Fixed
+- Static sites: `index.html` was overwritten, after the pages were built, with a randomly chosen document (Go map order), often the empty search results page, so it changed from build to build. A document named `index` (`index.md`) is now left as built; otherwise `index.html` is the first document in navigation order.
+- Static sites: `index.html` now has the same `content-page` wrapper (and so the same styling) as every other page.
+
 ## v3.15.0 - 2026-07-02
 ### Added
 - Private CSV table columns: a column whose heading begins with `!` is hidden by default.

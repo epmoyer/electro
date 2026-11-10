@@ -549,22 +549,19 @@ func (b *builderT) RenderSite() error {
 				return fmt.Errorf("error rendering document %s: %w", documentName, err)
 			}
 		}
-	}
 
-	// Build index.html (first document or main page)
-	if len(b.SiteDocuments) > 0 {
-		// Use first document as index
-		var firstDoc siteDocumentT
-		var firstName string
-		for name, doc := range b.SiteDocuments {
-			firstDoc = doc
-			firstName = name
-			break
-		}
-		indexPath := path.Join(b.PathOutputDir, "index.html")
-		err = b.renderDocument(templateHtml, indexPath, firstDoc.Html, firstName)
-		if err != nil {
-			return fmt.Errorf("error rendering index.html: %w", err)
+		// If no document is named "index" (and so was just written as index.html), use the
+		// first document, in navigation order, as index.html. (The search results document
+		// is built last, so it is only used if there are no others.)
+		_, hasIndex := b.SiteDocuments["index"]
+		if !hasIndex && len(b.OrderedDocumentnames) > 0 {
+			firstName := b.OrderedDocumentnames[0]
+			indexPath := path.Join(b.PathOutputDir, "index.html")
+			documentHtml := "<div class=\"content-page\">" + b.SiteDocuments[firstName].Html + "</div>"
+			err = b.renderDocument(templateHtml, indexPath, documentHtml, firstName)
+			if err != nil {
+				return fmt.Errorf("error rendering index.html: %w", err)
+			}
 		}
 	}
 
